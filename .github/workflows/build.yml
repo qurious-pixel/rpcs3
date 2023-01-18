@@ -35,11 +35,14 @@ jobs:
           libxcomposite-dev libxcursor-dev libxdamage-dev \
           libxfixes-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev \
           libxrandr-dev libxshmfence1 llvm ninja-build nodejs libclang-9-dev
+          sudo apt autoremove
+          sudo apt clean
       - name: Download QT6 source
         run: |
           QTVERMIN=$(echo ${{env.qtver}} | cut -b -3)
           wget https://download.qt.io/official_releases/qt/${QTVERMIN}/${{env.qtver}}/single/qt-everywhere-src-${{env.qtver}}.tar.xz
           tar xf qt-everywhere-src-${{env.qtver}}.tar.xz
+          rm qt-everywhere-src-${{env.qtver}}.tar.xz
           cd qt-everywhere-src-${{env.qtver}}
           export CC=gcc-10
           export CXX=g++-10
@@ -47,3 +50,14 @@ jobs:
           cmake --build .
           sudo cmake --install .
           ls /usr/local/Qt6 || true
+
+      - name: Compress QT6 source
+        run: |
+          mkdir artifacts
+          tar -czf Qt6-bionic.tar.gz /usr/local/Qt6
+          mv Qt6-bionic.tar.gz artifacts
+
+      - name: Publish Release
+        run: |
+          go install github.com/tcnksm/ghr@latest
+          ghr -u qurious-pixel -r rpcs3 -recreate -n "Qt6 Bionic build" -t "${{ secrets.GITHUB_TOKEN }}" Qt6 artifacts
