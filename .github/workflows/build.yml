@@ -41,8 +41,8 @@ jobs:
           wget https://download.qt.io/official_releases/qt/${QTVERMIN}/${{env.qtver}}/single/qt-everywhere-src-${{env.qtver}}.tar.xz
           tar xf qt-everywhere-src-${{env.qtver}}.tar.xz
           cd qt-everywhere-src-${{env.qtver}}
-          export CC=clang-9
-          export CXX=clang-9
+          export CC=gcc-10
+          export CXX=g++-10
           ./configure -prefix /usr/local/Qt6
           cmake --build .
           sudo cmake --install .
