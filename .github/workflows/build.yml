@@ -37,7 +37,7 @@ jobs:
           libxcomposite-dev libxcursor-dev libxdamage-dev libxext-dev \
           libxfixes-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev \
           libxkbfile-dev libxrandr-dev libxrender-dev libxshmfence-dev \
-          libxshmfence1 llvm ninja-build nodejs
+          libxshmfence1 llvm ninja-build nodejs libclang-9-dev
       - name: Download QT6 source
         run: |
           echo ${{env.qtver}}
