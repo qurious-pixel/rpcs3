@@ -1,0 +1,16 @@
+name: Qt6
+
+on: 
+  push:
+  
+jobs:
+  Qt6:
+    name: build Qt6 from src ubuntu-18.04
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Download source
+        run: |
+          wget --version || curl --version
