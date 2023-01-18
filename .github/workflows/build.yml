@@ -7,7 +7,9 @@ jobs:
   Qt6:
     name: build Qt6 from src ubuntu-18.04
     runs-on: ubuntu-18.04
-
+    env:
+      qtver: 6.4.2
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -23,9 +25,11 @@ jobs:
           cmake --version
       - name: Download QT6 source
         run: |
-          wget https://download.qt.io/official_releases/qt/6.4/6.4.0/single/qt-everywhere-src-6.4.0.tar.xz
-          tar xf qt-everywhere-src-6.4.0.tar.xz
-          cd qt-everywhere-src-6.4.0
+          echo ${env.qtver}
+          echo ${env.qtver%.*}
+          wget https://download.qt.io/official_releases/qt/6.4/${env.qtver}/single/qt-everywhere-src-${env.qtver}.tar.xz
+          tar xf qt-everywhere-src-${env.qtver}.tar.xz
+          cd qt-everywhere-src-${env.qtver}
           ./configure -prefix /usr/local/Qt6
           cmake --build .
           sudo cmake --install .
