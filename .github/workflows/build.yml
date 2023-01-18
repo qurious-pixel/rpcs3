@@ -43,7 +43,7 @@ jobs:
           echo ${{env.qtver}}
           QTVERMIN=$(echo ${{env.qtver}} | cut -b -3)
           echo $QTVERMIN
-          wget https://download.qt.io/official_releases/qt/{$QTVERMIN}/${{env.qtver}}/single/qt-everywhere-src-${{env.qtver}}.tar.xz
+          wget https://download.qt.io/official_releases/qt/${QTVERMIN}/${{env.qtver}}/single/qt-everywhere-src-${{env.qtver}}.tar.xz
           tar xf qt-everywhere-src-${{env.qtver}}.tar.xz
           cd qt-everywhere-src-${{env.qtver}}
           ./configure -prefix /usr/local/Qt6
