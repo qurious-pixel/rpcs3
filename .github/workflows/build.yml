@@ -11,7 +11,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Download source
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.17.0'
+      - name: Install cmake
+        run: |
+          pip install cmake
+          cmake --version
+      - name: Download QT6 source
         run: |
           wget https://download.qt.io/official_releases/qt/6.4/6.4.0/single/qt-everywhere-src-6.4.0.tar.xz
           tar xf qt-everywhere-src-6.4.0.tar.xz
