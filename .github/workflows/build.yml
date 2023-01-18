@@ -26,7 +26,6 @@ jobs:
       - name: Download QT6 source
         run: |
           echo ${{env.qtver}}
-          echo ${{env.qtver%.*}}
           wget https://download.qt.io/official_releases/qt/6.4/${{env.qtver}}/single/qt-everywhere-src-${{env.qtver}}.tar.xz
           tar xf qt-everywhere-src-${{env.qtver}}.tar.xz
           cd qt-everywhere-src-${{env.qtver}}
