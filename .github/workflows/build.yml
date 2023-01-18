@@ -28,7 +28,7 @@ jobs:
           sudo apt install bison build-essential clang flex gperf \
           libatspi2.0-dev libbluetooth-dev libclang-dev libcups2-dev libdrm-dev \
           libegl1-mesa-dev libfontconfig1-dev libfreetype6-dev \
-          libgstreamer1.0-dev libhunspell-dev libnss3-dev libopengl-dev \
+          libgstreamer1.0-dev libhunspell-dev libnss3-dev libopengl0 \
           libpulse-dev libssl-dev libts-dev libx11-dev libx11-xcb-dev \
           libxcb-glx0-dev libxcb-icccm4-dev libxcb-image0-dev \
           libxcb-keysyms1-dev libxcb-randr0-dev libxcb-render-util0-dev \
