@@ -47,6 +47,10 @@ jobs:
           qt6-base-dev qt6-base-private-dev libqt6svg6-dev qt6-tools-dev qt6-declarative-dev gcc-11 g++-11 libcurl4-openssl-dev
           sudo apt autoremove
           sudo apt clean
+          
+      - name: Fixes
+        run: |
+          sed -i 's/6.4.2/6.2.2/g' 3rdparty/qt6.cmake
       - name: Build RPCS3
         run: |
           export CC=gcc-11
