@@ -5,15 +5,17 @@ on:
   
 jobs:
   AppImage:
-    name: build Qt6 AppImage from src ubuntu-18.04
+    name: build Qt${{ env.QT }} AppImage from src ubuntu-18.04
     runs-on: ubuntu-18.04
+    env:
+      QT: 5
       
     steps:
       - name: Checkout Upstream Repo
         uses: actions/checkout@v3
         with:
-          repository: Megamouse/rpcs3 # RPCS3/rpcs3
-          ref: Qt6-fun # master
+          repository: RPCS3/rpcs3 # Megamouse/rpcs3 # 
+          ref: master # Qt6-fun # 
           submodules: recursive
       - name: Checkout AppImage Repo
         uses: actions/checkout@v3
@@ -39,7 +41,6 @@ jobs:
           cmake --version
       - name: Install packages
         run: |
-          sudo add-apt-repository -y ppa:okirby/qt6-backports
           sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
           sudo apt update
           sudo apt install -y build-essential libasound2-dev libpulse-dev libopenal-dev libglew-dev zlib1g-dev libedit-dev \
@@ -47,10 +48,23 @@ jobs:
           qt6-base-dev qt6-base-private-dev libqt6svg6-dev qt6-tools-dev qt6-declarative-dev gcc-11 g++-11 libcurl4-openssl-dev
           sudo apt autoremove
           sudo apt clean
-          
+      - name: Install Qt5
+        run: |
+          sudo add-apt-repository -y ppa:beineri/opt-qt-5.15.2-bionic
+          sudo apt install -y qt515base qt515svg
+          echo QT_BASE_DIR=/opt/qt515 >> $GITHUB_ENV
+          echo PATH="$QT_BASE_DIR"/bin:"$PATH" >> $GITHUB_ENV 
+          echo LD_LIBRARY_PATH="$QT_BASE_DIR"/lib/x86_64-linux-gnu:"$QT_BASE_DIR"/lib >> $GITHUB_ENV
+        if: ${{ env.QT == 5 }}
+      - name: Install Qt6
+        run: |
+          sudo add-apt-repository -y ppa:okirby/qt6-backports
+          echo "to-do"
+        if: ${{ env.QT == 6 }}
       - name: Fixes
         run: |
-          sed -i 's/6.4.2/6.2.2/g' 3rdparty/qt6.cmake
+          echo "fixes"
+          #sed -i 's/6.4.2/6.2.2/g' 3rdparty/qt6.cmake
       - name: Build RPCS3
         run: |
           export CC=gcc-11
@@ -82,4 +96,4 @@ jobs:
       - name: Publish Release
         run: |
           go install github.com/tcnksm/ghr@latest
-          ghr -u qurious-pixel -r rpcs3 -recreate -n "Qt6 Bionic build" -t "${{ secrets.GITHUB_TOKEN }}" Qt6 artifacts
+          ghr -u qurious-pixel -r rpcs3 -recreate -n "Qt${{ env.QT }} Bionic build" -t "${{ secrets.GITHUB_TOKEN }}" Qt${{ env.QT }} artifacts
