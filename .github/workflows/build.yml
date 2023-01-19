@@ -43,13 +43,13 @@ jobs:
           sudo apt update
           sudo apt install -y build-essential libasound2-dev libpulse-dev libopenal-dev libglew-dev zlib1g-dev libedit-dev \
           libvulkan-dev libudev-dev git libevdev-dev libsdl2-2.0 libsdl2-dev libjack-dev libsndio-dev ninja-build \
-          qt6-base-dev qt6-base-private-dev libqt6svg6-dev qt6-tools-dev qt6-declarative-dev gcc-10 g++-10 clang-9
+          qt6-base-dev qt6-base-private-dev libqt6svg6-dev qt6-tools-dev qt6-declarative-dev gcc-11 g++-11
           sudo apt autoremove
           sudo apt clean
       - name: Build RPCS3
         run: |
-          export CC=clang-9   #gcc-10
-          export CXX=clang-9  #g++-10
+          export CC=gcc-11
+          export CXX=g++-11
           mkdir build && cd build
           cmake ..                                               \
               -DCMAKE_INSTALL_PREFIX=/usr                        \
