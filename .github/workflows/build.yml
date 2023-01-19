@@ -12,8 +12,8 @@ jobs:
       - name: Checkout Upstream Repo
         uses: actions/checkout@v3
         with:
-          repository: RPCS3/rpcs3
-          ref: master
+          repository: Megamouse/rpcs3 # RPCS3/rpcs3
+          ref: Qt6-fun # master
           submodules: recursive
       - name: Checkout AppImage Repo
         uses: actions/checkout@v3
