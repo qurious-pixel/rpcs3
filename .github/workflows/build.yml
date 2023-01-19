@@ -54,7 +54,7 @@ jobs:
           mkdir build && cd build
           cmake ..                                               \
               -DCMAKE_INSTALL_PREFIX=/usr                        \
-              -DBUILD_LLVM_SUBMODULE=OFF                         \
+              -DBUILD_LLVM_SUBMODULE=ON                          \
               -DLLVM_DIR=llvmlibs/lib/cmake/llvm/                \
               -DUSE_NATIVE_INSTRUCTIONS=OFF                      \
               -DUSE_PRECOMPILED_HEADERS=OFF                      \
