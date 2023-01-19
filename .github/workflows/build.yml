@@ -14,13 +14,14 @@ jobs:
         with:
           repository: RPCS3/rpcs3
           ref: master
+          submodules: recursive
       - name: Checkout AppImage Repo
         uses: actions/checkout@v3
         with:
             clean: false
             path: ci      
       - name: cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.ccache
           key: build-ccache-${{ env.GITHUB_RUN_ID }}
