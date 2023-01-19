@@ -1,0 +1,71 @@
+name: AppImage
+
+on: 
+  push:
+  
+jobs:
+  AppImage:
+    name: build Qt6 AppImage from src ubuntu-18.04
+    runs-on: ubuntu-18.04
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.ccache
+          key: build-ccache-${{ env.GITHUB_RUN_ID }}
+          restore-keys: |
+            build-ccache
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.17.0'
+      - name: Install cmake
+        run: |
+          pip install cmake
+          cmake --version
+      - name: Install packages
+        run: |
+          sudo add-apt-repository ppa:okirby/qt6-backports
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+          sudo apt update
+          sudo apt install build-essential libasound2-dev libpulse-dev libopenal-dev libglew-dev zlib1g-dev libedit-dev \
+          libvulkan-dev libudev-dev git libevdev-dev libsdl2-2.0 libsdl2-dev libjack-dev libsndio-dev \
+          qt6-base qt6-svg qt6-tools qt6-declarative gcc-10 g++-10
+          sudo apt autoremove
+          sudo apt clean
+      - name: Build RPCS3
+        run: |
+          export CC=gcc-10
+          export CXX=g++-10
+          cmake ..                                               \
+              -DCMAKE_INSTALL_PREFIX=/usr                        \
+              -DBUILD_LLVM_SUBMODULE=OFF                         \
+              -DLLVM_DIR=llvmlibs/lib/cmake/llvm/                \
+              -DUSE_NATIVE_INSTRUCTIONS=OFF                      \
+              -DUSE_PRECOMPILED_HEADERS=OFF                      \
+              -DCMAKE_C_FLAGS="$CFLAGS"                          \
+              -DCMAKE_CXX_FLAGS="$CFLAGS"                        \
+              -DCMAKE_AR="$AR"                                   \
+              -DCMAKE_RANLIB="$RANLIB"                           \
+              -DUSE_SYSTEM_CURL=ON                               \
+              -DUSE_SDL=OFF                                      \
+              -DOpenGL_GL_PREFERENCE=LEGACY                      \
+              -G Ninja
+          ninja
+          ls build || true
+           
+      - name: Build AppImage
+        run: |
+          mkdir artifacts
+          cp build/bin artifacts
+          echo "To-do"
+          #mv Qt6-bionic.tar.gz artifacts
+      - name: Publish Release
+        run: |
+          go install github.com/tcnksm/ghr@latest
+          ghr -u qurious-pixel -r rpcs3 -recreate -n "Qt6 Bionic build" -t "${{ secrets.GITHUB_TOKEN }}" Qt6 artifacts
