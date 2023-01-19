@@ -5,7 +5,7 @@ on:
   
 jobs:
   AppImage:
-    name: build Qt${{ env.QT }} AppImage from src ubuntu-18.04
+    name: build Qt AppImage from src ubuntu-18.04
     runs-on: ubuntu-18.04
     env:
       QT: 5
@@ -26,8 +26,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.ccache
-          key: build-ccache-${{ env.GITHUB_RUN_ID }}
+          key: build-ccache-Qt${{ env.QT }}-${{ env.GITHUB_RUN_ID }}
           restore-keys: |
+            build-ccache-Qt${{ env.QT }}
             build-ccache
       - uses: actions/setup-python@v3
         with:
