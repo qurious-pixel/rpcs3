@@ -9,8 +9,16 @@ jobs:
     runs-on: ubuntu-18.04
       
     steps:
-      - name: Checkout code
+      - name: Checkout Upstream Repo
         uses: actions/checkout@v3
+        with:
+          repository: RPCS3/rpcs3
+          ref: master
+      - name: Checkout AppImage Repo
+        uses: actions/checkout@v3
+        with:
+            clean: false
+            path: ci      
       - name: cache
         uses: actions/cache@v2
         with:
