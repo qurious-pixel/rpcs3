@@ -72,7 +72,7 @@ jobs:
           export CC=gcc-11
           export CXX=g++-11
           mkdir build && cd build
-          cmake ..                                               \
+          sudo cmake ..                                               \
               -DCMAKE_INSTALL_PREFIX=/usr                        \
               -DBUILD_LLVM_SUBMODULE=ON                          \
               -DLLVM_DIR=llvmlibs/lib/cmake/llvm/                \
@@ -86,7 +86,7 @@ jobs:
               -DUSE_SDL=OFF                                      \
               -DOpenGL_GL_PREFERENCE=LEGACY                      \
               -G Ninja
-          ninja
+          sudo ninja
           ls build || true
            
       - name: Build AppImage
