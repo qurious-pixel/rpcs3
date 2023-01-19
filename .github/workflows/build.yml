@@ -42,6 +42,7 @@ jobs:
         run: |
           export CC=gcc-10
           export CXX=g++-10
+          mkdir build && cd build
           cmake ..                                               \
               -DCMAKE_INSTALL_PREFIX=/usr                        \
               -DBUILD_LLVM_SUBMODULE=OFF                         \
