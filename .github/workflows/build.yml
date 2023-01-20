@@ -69,8 +69,11 @@ jobs:
           #sed -i 's/6.4.2/6.2.2/g' 3rdparty/qt6.cmake
       - name: Build RPCS3
         run: |
-          sudo export CC=gcc-11
-          sudo export CXX=g++-11
+          export CC=gcc-11
+          export CXX=g++-11
+          sudo ln -sf /usr/bin/gcc-11 /usr/bin/gcc
+          sudo ln -sf /usr/bin/g++-11 /usr/bin/g++
+          ls -af /usr/bin/gcc*
           mkdir build && cd build
           sudo cmake ..                                               \
               -DCMAKE_INSTALL_PREFIX=/usr                        \
