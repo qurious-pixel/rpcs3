@@ -66,16 +66,14 @@ jobs:
       - name: Fixes
         run: |
           echo "fixes"
-          #sed -i 's/6.4.2/6.2.2/g' 3rdparty/qt6.cmake
+          ls -ah ~/.local/bin/
+          sudo ln -sf ~/.local/bin/cmake /usr/local/bin/cmake
       - name: Build RPCS3
         run: |
           export CC=gcc-11
           export CXX=g++-11
-          sudo ln -sf /usr/bin/gcc-11 /usr/bin/gcc
-          sudo ln -sf /usr/bin/g++-11 /usr/bin/g++
-          ls -af /usr/bin/gcc*
           mkdir build && cd build
-          sudo cmake ..                                               \
+          cmake ..                                               \
               -DCMAKE_INSTALL_PREFIX=/usr                        \
               -DBUILD_LLVM_SUBMODULE=ON                          \
               -DLLVM_DIR=llvmlibs/lib/cmake/llvm/                \
