@@ -105,7 +105,7 @@ jobs:
               -DOpenGL_GL_PREFERENCE=LEGACY                      \
               -G Ninja
           ninja
-          ls build || true
+          ls bin || true
            
       - name: Build AppImage
         run: |
@@ -113,7 +113,7 @@ jobs:
           cp -r build/bin artifacts
           echo "To-do"
           #mv Qt6-bionic.tar.gz artifacts
-      - name: Publish Release
-        run: |
-          go install github.com/tcnksm/ghr@latest
-          ghr -u qurious-pixel -r rpcs3 -recreate -n "Qt${{ env.QT }} Bionic build" -t "${{ secrets.GITHUB_TOKEN }}" Qt${{ env.QT }} artifacts
+      #- name: Publish Release
+      #  run: |
+      #    go install github.com/tcnksm/ghr@latest
+      #    ghr -u qurious-pixel -r rpcs3 -recreate -n "Qt${{ env.QT }} Bionic build" -t "${{ secrets.GITHUB_TOKEN }}" Qt${{ env.QT }} artifacts
