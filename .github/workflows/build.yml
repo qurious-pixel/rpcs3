@@ -83,7 +83,6 @@ jobs:
 
       - name: Build RPCS3
         run: |
-          set -x
           export CC=gcc-11
           export CXX=g++-11
           export LINKER=gold
@@ -111,7 +110,7 @@ jobs:
       - name: Build AppImage
         run: |
           mkdir artifacts
-          cp build/bin artifacts
+          cp -r build/bin artifacts
           echo "To-do"
           #mv Qt6-bionic.tar.gz artifacts
       - name: Publish Release
