@@ -116,4 +116,4 @@ jobs:
       - name: Publish Release
         run: |
           go install github.com/tcnksm/ghr@latest
-          ghr -u qurious-pixel -r rpcs3 -recreate -n "Qt${{ env.QT }} Bionic build" -t "${{ secrets.GITHUB_TOKEN }}" Qt${{ env.QT }} artifacts/
+          ghr -u qurious-pixel -r rpcs3 -n "Qt${{ env.QT }} Bionic build" -t "${{ secrets.GITHUB_TOKEN }}" Qt${{ env.QT }} artifacts/
