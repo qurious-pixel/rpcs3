@@ -72,6 +72,10 @@ jobs:
           set -x
           export CC=gcc-11
           export CXX=g++-11
+          export LINKER=gold
+          export AR=/usr/bin/gcc-ar-11
+          export RANLIB=/usr/bin/gcc-ranlib-11
+          export CFLAGS="-fuse-linker-plugin"
           mkdir build && cd build
           cmake ..                                               \
               -DCMAKE_INSTALL_PREFIX=/usr                        \
