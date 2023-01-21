@@ -67,6 +67,17 @@ jobs:
           qt6-base-dev qt6-base-private-dev libqt6svg6-dev qt6-tools-dev qt6-declarative-dev
           echo "to-do"
         if: ${{ env.QT == 6 }}
+      - name: Build llvmlibs
+        run: |
+          curl -sLO https://github.com/RPCS3/llvm-mirror/releases/download/custom-build/llvmlibs-linux.tar.gz
+          mkdir llvmlibs
+          tar -xzf ./llvmlibs-linux.tar.gz -C llvmlibs
+      - name: Build vulkan-sdk
+        run: |
+          wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
+          sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.2.198-bionic.list https://packages.lunarg.com/vulkan/1.2.198/lunarg-vulkan-1.2.198-bionic.list
+          sudo apt update
+          sudo apt install -y vulkan-sdk
       - name: Build RPCS3
         run: |
           set -x
@@ -79,7 +90,7 @@ jobs:
           mkdir build && cd build
           cmake ..                                               \
               -DCMAKE_INSTALL_PREFIX=/usr                        \
-              -DBUILD_LLVM_SUBMODULE=ON                          \
+              -DBUILD_LLVM_SUBMODULE=OFF                         \
               -DLLVM_DIR=llvmlibs/lib/cmake/llvm/                \
               -DUSE_NATIVE_INSTRUCTIONS=OFF                      \
               -DUSE_PRECOMPILED_HEADERS=OFF                      \
