@@ -58,6 +58,8 @@ jobs:
           echo QT_BASE_DIR=/opt/qt515 >> $GITHUB_ENV
           echo PATH="$QT_BASE_DIR"/bin:"$PATH" >> $GITHUB_ENV 
           echo LD_LIBRARY_PATH="$QT_BASE_DIR"/lib/x86_64-linux-gnu:"$QT_BASE_DIR"/lib >> $GITHUB_ENV
+          echo "base:" && ls $QT_BASE_DIR/
+          echo "plugins:" && ls $QT_BASE_DIR/plugins
           sudo sed -i 's/ThreadEngineStarter<void>(ThreadEngine<void> \*_threadEngine)/ThreadEngineStarter(ThreadEngine<void> \*_threadEngine)/' /opt/qt515/include/QtConcurrent/qtconcurrentthreadengine.h
         if: ${{ env.QT == 5 }}
       - name: Install Qt6
@@ -113,7 +115,7 @@ jobs:
           mkdir artifacts
           chmod +x ci/appimage.sh 
           ./ci/appimage.sh 
-          ls artifacts
+          echo "artifacts:" && ls artifacts
         continue-on-error: true  
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
