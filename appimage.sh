@@ -25,7 +25,7 @@ cd build || exit 1
     echo "Qt base dir: $QT_BASE_DIR" 
     cp -r ${QT_BASE_DIR}/plugins/wayland* ./appdir/usr/plugins/
     cp ${QT_BASE_DIR}/plugins/platforms/libqwayland* ./appdir/usr/plugins/platforms/
-    cp /usr/lib/x86_64-linux-gnu/libQt5Wayland* ./appdir/usr/lib/
+    cp ${QT_BASE_DIR}/lib/libQt5Wayland* ./appdir/usr/lib/
 
     # Remove libgmodule and libglib due to g_source_set_static_name symbol conflict with host libraries
     rm -f ./appdir/usr/lib/libgmodule-2.0.so*
