@@ -22,8 +22,9 @@ cd build || exit 1
     #rm -f ./appdir/usr/lib/libwayland-client.so*
     
     # Install wayland
-    cp -r ${{ env.QT_BASE_DIR }}/plugins/wayland* ./appdir/usr/plugins/
-    cp ${{ env.QT_BASE_DIR }}/plugins/platforms/libqwayland* ./appdir/usr/plugins/platforms/
+    echo "Qt base dir: $QT_BASE_DIR" 
+    cp -r ${QT_BASE_DIR}/plugins/wayland* ./appdir/usr/plugins/
+    cp ${QT_BASE_DIR}/plugins/platforms/libqwayland* ./appdir/usr/plugins/platforms/
 
     # Remove libgmodule and libglib due to g_source_set_static_name symbol conflict with host libraries
     rm -f ./appdir/usr/lib/libgmodule-2.0.so*
@@ -46,8 +47,6 @@ cd build || exit 1
 
     # Package it up and send it off
     ./squashfs-root/usr/bin/appimagetool appdir
-
-    ls
 
     mv ./RPCS3*.AppImage ../artifacts
 
