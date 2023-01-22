@@ -60,6 +60,7 @@ jobs:
           echo LD_LIBRARY_PATH="$QT_BASE_DIR"/lib/x86_64-linux-gnu:"$QT_BASE_DIR"/lib >> $GITHUB_ENV
           echo "base:" && ls $QT_BASE_DIR/
           echo "plugins:" && ls $QT_BASE_DIR/plugins
+          echo "lib:" && ls $QT_BASE_DIR/lib
           sudo sed -i 's/ThreadEngineStarter<void>(ThreadEngine<void> \*_threadEngine)/ThreadEngineStarter(ThreadEngine<void> \*_threadEngine)/' /opt/qt515/include/QtConcurrent/qtconcurrentthreadengine.h
         if: ${{ env.QT == 5 }}
       - name: Install Qt6
