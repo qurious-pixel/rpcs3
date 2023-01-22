@@ -110,9 +110,9 @@ jobs:
       - name: Build AppImage
         run: |
           mkdir artifacts
-          cp -r build/bin artifacts
-          echo "To-do"
-          #mv Qt6-bionic.tar.gz artifacts
+          #cp -r build/bin artifacts
+          chmod +x ci/appimage.sh 
+          ./ci/appimage.sh 
         continue-on-error: true  
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
