@@ -41,7 +41,7 @@ cd build || exit 1
      | $CXX -x c++ -std=c++2a -o ./appdir/usr/optional/checker -
 
     # Package it up and send it off
-    ./squashfs-root/usr/bin/appimagetool "$APPDIR"
+    ./squashfs-root/usr/bin/appimagetool appdir
 
     ls
 
