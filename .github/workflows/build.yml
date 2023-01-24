@@ -83,6 +83,8 @@ jobs:
       - name: Fixes
         run: |
           echo "fixes"
+          sed -i '914a */' Utilities/JIT.cpp
+          sed -i '904i /*' Utilities/JIT.cpp
 
       - name: Build RPCS3
         run: |
