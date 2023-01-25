@@ -32,7 +32,7 @@ cd build || exit 1
     # Install Qt Plugins
     curl -sL "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage" > "$QT_PLUGIN_APPIMAGE"
     chmod a+x "$QT_PLUGIN_APPIMAGE"
-    "./$QT_PLUGIN_APPIMAGE" --appimage-extract-and-run --appdir=appdir --plugin qt
+    "./$QT_PLUGIN_APPIMAGE" --appimage-extract-and-run --appdir=appdir
 
     # Remove libgmodule and libglib due to g_source_set_static_name symbol conflict with host libraries
     rm -f ./appdir/usr/lib/libgmodule-2.0.so*
