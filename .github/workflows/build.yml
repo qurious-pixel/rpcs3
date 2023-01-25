@@ -8,14 +8,14 @@ jobs:
     name: build Qt AppImage from src ubuntu-18.04
     runs-on: ubuntu-18.04
     env:
-      QT: 5
+      QT: 6
       
     steps:
       - name: Checkout Upstream Repo
         uses: actions/checkout@v3
         with:
-          repository: RPCS3/rpcs3 # Megamouse/rpcs3 # 
-          ref: master # Qt6-fun # 
+          repository: Megamouse/rpcs3 # RPCS3/rpcs3 # 
+          ref:  Qt6-fun # master #
           submodules: recursive
       - name: Checkout AppImage Repo
         uses: actions/checkout@v3
@@ -65,8 +65,9 @@ jobs:
         if: ${{ env.QT == 5 }}
       - name: Install Qt6
         run: |
-          sudo add-apt-repository -y ppa:okirby/qt6-backports
-          qt6-base-dev qt6-base-private-dev libqt6svg6-dev qt6-tools-dev qt6-declarative-dev
+          wget https://github.com/qurious-pixel/rpcs3/releases/download/Qt6-Bionic/Qt6-bionic.tar.gz
+          tar xf Qt6-bionic.tar.gz
+          ls /usr/local/Qt6
           echo "to-do"
         if: ${{ env.QT == 6 }}
       - name: Build llvmlibs
@@ -83,8 +84,6 @@ jobs:
       - name: Fixes
         run: |
           echo "fixes"
-          sed -i '914a */' Utilities/JIT.cpp
-          sed -i '904i /*' Utilities/JIT.cpp
 
       - name: Build RPCS3
         run: |
@@ -109,19 +108,19 @@ jobs:
               -DUSE_SDL=OFF                                      \
               -DOpenGL_GL_PREFERENCE=LEGACY                      \
               -G Ninja
-          ninja
-          ls bin || true
+          #ninja
+          #ls bin || true
            
-      - name: Build AppImage
-        run: |
-          export CXX=g++-11
-          mkdir artifacts
-          chmod +x ci/appimage.sh 
-          ./ci/appimage.sh 
-          echo "artifacts:" && ls artifacts
-        continue-on-error: true  
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: RPCS3
-          path: artifacts/
+      #- name: Build AppImage
+      #  run: |
+      #    export CXX=g++-11
+      #    mkdir artifacts
+      #    chmod +x ci/appimage.sh 
+      #    ./ci/appimage.sh 
+      #    echo "artifacts:" && ls artifacts
+      #  continue-on-error: true  
+      #- name: Upload artifacts
+      #  uses: actions/upload-artifact@v3
+      #  with:
+      #    name: RPCS3
+      #    path: artifacts/
