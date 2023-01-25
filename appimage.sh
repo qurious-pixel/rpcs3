@@ -4,6 +4,7 @@ cd build || exit 1
 
     DESTDIR=appdir ninja install
     QT_APPIMAGE="linuxdeployqt.AppImage"
+    QT_PLUGIN_APPIMAGE="linuxdeploy-plugin-qt.AppImage"
 
     curl -sL "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage" > "$QT_APPIMAGE"
     chmod a+x "$QT_APPIMAGE"
