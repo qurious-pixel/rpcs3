@@ -115,19 +115,19 @@ jobs:
               -DUSE_SDL=OFF                                      \
               -DOpenGL_GL_PREFERENCE=LEGACY                      \
               -G Ninja
-          #ninja
-          #ls bin || true
+          ninja
+          ls bin || true
            
-      #- name: Build AppImage
-      #  run: |
-      #    export CXX=g++-11
-      #    mkdir artifacts
-      #    chmod +x ci/appimage.sh 
-      #    ./ci/appimage.sh 
-      #    echo "artifacts:" && ls artifacts
-      #  continue-on-error: true  
-      #- name: Upload artifacts
-      #  uses: actions/upload-artifact@v3
-      #  with:
-      #    name: RPCS3
+      - name: Build AppImage
+        run: |
+          export CXX=g++-11
+          mkdir artifacts
+          chmod +x ci/appimage.sh 
+          ./ci/appimage.sh 
+          echo "artifacts:" && ls artifacts
+        continue-on-error: true  
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: RPCS3
       #    path: artifacts/
