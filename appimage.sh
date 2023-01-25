@@ -6,6 +6,7 @@ cd build || exit 1
     QT_APPIMAGE="linuxdeployqt.AppImage"
 
     curl -sL "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage" > "$QT_APPIMAGE"
+    chmod a+x "$QT_APPIMAGE"
     "./$QT_APPIMAGE" --appimage-extract
     ./squashfs-root/AppRun ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs
     ls ./appdir/usr/lib/
@@ -28,8 +29,9 @@ cd build || exit 1
     #cp ${QT_BASE_DIR}/lib/libQt${QT}Wayland* ./appdir/usr/lib/
 
     # Install Qt Plugins
-    curl -sL "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
-    ./linuxdeploy-plugin-qt-x86_64.AppImage --appimage-extract-and-run --appdir=./appdir --plugin qt
+    curl -sL "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage" > "$QT_PLUGIN_APPIMAGE"
+    chmod a+x "$QT_PLUGIN_APPIMAGE"
+    "$QT_PLUGIN_APPIMAGE" --appimage-extract-and-run --appdir=./appdir --plugin qt
 
     # Remove libgmodule and libglib due to g_source_set_static_name symbol conflict with host libraries
     rm -f ./appdir/usr/lib/libgmodule-2.0.so*
