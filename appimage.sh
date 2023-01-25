@@ -5,10 +5,9 @@ cd build || exit 1
     DESTDIR=appdir ninja install
     QT_APPIMAGE="linuxdeployqt.AppImage"
 
-    curl -sL "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage" > "$QT_APPIMAGE"
-    chmod a+x "$QT_APPIMAGE"
+    curl -sL "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage" > "$QT_APPIMAGE"
     "./$QT_APPIMAGE" --appimage-extract
-    ./squashfs-root/AppRun --appdir=./appdir/ -d ./appdir/usr/share/applications/*.desktop --plugin qt
+    ./squashfs-root/AppRun ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs
     ls ./appdir/usr/lib/
     rm -r ./appdir/usr/share/doc
     cp "$(readlink -f /lib/x86_64-linux-gnu/libnsl.so.1)" ./appdir/usr/lib/libnsl.so.1
@@ -21,12 +20,16 @@ cd build || exit 1
     # Remove libwayland-client because it has platform-dependent exports and breaks other OSes
     #rm -f ./appdir/usr/lib/libwayland-client.so*
     
-    # Install wayland
-    mkdir -p appdir/usr/plugins/platforms
-    echo "Qt base dir: $QT_BASE_DIR" 
-    cp -r ${QT_BASE_DIR}/plugins/wayland* ./appdir/usr/plugins/
-    cp ${QT_BASE_DIR}/plugins/platforms/libqwayland* ./appdir/usr/plugins/platforms/
-    cp ${QT_BASE_DIR}/lib/libQt${QT}Wayland* ./appdir/usr/lib/
+    ## Install wayland
+    #mkdir -p appdir/usr/plugins/platforms
+    #echo "Qt base dir: $QT_BASE_DIR" 
+    #cp -r ${QT_BASE_DIR}/plugins/wayland* ./appdir/usr/plugins/
+    #cp ${QT_BASE_DIR}/plugins/platforms/libqwayland* ./appdir/usr/plugins/platforms/
+    #cp ${QT_BASE_DIR}/lib/libQt${QT}Wayland* ./appdir/usr/lib/
+
+    # Install Qt Plugins
+    curl -sL "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
+    ./linuxdeploy-plugin-qt-x86_64.AppImage --appimage-extract-and-run --appdir=./appdir --plugin qt
 
     # Remove libgmodule and libglib due to g_source_set_static_name symbol conflict with host libraries
     rm -f ./appdir/usr/lib/libgmodule-2.0.so*
