@@ -65,17 +65,12 @@ jobs:
         if: ${{ env.QT == 5 }}
       - name: Install Qt6
         run: |
-          wget https://github.com/qurious-pixel/rpcs3/releases/download/Qt6-Bionic/Qt6-bionic.tar.gz
+          wget -q https://github.com/qurious-pixel/rpcs3/releases/download/Qt6-Bionic/Qt6-bionic.tar.gz
           tar xf Qt6-bionic.tar.gz -C 3rdparty
-          ls 3rdparty/Qt6
           QT_BASE_DIR=$PWD/3rdparty/Qt6
           echo QT_BASE_DIR=$PWD/3rdparty/Qt6 >> $GITHUB_ENV
           echo PATH="$QT_BASE_DIR"/bin:"$PATH" >> $GITHUB_ENV 
           echo LD_LIBRARY_PATH="$QT_BASE_DIR"/lib/x86_64-linux-gnu:"$QT_BASE_DIR"/lib >> $GITHUB_ENV
-          echo "base:" && ls $QT_BASE_DIR/
-          echo "plugins:" && ls $QT_BASE_DIR/plugins
-          echo "lib:" && ls $QT_BASE_DIR/lib
-          echo "to-do"
         if: ${{ env.QT == 6 }}
       - name: Build llvmlibs
         run: |
@@ -130,4 +125,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: RPCS3
-      #    path: artifacts/
+          path: artifacts/
