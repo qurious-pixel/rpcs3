@@ -5,10 +5,10 @@ cd build || exit 1
     DESTDIR=appdir ninja install
     QT_APPIMAGE="linuxdeployqt.AppImage"
 
-    curl -sL "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage" > "$QT_APPIMAGE"
+    curl -sL "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage" > "$QT_APPIMAGE"
     chmod a+x "$QT_APPIMAGE"
     "./$QT_APPIMAGE" --appimage-extract
-    ./squashfs-root/AppRun ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs
+    ./squashfs-root/AppRun --appdir=./appdir/ -d ./appdir/usr/share/applications/*.desktop --plugin qt
     ls ./appdir/usr/lib/
     rm -r ./appdir/usr/share/doc
     cp "$(readlink -f /lib/x86_64-linux-gnu/libnsl.so.1)" ./appdir/usr/lib/libnsl.so.1
