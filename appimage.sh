@@ -22,6 +22,7 @@ cd build || exit 1
     #rm -f ./appdir/usr/lib/libwayland-client.so*
     
     # Install wayland
+    mkdir -p appdir/usr/plugins
     echo "Qt base dir: $QT_BASE_DIR" 
     cp -r ${QT_BASE_DIR}/plugins/wayland* ./appdir/usr/plugins/
     cp ${QT_BASE_DIR}/plugins/platforms/libqwayland* ./appdir/usr/plugins/platforms/
