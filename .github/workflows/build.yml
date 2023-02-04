@@ -44,10 +44,12 @@ jobs:
       - name: Install packages
         run: |
           sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo add-apt-repository -y "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-14 main"
           sudo apt update
           sudo apt install -y build-essential libasound2-dev libpulse-dev libopenal-dev libglew-dev zlib1g-dev libedit-dev \
           libvulkan-dev libudev-dev git libevdev-dev libsdl2-2.0 libsdl2-dev libjack-dev libsndio-dev ninja-build \
-          gcc-11 g++-11 libcurl4-openssl-dev ccache lld desktop-file-utils appstream libbrotli-dev libxcb-cursor-dev
+          gcc-11 g++-11 libcurl4-openssl-dev ccache lld desktop-file-utils appstream libbrotli-dev libxcb-cursor-dev \
+          clang-14 clang++-14 lld-14
           sudo apt autoremove
           sudo apt clean
       - name: Install Qt5
@@ -90,11 +92,11 @@ jobs:
 
       - name: Build RPCS3
         run: |
-          export CC=gcc-11
-          export CXX=g++-11
+          export CC=clang-14 #gcc-11
+          export CXX=clang++-14 #g++-11
           export LINKER=gold
-          export AR=/usr/bin/gcc-ar-11
-          export RANLIB=/usr/bin/gcc-ranlib-11
+          export AR=/usr/bin/llvm-ar-14 #gcc-ar-11
+          export RANLIB=/usr/bin/llvm-ranlib-14 #gcc-ranlib-11
           export CFLAGS="-fuse-linker-plugin"
           mkdir build && cd build
           cmake ..                                               \
@@ -117,7 +119,7 @@ jobs:
            
       - name: Build AppImage
         run: |
-          export CXX=g++-11
+          export CXX=clang++-14 #g++-11
           mkdir artifacts
           chmod +x ci/appimage.sh 
           ./ci/appimage.sh 
