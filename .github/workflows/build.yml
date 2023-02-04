@@ -69,6 +69,7 @@ jobs:
           tar xf Qt6-bionic.tar.gz -C 3rdparty
           QT_BASE_DIR=$PWD/3rdparty/Qt6
           echo QT_BASE_DIR=$PWD/3rdparty/Qt6 >> $GITHUB_ENV
+          echo Qt6_DIR=$QT_BASE_DIR/lib/cmake/Qt6 >> $GITHUB_ENV
           echo PATH="$QT_BASE_DIR"/bin:"$PATH" >> $GITHUB_ENV 
           echo LD_LIBRARY_PATH="$QT_BASE_DIR"/lib/x86_64-linux-gnu:"$QT_BASE_DIR"/lib >> $GITHUB_ENV
         if: ${{ env.QT == 6 }}
