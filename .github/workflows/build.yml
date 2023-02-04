@@ -72,6 +72,7 @@ jobs:
           echo Qt6_DIR=$QT_BASE_DIR/lib/cmake/Qt6 >> $GITHUB_ENV
           echo PATH="$QT_BASE_DIR"/bin:"$PATH" >> $GITHUB_ENV 
           echo LD_LIBRARY_PATH="$QT_BASE_DIR"/lib/x86_64-linux-gnu:"$QT_BASE_DIR"/lib >> $GITHUB_ENV
+          ls 3rdparty
         if: ${{ env.QT == 6 }}
       - name: Build llvmlibs
         run: |
@@ -110,6 +111,7 @@ jobs:
               -DUSE_SYSTEM_CURL=ON                               \
               -DUSE_SDL=OFF                                      \
               -DOpenGL_GL_PREFERENCE=LEGACY                      \
+              -DCMAKE_PREFIX_PATH=$QT_BASE_DIR                   \
               -G Ninja
           ninja
           ls bin || true
