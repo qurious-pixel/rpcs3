@@ -21,13 +21,16 @@ cd build || exit 1
 
     # Remove libwayland-client because it has platform-dependent exports and breaks other OSes
     #rm -f ./appdir/usr/lib/libwayland-client.so*
-    
+      
     ## Install wayland
-    #mkdir -p appdir/usr/plugins/platforms
-    #echo "Qt base dir: $QT_BASE_DIR" 
-    #cp -r ${QT_BASE_DIR}/plugins/wayland* ./appdir/usr/plugins/
-    #cp ${QT_BASE_DIR}/plugins/platforms/libqwayland* ./appdir/usr/plugins/platforms/
-    #cp ${QT_BASE_DIR}/lib/libQt${QT}Wayland* ./appdir/usr/lib/
+    mkdir -p appdir/usr/plugins/platforms
+    echo "Qt base dir: $QT_BASE_DIR" 
+    cp -r ${QT_BASE_DIR}/plugins/wayland* ./appdir/usr/plugins/
+    cp ${QT_BASE_DIR}/plugins/platforms/libqwayland* ./appdir/usr/plugins/platforms/
+    cp ${QT_BASE_DIR}/lib/libQt${QT}Wayland* ./appdir/usr/lib/
+
+    ## Install multimedia
+    cp -r ${QT_BASE_DIR}/plugins/multimedia ./appdir/usr/plugins/
 
     # Install Qt Plugins
     curl -sL "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage" > "$QT_PLUGIN_APPIMAGE"
