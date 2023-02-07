@@ -5,10 +5,12 @@ on:
   
 jobs:
   AppImage:
-    name: build Qt AppImage from src ubuntu-18.04
+    strategy:
+      fail-fast: false
+      matrix:
+        QT: [5,6]
+    name: build Qt${{ matrix.QT }} AppImage from src ubuntu-18.04
     runs-on: ubuntu-18.04
-    env:
-      QT: 6
       
     steps:
       - name: Checkout Upstream Repo
@@ -26,9 +28,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.ccache
-          key: build-ccache-Qt${{ env.QT }}-${{ env.GITHUB_RUN_ID }}
+          key: build-ccache-Qt${{ matrix.QT }}-${{ env.GITHUB_RUN_ID }}
           restore-keys: |
-            build-ccache-Qt${{ env.QT }}
+            build-ccache-Qt${{ matrix.QT }}
             build-ccache
       - uses: actions/setup-python@v3
         with:
@@ -65,7 +67,8 @@ jobs:
           echo "plugins:" && ls $QT_BASE_DIR/plugins
           echo "lib:" && ls $QT_BASE_DIR/lib
           sudo sed -i 's/ThreadEngineStarter<void>(ThreadEngine<void> \*_threadEngine)/ThreadEngineStarter(ThreadEngine<void> \*_threadEngine)/' /opt/qt515/include/QtConcurrent/qtconcurrentthreadengine.h
-        if: ${{ env.QT == 5 }}
+          if [[ ! -e 3rdparty/qt5.cmake ]]; then cp ci/qt5.cmake 3rdparty/qt5.cmake; fi
+        if: ${{ matrix.QT == 5 }}
       - name: Install Qt6
         run: |
           wget -q https://github.com/qurious-pixel/rpcs3/releases/download/Qt6-Bionic/Qt6-bionic.tar.gz
@@ -75,7 +78,7 @@ jobs:
           echo Qt6_DIR=$QT_BASE_DIR/lib/cmake/Qt6 >> $GITHUB_ENV
           echo PATH="$QT_BASE_DIR"/bin:"$PATH" >> $GITHUB_ENV 
           echo LD_LIBRARY_PATH="$QT_BASE_DIR"/lib/x86_64-linux-gnu:"$QT_BASE_DIR"/lib >> $GITHUB_ENV
-        if: ${{ env.QT == 6 }}
+        if: ${{ matrix.QT == 6 }}
       - name: Build llvmlibs
         run: |
           curl -sLO https://github.com/RPCS3/llvm-mirror/releases/download/custom-build/llvmlibs-linux.tar.gz
@@ -129,5 +132,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: RPCS3
+          name: RPCS3-Qt${{ matrix.QT }}
           path: artifacts/
