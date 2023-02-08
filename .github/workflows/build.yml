@@ -63,11 +63,9 @@ jobs:
           echo QT_BASE_DIR=/opt/qt515 >> $GITHUB_ENV
           echo PATH="$QT_BASE_DIR"/bin:"$PATH" >> $GITHUB_ENV 
           echo LD_LIBRARY_PATH="$QT_BASE_DIR"/lib/x86_64-linux-gnu:"$QT_BASE_DIR"/lib >> $GITHUB_ENV
-          echo "base:" && ls $QT_BASE_DIR/
-          echo "plugins:" && ls $QT_BASE_DIR/plugins
-          echo "lib:" && ls $QT_BASE_DIR/lib
           sudo sed -i 's/ThreadEngineStarter<void>(ThreadEngine<void> \*_threadEngine)/ThreadEngineStarter(ThreadEngine<void> \*_threadEngine)/' /opt/qt515/include/QtConcurrent/qtconcurrentthreadengine.h
-          if [[ ! -e 3rdparty/qt5.cmake ]]; then cp ci/qt5.cmake 3rdparty/qt5.cmake; fi
+          if [[ ! -e 3rdparty/qt5.cmake ]]; then cp -v ci/qt5.cmake 3rdparty/qt5.cmake; fi
+          ls 3rdparty
         if: ${{ matrix.QT == 5 }}
       - name: Install Qt6
         run: |
@@ -96,11 +94,11 @@ jobs:
 
       - name: Build RPCS3
         run: |
-          export CC=clang-14 #gcc-11
-          export CXX=clang++-14 #g++-11
+          export CC=gcc-11 # clang-14 #
+          export CXX=g++-11 # clang++-14 #
           export LINKER=gold
-          export AR=/usr/bin/llvm-ar-14 #gcc-ar-11
-          export RANLIB=/usr/bin/llvm-ranlib-14 #gcc-ranlib-11
+          export AR=/usr/bin/gcc-ar-11 # llvm-ar-14 #
+          export RANLIB=/usr/bin/gcc-ranlib-11 # llvm-ranlib-14 #
           export CFLAGS="-fuse-linker-plugin"
           mkdir build && cd build
           cmake ..                                               \
@@ -123,7 +121,7 @@ jobs:
            
       - name: Build AppImage
         run: |
-          export CXX=clang++-14 #g++-11
+          export CXX=g++-11 # clang++-14 #
           mkdir artifacts
           chmod +x ci/appimage.sh 
           ./ci/appimage.sh 
