@@ -36,10 +36,6 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: '>=1.19.0'
-      - name: Install cmake
-        run: |
-          pip install cmake
-          cmake --version
 
       - name: Install packages
         run: |
@@ -59,7 +55,8 @@ jobs:
           git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
           pip3 install pipenv
           pipenv run pip3 install py7zr requests semantic_version lxml
-          pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --opensource --addons qtmultimedia
+          mkdir -p ${{ env.QT_VER }}/clang_64/bin/
+          pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --module qtmultimedia --opensource
           cd ..
           export WORKDIR="$(pwd)"
           echo Qt6_DIR="$WORKDIR/qt-downloader/${{ env.QT_VER }}/clang_64/lib/cmake/Qt${{ env.QT_VER_MAIN }}" >> $GITHUB_ENV
