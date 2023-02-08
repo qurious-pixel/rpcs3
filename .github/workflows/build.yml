@@ -5,7 +5,7 @@ on:
   
 jobs:
   MacOS:     
-    name: MacOS build of Qt${{ env.QT_VER }} 
+    name: MacOS build of Qt6 
     runs-on: macos-12
     env:
       QT_VER: 6.4.2
@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: Megamouse/rpcs3 # RPCS3/rpcs3 # 
-          ref:  Qt6-fun # master #
+          ref: 9a0490114383403f00f53dabf0373b75f132685e # Qt6-fun # master #
           submodules: recursive
       - name: Checkout AppImage Repo
         uses: actions/checkout@v3
@@ -59,7 +59,7 @@ jobs:
           git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
           pip3 install pipenv
           pipenv run pip3 install py7zr requests semantic_version lxml
-          pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --opensource
+          pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --opensource --addons qtmultimedia
           cd ..
           export WORKDIR="$(pwd)"
           echo Qt6_DIR="$WORKDIR/qt-downloader/${{ env.QT_VER }}/clang_64/lib/cmake/Qt${{ env.QT_VER_MAIN }}" >> $GITHUB_ENV
