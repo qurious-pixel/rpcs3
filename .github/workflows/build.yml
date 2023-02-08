@@ -40,6 +40,7 @@ jobs:
       - name: Install packages
         run: |
           brew install -f --overwrite llvm@14 nasm ninja git p7zip create-dmg ccache
+          pip install --upgrade pip
 
       - name: Install Qt
         run: |
@@ -47,7 +48,7 @@ jobs:
           python3 -m pip install yaqti-2021.7.29-py3-none-any.whl
           pyver=$(python3 --version | awk '{print $2}')
           curl -sL https://raw.githubusercontent.com/qurious-pixel/yaqti/fetch/yaqti/fetchers.py -o $HOME/hostedtoolcache/Python/$pyver/x64/lib/python${pyver%.*}/site-packages/yaqti/fetchers.py
-          python -m yaqti install --os mac --platform desktop --version ${{ env.QT_VER }} --modules clang_64 --set-envs --install-deps
+          python -m yaqti install --os mac --platform desktop --version ${{ env.QT_VER }} --modules qtmultimedia --set-envs --install-deps
 
       #- name: Install Qt6
       #  run: |
