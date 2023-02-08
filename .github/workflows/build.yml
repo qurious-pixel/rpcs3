@@ -40,6 +40,28 @@ jobs:
       - name: Install packages
         run: |
           brew install -f --overwrite llvm@14 nasm ninja git p7zip create-dmg ccache
+
+      - name: Install Qt
+        run: |
+          curl -sLO https://files.pythonhosted.org/packages/47/42/351389ca36c7adfc5f4e92d086cdb2bdbde13f1b89ee882f4a1cab2183ac/yaqti-2021.7.29-py3-none-any.whl
+          python3 -m pip install yaqti-2021.7.29-py3-none-any.whl
+          pyver=$(python3 --version | awk '{print $2}')
+          curl -sL https://raw.githubusercontent.com/qurious-pixel/yaqti/fetch/yaqti/fetchers.py -o $HOME/hostedtoolcache/Python/$pyver/x64/lib/python${pyver%.*}/site-packages/yaqti/fetchers.py
+          python -m yaqti install --os mac --platform desktop --version ${{ env.QT_VER }} --modules clang_64 --set-envs --install-deps
+
+      #- name: Install Qt6
+      #  run: |
+      #    git clone https://github.com/engnr/qt-downloader.git
+      #    cd qt-downloader
+      #    git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
+      #    pip3 install pipenv
+      #    pipenv run pip3 install py7zr requests semantic_version lxml
+      #    mkdir -p ${{ env.QT_VER }}/clang_64/{bin,mkspecs}
+      #    pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --module qtmultimedia --opensource
+      #    cd ..
+      
+      - name: Environmental Variables
+        run: |
           echo CXX=clang++ >> $GITHUB_ENV
           echo CC=clang >> $GITHUB_ENV
           echo BREW_PATH="$(brew --prefix)" >> $GITHUB_ENV
@@ -47,17 +69,6 @@ jobs:
           echo BREW_BIN="/usr/local/bin" >> $GITHUB_ENV
           echo BREW_SBIN="/usr/local/sbin" >> $GITHUB_ENV
           echo CMAKE_EXTRA_OPTS='-DLLVM_TARGETS_TO_BUILD=X86' >> $GITHUB_ENV
-
-      - name: Install Qt6
-        run: |
-          git clone https://github.com/engnr/qt-downloader.git
-          cd qt-downloader
-          git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
-          pip3 install pipenv
-          pipenv run pip3 install py7zr requests semantic_version lxml
-          mkdir -p ${{ env.QT_VER }}/clang_64/{bin,mkspecs}
-          pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --module qtmultimedia --opensource
-          cd ..
           export WORKDIR="$(pwd)"
           echo Qt6_DIR="$WORKDIR/qt-downloader/${{ env.QT_VER }}/clang_64/lib/cmake/Qt${{ env.QT_VER_MAIN }}" >> $GITHUB_ENV
           echo SDL2_DIR="$BREW_X64_PATH/opt/sdl2/lib/cmake/SDL2" >> $GITHUB_ENV
