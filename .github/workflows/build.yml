@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        QT: [5,6]
+        QT: [5] #,6]
     name: build Qt${{ matrix.QT }} AppImage from src ubuntu-18.04
     runs-on: ubuntu-18.04
       
@@ -66,6 +66,7 @@ jobs:
           sudo sed -i 's/ThreadEngineStarter<void>(ThreadEngine<void> \*_threadEngine)/ThreadEngineStarter(ThreadEngine<void> \*_threadEngine)/' /opt/qt515/include/QtConcurrent/qtconcurrentthreadengine.h
           if [[ ! -e 3rdparty/qt5.cmake ]]; then cp -v ci/qt5.cmake 3rdparty/qt5.cmake; fi
           sed -i '/t6/ s/6/5/g' rpcs3/CMakeLists.txt
+          sed -i 's/qt6/qt5/g' rpcs3/rpcs3qt/CMakeLists.txt
           ls 3rdparty
         if: ${{ matrix.QT == 5 }}
       - name: Install Qt6
