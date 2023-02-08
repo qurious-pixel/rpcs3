@@ -65,7 +65,7 @@ jobs:
           echo LD_LIBRARY_PATH="$QT_BASE_DIR"/lib/x86_64-linux-gnu:"$QT_BASE_DIR"/lib >> $GITHUB_ENV
           sudo sed -i 's/ThreadEngineStarter<void>(ThreadEngine<void> \*_threadEngine)/ThreadEngineStarter(ThreadEngine<void> \*_threadEngine)/' /opt/qt515/include/QtConcurrent/qtconcurrentthreadengine.h
           if [[ ! -e 3rdparty/qt5.cmake ]]; then cp -v ci/qt5.cmake 3rdparty/qt5.cmake; fi
-          sed -i 's/qt6.cmake/qt5.cmake/g' rpcs3/CMakeLists.txt
+          sed -i '/t6/ s/6/5/g' rpcs3/CMakeLists.txt
           ls 3rdparty
         if: ${{ matrix.QT == 5 }}
       - name: Install Qt6
