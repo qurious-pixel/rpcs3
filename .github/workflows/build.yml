@@ -65,14 +65,17 @@ jobs:
       
       - name: Environmental Variables
         run: |
+          echo BREW_PATH="$(brew --prefix)" >> $GITHUB_ENV
+          export BREW_PATH="$(brew --prefix)"
           echo CXX="$BREW_PATH/opt/llvm@14/bin/clang++" >> $GITHUB_ENV
           echo CC="$BREW_PATH/opt/llvm@14/bin/clang" >> $GITHUB_ENV
-          echo BREW_PATH="$(brew --prefix)" >> $GITHUB_ENV
           echo BREW_X64_PATH="$("/usr/local/homebrew/bin/brew" --prefix)" >> $GITHUB_ENV
+          export BREW_X64_PATH="$("/usr/local/homebrew/bin/brew" --prefix)"
           echo BREW_BIN="/usr/local/bin" >> $GITHUB_ENV
           echo BREW_SBIN="/usr/local/sbin" >> $GITHUB_ENV
           echo CMAKE_EXTRA_OPTS='-DLLVM_TARGETS_TO_BUILD=X86' >> $GITHUB_ENV
           export WORKDIR="$(pwd)"
+          echo WORKDIR="$(pwd)" >> $GITHUB_ENV 
           echo Qt6_DIR="$WORKDIR/qt-downloader/${{ env.QT_VER }}/clang_64/lib/cmake/Qt${{ env.QT_VER_MAIN }}" >> $GITHUB_ENV
           echo SDL2_DIR="$BREW_X64_PATH/opt/sdl2/lib/cmake/SDL2" >> $GITHUB_ENV
           echo PATH="$BREW_PATH/opt/llvm@14/bin:$WORKDIR/qt-downloader/${{ env.QT_VER }}/clang_64/bin:$BREW_BIN:$BREW_SBIN:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/Apple/usr/bin:$PATH" >> $GITHUB_ENV
