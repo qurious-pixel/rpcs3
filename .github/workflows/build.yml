@@ -39,7 +39,7 @@ jobs:
 
       - name: Install packages
         run: |
-          brew install -f --overwrite llvm@14 nasm ninja git p7zip create-dmg ccache cmake SDL2 glew glslang
+          brew install -f --overwrite llvm@14 nasm ninja git p7zip create-dmg ccache cmake SDL2 glew
           pip install --upgrade pip
 
       #- name: Install Qt
@@ -60,7 +60,7 @@ jobs:
           mkdir -p ${{ env.QT_VER }}/clang_64/bin/
           mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
           touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
-          PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --module qtmultimedia --opensource
+          PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --module qtmultimedia --addons qtmultimedia --opensource
           cd ..
       
       - name: Environmental Variables
@@ -72,7 +72,9 @@ jobs:
           echo BREW_X64_PATH="$("/usr/local/homebrew/bin/brew" --prefix)" >> $GITHUB_ENV
           export BREW_X64_PATH="$("/usr/local/homebrew/bin/brew" --prefix)"
           echo BREW_BIN="/usr/local/bin" >> $GITHUB_ENV
+          export BREW_BIN="/usr/local/bin"
           echo BREW_SBIN="/usr/local/sbin" >> $GITHUB_ENV
+          export BREW_SBIN="/usr/local/sbin"
           echo CMAKE_EXTRA_OPTS='-DLLVM_TARGETS_TO_BUILD=X86' >> $GITHUB_ENV
           export WORKDIR="$(pwd)"
           echo WORKDIR="$(pwd)" >> $GITHUB_ENV 
