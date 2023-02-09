@@ -65,8 +65,8 @@ jobs:
       
       - name: Environmental Variables
         run: |
-          echo CXX=clang++ >> $GITHUB_ENV
-          echo CC=clang >> $GITHUB_ENV
+          echo CXX=clang++-14 >> $GITHUB_ENV
+          echo CC=clang-14 >> $GITHUB_ENV
           echo BREW_PATH="$(brew --prefix)" >> $GITHUB_ENV
           echo BREW_X64_PATH="$("/usr/local/homebrew/bin/brew" --prefix)" >> $GITHUB_ENV
           echo BREW_BIN="/usr/local/bin" >> $GITHUB_ENV
@@ -85,7 +85,9 @@ jobs:
         run: |
           echo "fixes"
           sed -i '' "s/extern const double NSAppKitVersionNumber;/const double NSAppKitVersionNumber = 1343;/g" 3rdparty/hidapi/hidapi/mac/hid.c
-
+          clang --version
+          clang-14 --version
+          
       - name: Build RPCS3
         run: |
           mkdir build && cd build || exit 1
