@@ -85,7 +85,7 @@ jobs:
         run: |
           echo "fixes"
           sed -i '' "s/extern const double NSAppKitVersionNumber;/const double NSAppKitVersionNumber = 1343;/g" 3rdparty/hidapi/hidapi/mac/hid.c
-          ls "$BREW_PATH/opt/llvm@14/bin
+          ls "$BREW_PATH/opt/llvm@14/bin"
           /usr/local/opt/llvm@14/bin/clang++ --version
           /usr/local/opt/llvm@14/bin/clang --version
           
