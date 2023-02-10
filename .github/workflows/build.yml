@@ -58,7 +58,6 @@ jobs:
           pip3 install pipenv
           pipenv run pip3 install py7zr requests semantic_version lxml
           mkdir -p ${{ env.QT_VER }}/clang_64/bin/
-          mkdir -p ${{ env.QT_VER }}/clang_64/lib/
           mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
           touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
           PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --addons qtmultimedia --opensource
@@ -66,10 +65,10 @@ jobs:
           pwd
           ls -al
           echo "qt-downloader:" && ls qt-downloader
-          echo "clang64:" && ls qt-downloader/${{ env.QT_VER }}/clang_64/
-          echo "bin:" && ls qt-downloader/${{ env.QT_VER }}/clang_64/bin
-          echo "lib:" && ls qt-downloader/${{ env.QT_VER }}/clang_64/lib
-          echo "cmake:" && ls qt-downloader/${{ env.QT_VER }}/clang_64/lib/cmake
+          echo "macos:" && ls qt-downloader/${{ env.QT_VER }}/macos/
+          echo "bin:" && ls qt-downloader/${{ env.QT_VER }}/macos/bin
+          echo "lib:" && ls qt-downloader/${{ env.QT_VER }}/macos/lib
+          echo "cmake:" && ls qt-downloader/${{ env.QT_VER }}/macos/lib/cmake
       
       - name: Environmental Variables
         run: |
@@ -86,8 +85,8 @@ jobs:
           echo CMAKE_EXTRA_OPTS='-DLLVM_TARGETS_TO_BUILD=X86' >> $GITHUB_ENV
           export WORKDIR="$(pwd)"
           echo WORKDIR="$(pwd)" >> $GITHUB_ENV
-          export Qt6_PREFIX="$WORKDIR/qt-downloader/${{ env.QT_VER }}/clang_64"
-          echo Qt6_PREFIX="$WORKDIR/qt-downloader/${{ env.QT_VER }}/clang_64" >> $GITHUB_ENV
+          export Qt6_PREFIX="$WORKDIR/qt-downloader/${{ env.QT_VER }}/macos"
+          echo Qt6_PREFIX="$WORKDIR/qt-downloader/${{ env.QT_VER }}/macos" >> $GITHUB_ENV
           export Qt6_DIR="$Qt6_PREFIX/lib/cmake/Qt${{ env.QT_VER_MAIN }}"
           echo Qt6_DIR="$Qt6_PREFIX/lib/cmake/Qt${{ env.QT_VER_MAIN }}" >> $GITHUB_ENV
           echo SDL2_DIR="$BREW_X64_PATH/opt/sdl2/lib/cmake/SDL2" >> $GITHUB_ENV
