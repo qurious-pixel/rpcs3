@@ -57,8 +57,9 @@ jobs:
           git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
           pip3 install pipenv
           pipenv run pip3 install py7zr requests semantic_version lxml
-          #mkdir -p ${{ env.QT_VER }}/clang_64/bin/
-          #mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
+          mkdir -p ${{ env.QT_VER }}/clang_64/bin/
+          mkdir -p ${{ env.QT_VER }}/clang_64/lib/
+          mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
           touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
           PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --addons qtmultimedia --opensource
           cd ..
