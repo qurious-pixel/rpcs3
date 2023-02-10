@@ -66,9 +66,9 @@ jobs:
           ls -al
           echo "qt-downloader:" && ls qt-downloader
           echo "clang64:" && ls qt-downloader/${{ env.QT_VER }}/clang_64/
-          echo "bin:" && qt-downloader/${{ env.QT_VER }}/clang_64/bin
-          echo "lib:" && qt-downloader/${{ env.QT_VER }}/clang_64/lib
-          echo "cmake:" && qt-downloader/${{ env.QT_VER }}/clang_64/lib/cmake
+          echo "bin:" && ls qt-downloader/${{ env.QT_VER }}/clang_64/bin
+          echo "lib:" && ls qt-downloader/${{ env.QT_VER }}/clang_64/lib
+          echo "cmake:" && ls qt-downloader/${{ env.QT_VER }}/clang_64/lib/cmake
       
       - name: Environmental Variables
         run: |
