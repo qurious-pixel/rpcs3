@@ -60,7 +60,7 @@ jobs:
           mkdir -p ${{ env.QT_VER }}/clang_64/bin/
           mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
           touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
-          PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --module qtmultimedia --addons qtmultimedia --opensource
+          PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --addons qtmultimedia --opensource
           cd ..
       
       - name: Environmental Variables
