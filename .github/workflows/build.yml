@@ -62,6 +62,13 @@ jobs:
           touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
           PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --addons qtmultimedia --opensource
           cd ..
+          pwd
+          ls -al
+          echo "qt-downloader:" && ls qt-downloader
+          echo "clang64:" && ls qt-downloader/${{ env.QT_VER }}/clang_64/
+          echo "bin:" && qt-downloader/${{ env.QT_VER }}/clang_64/bin
+          echo "lib:" && qt-downloader/${{ env.QT_VER }}/clang_64/lib
+          echo "cmake:" && qt-downloader/${{ env.QT_VER }}/clang_64/lib/cmake
       
       - name: Environmental Variables
         run: |
@@ -99,18 +106,18 @@ jobs:
         run: |
           echo "Qt6_PREFIX is $Qt6_PREFIX"
           echo "Qt6_DIR is $Qt6_DIR"
-          mkdir build && cd build || exit 1
-          cmake .. \
-              -DUSE_SDL=ON -DUSE_DISCORD_RPC=OFF -DUSE_VULKAN=ON -DUSE_ALSA=OFF -DUSE_PULSE=OFF -DUSE_AUDIOUNIT=ON \
-              -DLLVM_CCACHE_BUILD=OFF -DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF \
-              -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=OFF \
-              -DLLVM_INCLUDE_UTILS=OFF -DLLVM_USE_PERF=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF \
-              -DUSE_NATIVE_INSTRUCTIONS=OFF \
-              -DUSE_SYSTEM_MVK=OFF -DCMAKE_PREFIX_PATH="$Qt6_PREFIX" \
-              $CMAKE_EXTRA_OPTS \
-              -DLLVM_TARGET_ARCH=X86_64 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_IGNORE_PATH="$BREW_PATH/lib" \
-              -G Ninja
-          "$BREW_PATH/bin/ninja"; build_status=$?;
+      #    mkdir build && cd build || exit 1
+      #    cmake .. \
+      #        -DUSE_SDL=ON -DUSE_DISCORD_RPC=OFF -DUSE_VULKAN=ON -DUSE_ALSA=OFF -DUSE_PULSE=OFF -DUSE_AUDIOUNIT=ON \
+      #        -DLLVM_CCACHE_BUILD=OFF -DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF \
+      #        -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=OFF \
+      #        -DLLVM_INCLUDE_UTILS=OFF -DLLVM_USE_PERF=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF \
+      #        -DUSE_NATIVE_INSTRUCTIONS=OFF \
+      #        -DUSE_SYSTEM_MVK=OFF -DCMAKE_PREFIX_PATH="$Qt6_PREFIX" \
+      #        $CMAKE_EXTRA_OPTS \
+      #        -DLLVM_TARGET_ARCH=X86_64 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_IGNORE_PATH="$BREW_PATH/lib" \
+      #        -G Ninja
+      #    "$BREW_PATH/bin/ninja"; build_status=$?;
            
       #- name: Upload artifacts
       #  uses: actions/upload-artifact@v3
