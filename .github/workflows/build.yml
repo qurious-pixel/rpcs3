@@ -94,6 +94,8 @@ jobs:
           
       - name: Build RPCS3
         run: |
+          export Qt6_DIR=$Qt6_DIR
+          echo "$Qt6_DIR is $Qt6_DIR"
           mkdir build && cd build || exit 1
           cmake .. \
               -DUSE_SDL=ON -DUSE_DISCORD_RPC=OFF -DUSE_VULKAN=ON -DUSE_ALSA=OFF -DUSE_PULSE=OFF -DUSE_AUDIOUNIT=ON \
@@ -101,7 +103,7 @@ jobs:
               -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=OFF \
               -DLLVM_INCLUDE_UTILS=OFF -DLLVM_USE_PERF=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF \
               -DUSE_NATIVE_INSTRUCTIONS=OFF \
-              -DUSE_SYSTEM_MVK=OFF \
+              -DUSE_SYSTEM_MVK=OFF -DCMAKE_PREFIX_PATH="$Qt6_DIR" \
               $CMAKE_EXTRA_OPTS \
               -DLLVM_TARGET_ARCH=X86_64 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_IGNORE_PATH="$BREW_PATH/lib" \
               -G Ninja
