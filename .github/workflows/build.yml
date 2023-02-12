@@ -67,6 +67,7 @@ jobs:
           echo CPPFLAGS="-I$BREW_X64_PATH/include -msse -msse2 -mcx16 -no-pie" >> $GITHUB_ENV
           echo LIBRARY_PATH="$BREW_X64_PATH/lib" >> $GITHUB_ENV
           echo LD_LIBRARY_PATH="$BREW_X64_PATH/lib" >> $GITHUB_ENV
+          echo CCACHE_DIR=~/.ccache >> $GITHUB_ENV
 
       - name: Fixes
         run: |
@@ -76,6 +77,7 @@ jobs:
         run: |
           mkdir -p bin/rpcs3.app
           ccache -s
+          echo $CCACHE_DIR
           ls ~/.ccache 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
