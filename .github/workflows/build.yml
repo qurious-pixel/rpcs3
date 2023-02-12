@@ -67,8 +67,8 @@ jobs:
         run: |
           echo BREW_PATH="$(brew --prefix)" >> $GITHUB_ENV
           export BREW_PATH="$(brew --prefix)"
-          echo CXX="ccache $BREW_PATH/opt/llvm@14/bin/clang++" >> $GITHUB_ENV
-          echo CC="ccache $BREW_PATH/opt/llvm@14/bin/clang" >> $GITHUB_ENV
+          echo CXX="$BREW_PATH/opt/llvm@14/bin/clang++" >> $GITHUB_ENV
+          echo CC="$BREW_PATH/opt/llvm@14/bin/clang" >> $GITHUB_ENV
           echo BREW_X64_PATH="$("/usr/local/homebrew/bin/brew" --prefix)" >> $GITHUB_ENV
           export BREW_X64_PATH="$("/usr/local/homebrew/bin/brew" --prefix)"
           echo BREW_BIN="/usr/local/bin" >> $GITHUB_ENV
