@@ -101,7 +101,8 @@ jobs:
           echo "fixes"
           sed -i '' "s/extern const double NSAppKitVersionNumber;/const double NSAppKitVersionNumber = 1343;/g" 3rdparty/hidapi/hidapi/mac/hid.c
           sed -i '' -e 's/GLEW 1.13.0/GLEW/g' 3rdparty/CMakeLists.txt
-          
+          sed -i '' 's/std::min/std::min<unsigned>/g' rpcs3/rpcs3qt/osk_dialog_frame.cpp
+
       - name: Build RPCS3
         run: |
           echo "Qt6_PREFIX is $Qt6_PREFIX"
