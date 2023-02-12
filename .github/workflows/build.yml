@@ -93,6 +93,7 @@ jobs:
       - name: Fixes
         run: |
           echo "fixes"
+          sed -i 's/std::min/std::min<unsigned>/g' rpcs3/rpcs3qt/osk_dialog_frame.cpp
 
       - name: Build RPCS3
         run: |
