@@ -27,7 +27,7 @@ cd build || exit 1
     echo "Qt base dir: $QT_BASE_DIR" 
     cp -r ${QT_BASE_DIR}/plugins/wayland* ./appdir/usr/plugins/
     cp ${QT_BASE_DIR}/plugins/platforms/libqwayland* ./appdir/usr/plugins/platforms/
-    cp ${QT_BASE_DIR}/lib/libQt${QT}Wayland* ./appdir/usr/lib/
+    #cp ${QT_BASE_DIR}/lib/libQt${QT}Wayland* ./appdir/usr/lib/
 
     ## Install multimedia
     cp -r ${QT_BASE_DIR}/plugins/multimedia ./appdir/usr/plugins/
