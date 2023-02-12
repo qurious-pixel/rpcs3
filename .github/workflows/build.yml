@@ -39,29 +39,8 @@ jobs:
 
       - name: Install packages
         run: |
-          brew install -f --overwrite llvm@14 nasm ninja git p7zip create-dmg ccache sdl2 glew cmake
+          brew install -f --overwrite llvm@14 nasm ninja git p7zip create-dmg ccache cmake
           pip install --upgrade pip
-
-      #- name: Install Qt
-      #  run: |
-      #    curl -sLO https://files.pythonhosted.org/packages/47/42/351389ca36c7adfc5f4e92d086cdb2bdbde13f1b89ee882f4a1cab2183ac/yaqti-2021.7.29-py3-none-any.whl
-      #    python3 -m pip install yaqti-2021.7.29-py3-none-any.whl
-      #    pyver=$(python3 --version | awk '{print $2}')
-      #    curl -sL https://raw.githubusercontent.com/qurious-pixel/yaqti/fetch/yaqti/fetchers.py -o $HOME/hostedtoolcache/Python/$pyver/x64/lib/python${pyver%.*}/site-packages/yaqti/fetchers.py
-      #    python -m yaqti install --os mac --platform desktop --version ${{ env.QT_VER }} --modules qtmultimedia --set-envs --install-deps
-
-      - name: Install Qt6
-        run: |
-          git clone https://github.com/engnr/qt-downloader.git
-          cd qt-downloader
-          git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
-          pip3 install pipenv
-          pipenv run pip3 install py7zr requests semantic_version lxml
-          mkdir -p ${{ env.QT_VER }}/clang_64/bin/
-          mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
-          touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
-          PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --addons qtmultimedia --opensource
-          cd ..
           
       - name: Environmental Variables
         run: |
@@ -92,27 +71,12 @@ jobs:
       - name: Fixes
         run: |
           echo "fixes"
-          sed -i '' "s/extern const double NSAppKitVersionNumber;/const double NSAppKitVersionNumber = 1343;/g" 3rdparty/hidapi/hidapi/mac/hid.c
-          sed -i '' -e 's/GLEW 1.13.0/GLEW/g' 3rdparty/CMakeLists.txt
-          sed -i '' 's/std::min/std::min<unsigned>/g' rpcs3/rpcs3qt/osk_dialog_frame.cpp
-
+          
       - name: Build RPCS3
         run: |
-          echo "Qt6_PREFIX is $Qt6_PREFIX"
-          echo "Qt6_DIR is $Qt6_DIR"
-          mkdir build && cd build || exit 1
-          cmake .. \
-              -DUSE_SDL=ON -DUSE_DISCORD_RPC=OFF -DUSE_VULKAN=ON -DUSE_ALSA=OFF -DUSE_PULSE=OFF -DUSE_AUDIOUNIT=ON \
-              -DLLVM_CCACHE_BUILD=OFF -DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF \
-              -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=OFF \
-              -DLLVM_INCLUDE_UTILS=OFF -DLLVM_USE_PERF=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF \
-              -DUSE_NATIVE_INSTRUCTIONS=OFF \
-              -DUSE_SYSTEM_MVK=OFF -DCMAKE_PREFIX_PATH="$Qt6_PREFIX" \
-              $CMAKE_EXTRA_OPTS \
-              -DLLVM_TARGET_ARCH=X86_64 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_IGNORE_PATH="$BREW_PATH/lib" \
-              -G Ninja
-          "$BREW_PATH/bin/ninja"; build_status=$?;
-           
+          mkdir -p bin/rpcs3.app
+          ccache -s
+          ls ~/.ccache 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
