@@ -78,7 +78,8 @@ jobs:
           mkdir -p bin/rpcs3.app
           ccache -s
           echo $CCACHE_DIR
-          ls ~/Library/Caches/ccache 
+          ls -al ~/
+          ls ~/.cache 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
