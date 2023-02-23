@@ -39,7 +39,7 @@ jobs:
 
       - name: Install packages
         run: |
-          brew install -f --overwrite llvm@14 nasm ninja git p7zip create-dmg ccache sdl2 glew cmake
+          brew install -f --overwrite llvm@14 nasm ninja git p7zip create-dmg ccache sdl2 glew@1.13.0 cmake
           pip install --upgrade pip
 
       #- name: Install Qt
@@ -50,18 +50,18 @@ jobs:
       #    curl -sL https://raw.githubusercontent.com/qurious-pixel/yaqti/fetch/yaqti/fetchers.py -o $HOME/hostedtoolcache/Python/$pyver/x64/lib/python${pyver%.*}/site-packages/yaqti/fetchers.py
       #    python -m yaqti install --os mac --platform desktop --version ${{ env.QT_VER }} --modules qtmultimedia --set-envs --install-deps
 
-      - name: Install Qt6
-        run: |
-          git clone https://github.com/engnr/qt-downloader.git
-          cd qt-downloader
-          git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
-          pip3 install pipenv
-          pipenv run pip3 install py7zr requests semantic_version lxml
-          mkdir -p ${{ env.QT_VER }}/clang_64/bin/
-          mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
-          touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
-          PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --addons qtmultimedia --opensource
-          cd ..
+      #- name: Install Qt6
+      #  run: |
+      #    git clone https://github.com/engnr/qt-downloader.git
+      #    cd qt-downloader
+      #    git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
+      #    pip3 install pipenv
+      #    pipenv run pip3 install py7zr requests semantic_version lxml
+      #    mkdir -p ${{ env.QT_VER }}/clang_64/bin/
+      #    mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
+      #    touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
+      #    PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --addons qtmultimedia --opensource
+      #    cd ..
           
       - name: Environmental Variables
         run: |
@@ -93,7 +93,7 @@ jobs:
         run: |
           echo "fixes"
           sed -i '' "s/extern const double NSAppKitVersionNumber;/const double NSAppKitVersionNumber = 1343;/g" 3rdparty/hidapi/hidapi/mac/hid.c
-          sed -i '' -e 's/GLEW 1.13.0/GLEW/g' 3rdparty/CMakeLists.txt
+          #sed -i '' -e 's/GLEW 1.13.0/GLEW/g' 3rdparty/CMakeLists.txt
           #sed -i '' 's/std::min/std::min<unsigned>/g' rpcs3/rpcs3qt/osk_dialog_frame.cpp
 
       - name: Build RPCS3
@@ -111,10 +111,10 @@ jobs:
               $CMAKE_EXTRA_OPTS \
               -DLLVM_TARGET_ARCH=X86_64 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_IGNORE_PATH="$BREW_PATH/lib" \
               -G Ninja
-          "$BREW_PATH/bin/ninja"; build_status=$?;
+          #"$BREW_PATH/bin/ninja"; build_status=$?;
            
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: RPCS3
-          path: bin/rpcs3.app
+      #- name: Upload artifacts
+      #  uses: actions/upload-artifact@v3
+      #  with:
+      #    name: RPCS3
+      #    path: bin/rpcs3.app
