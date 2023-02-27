@@ -50,18 +50,18 @@ jobs:
       #    curl -sL https://raw.githubusercontent.com/qurious-pixel/yaqti/fetch/yaqti/fetchers.py -o $HOME/hostedtoolcache/Python/$pyver/x64/lib/python${pyver%.*}/site-packages/yaqti/fetchers.py
       #    python -m yaqti install --os mac --platform desktop --version ${{ env.QT_VER }} --modules qtmultimedia --set-envs --install-deps
 
-      #- name: Install Qt6
-      #  run: |
-      #    git clone https://github.com/engnr/qt-downloader.git
-      #    cd qt-downloader
-      #    git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
-      #    pip3 install pipenv
-      #    pipenv run pip3 install py7zr requests semantic_version lxml
-      #    mkdir -p ${{ env.QT_VER }}/clang_64/bin/
-      #    mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
-      #    touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
-      #    PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --addons qtmultimedia --opensource
-      #    cd ..
+      - name: Install Qt6
+        run: |
+          git clone https://github.com/engnr/qt-downloader.git
+          cd qt-downloader
+          git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
+          pip3 install pipenv
+          pipenv run pip3 install py7zr requests semantic_version lxml
+          mkdir -p ${{ env.QT_VER }}/clang_64/bin/
+          mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
+          touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
+          PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --addons qtmultimedia --opensource
+          cd ..
           
       - name: Environmental Variables
         run: |
@@ -112,7 +112,7 @@ jobs:
               $CMAKE_EXTRA_OPTS \
               -DLLVM_TARGET_ARCH=X86_64 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_IGNORE_PATH="$BREW_PATH/lib" \
               -G Ninja
-          #"$BREW_PATH/bin/ninja"; build_status=$?;
+          "$BREW_PATH/bin/ninja"; build_status=$?;
           ccache -s
            
       #- name: Upload artifacts
