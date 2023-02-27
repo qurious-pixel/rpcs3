@@ -78,7 +78,8 @@ jobs:
         run: |
           mkdir -p simple-project/build
           cd simple-project/build
-          cmake .. -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER=clang++-14
+          clang++ --version
+          cmake .. -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER=clang++
           ccache -s
           echo $CCACHE_DIR
           ls -al ~/
