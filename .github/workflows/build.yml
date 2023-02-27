@@ -99,6 +99,7 @@ jobs:
         run: |
           echo "Qt6_PREFIX is $Qt6_PREFIX"
           echo "Qt6_DIR is $Qt6_DIR"
+          ccache --version; ccache -z
           mkdir build && cd build || exit 1
           cmake .. \
               -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
