@@ -2,7 +2,7 @@ name: MacOS
 
 on: 
   push:
-    branches: main
+    #branches: main
   
 jobs:
   MacOS:     
@@ -14,15 +14,15 @@ jobs:
     steps:
       - name: Checkout Upstream Repo
         uses: actions/checkout@v3
-        with:
-          repository: Megamouse/rpcs3 # RPCS3/rpcs3 # 
-          ref: 07395dd8fa0848268ad9818fc43a216bd3da5a1c # Qt6-fun # master #
-          submodules: recursive
-      - name: Checkout AppImage Repo
-        uses: actions/checkout@v3
-        with:
-            clean: false
-            path: ci      
+        #with:
+        #  repository: Megamouse/rpcs3 # RPCS3/rpcs3 # 
+        #  ref: 07395dd8fa0848268ad9818fc43a216bd3da5a1c # Qt6-fun # master #
+        #  submodules: recursive
+      #- name: Checkout AppImage Repo
+      #  uses: actions/checkout@v3
+      #  with:
+      #      clean: false
+      #      path: ci      
       - name: cache
         uses: actions/cache@v3
         with:
@@ -40,8 +40,8 @@ jobs:
 
       - name: Install packages
         run: |
-          brew install -f --overwrite llvm@14 nasm ninja git p7zip create-dmg ccache cmake
-          pip install --upgrade pip
+          brew install -f --overwrite llvm@14 ccache cmake # nasm ninja git p7zip create-dmg 
+          #pip install --upgrade pip
           
       - name: Environmental Variables
         run: |
@@ -73,16 +73,18 @@ jobs:
       - name: Fixes
         run: |
           echo "fixes"
-          
-      - name: Build RPCS3
+
+      - name: Build ccache
         run: |
-          mkdir -p bin/rpcs3.app
+          mkdir -p simple-project/build
+          cd simple-project/build
+          cmake .. -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER=clang++-14
           ccache -s
           echo $CCACHE_DIR
           ls -al ~/
           ls ~/.cache 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: RPCS3
-          path: bin/rpcs3.app
+      #- name: Upload artifacts
+      #  uses: actions/upload-artifact@v3
+      #  with:
+      #    name: RPCS3
+      #    path: bin/rpcs3.app
