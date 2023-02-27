@@ -14,10 +14,10 @@ jobs:
     steps:
       - name: Checkout Upstream Repo
         uses: actions/checkout@v3
-        with:
-          repository: Megamouse/rpcs3 # RPCS3/rpcs3 # 
-          ref: Qt6-fun # 07395dd8fa0848268ad9818fc43a216bd3da5a1c # master #
-          submodules: recursive
+        #with:
+        #  repository: Megamouse/rpcs3 # RPCS3/rpcs3 # 
+        #  ref: Qt6-fun # 07395dd8fa0848268ad9818fc43a216bd3da5a1c # master #
+        #  submodules: recursive
       #- name: Checkout AppImage Repo
       #  uses: actions/checkout@v3
       #  with:
