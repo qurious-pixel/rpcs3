@@ -93,7 +93,7 @@ jobs:
           cd simple-project/build
           clang++ --version
           ccache --clear
-          cmake .. # -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache # -DCMAKE_CXX_COMPILER=clang++
+          cmake .. -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache # -DCMAKE_CXX_COMPILER=clang++
           ccache -s
           echo $CCACHE_DIR
           ls ~/.ccache 
