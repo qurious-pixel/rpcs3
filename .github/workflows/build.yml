@@ -63,7 +63,7 @@ jobs:
           export Qt6_DIR="$Qt6_PREFIX/lib/cmake/Qt${{ env.QT_VER_MAIN }}"
           echo Qt6_DIR="$Qt6_PREFIX/lib/cmake/Qt${{ env.QT_VER_MAIN }}" >> $GITHUB_ENV
           echo SDL2_DIR="$BREW_X64_PATH/opt/sdl2/lib/cmake/SDL2" >> $GITHUB_ENV
-          echo PATH="$BREW_PATH/opt/ccache/libexec:$BREW_PATH/opt/llvm@14/bin:$WORKDIR/qt-downloader/${{ env.QT_VER }}/clang_64/bin:$BREW_BIN:$BREW_SBIN:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/Apple/usr/bin:$PATH" >> $GITHUB_ENV
+          echo PATH="$BREW_PATH/opt/local/ccache/bin:$BREW_PATH/opt/ccache/libexec:$BREW_PATH/opt/llvm@14/bin:$WORKDIR/qt-downloader/${{ env.QT_VER }}/clang_64/bin:$BREW_BIN:$BREW_SBIN:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/Apple/usr/bin:$PATH" >> $GITHUB_ENV
           echo LDFLAGS="-L$BREW_X64_PATH/lib -Wl,-rpath,$BREW_X64_PATH/lib" >> $GITHUB_ENV
           echo CPPFLAGS="-I$BREW_X64_PATH/include -msse -msse2 -mcx16 -no-pie" >> $GITHUB_ENV
           echo LIBRARY_PATH="$BREW_X64_PATH/lib" >> $GITHUB_ENV
