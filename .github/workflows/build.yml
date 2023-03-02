@@ -27,10 +27,10 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.ccache
-          key: build-ccache-Qt${{ env.QT_VER_MAIN }}-${{ env.GITHUB_RUN_ID }}
+          key: build-ccache-${{ env.GITHUB_RUN_ID }}
           restore-keys: |
-            build-ccache-Qt${{ env.QT_VER_MAIN }}
-            build-ccache
+            build-ccache-${{ env.GITHUB_RUN_ID }}
+            
       - uses: actions/setup-python@v3
         with:
           python-version: '3.10'
