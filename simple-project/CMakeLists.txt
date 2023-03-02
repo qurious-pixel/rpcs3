@@ -19,6 +19,11 @@ project(
 # (But usually don't do this, except maybe for C++ standard)
 
 # Find packages go here.
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+endif()
 
 # You should usually split this into folders, but this is a simple example
 
