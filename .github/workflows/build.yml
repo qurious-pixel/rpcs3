@@ -101,7 +101,7 @@ jobs:
         run: |
           export CC=clang-15 # gcc-11 # 
           export CXX=clang++-15 # g++-11 # 
-          export LINKER=gold
+          export LINKER=lld # gold
           export AR=/usr/bin/llvm-ar-15 # gcc-ar-11 # 
           export RANLIB=/usr/bin/llvm-ranlib-15 # gcc-ranlib-11 # 
           #export CFLAGS="-fuse-linker-plugin"
