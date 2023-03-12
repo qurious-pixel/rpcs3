@@ -67,7 +67,6 @@ jobs:
           if [[ ! -e 3rdparty/qt5.cmake ]]; then cp -v ci/qt5.cmake 3rdparty/qt5.cmake; fi
           sed -i '/t6/ s/6/5/g' rpcs3/CMakeLists.txt
           sed -i 's/qt6/qt5/g' rpcs3/rpcs3qt/CMakeLists.txt
-          ls 3rdparty
         if: ${{ matrix.QT == 5 }}
       - name: Install Qt6
         run: |
@@ -95,6 +94,8 @@ jobs:
           echo "fixes"
           #sed -i 's/std::min/std::min<unsigned>/g' rpcs3/rpcs3qt/osk_dialog_frame.cpp
           ls -al /usr/lib/llvm-15/bin/
+          echo PATH=/usr/lib/llvm-15/bin:"$PATH" >> $GITHUB_ENV 
+          
 
       - name: Build RPCS3
         run: |
