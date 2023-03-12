@@ -39,7 +39,8 @@ jobs:
 
       - name: Install packages
         run: |
-          brew install -f --overwrite llvm nasm ninja git p7zip create-dmg ccache sdl2 glew cmake
+          brew link llvm
+          brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
           pip install --upgrade pip
 
       #- name: Install Qt
