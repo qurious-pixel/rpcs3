@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        QT: [6] #[5,6]
+        QT: [5] #[5,6]
     name: build Qt${{ matrix.QT }} AppImage from src ubuntu-18.04
     runs-on: ubuntu-18.04
       
@@ -16,8 +16,8 @@ jobs:
       - name: Checkout Upstream Repo
         uses: actions/checkout@v3
         with:
-          repository: Megamouse/rpcs3 # RPCS3/rpcs3 # 
-          ref:  Qt6-fun # master #
+          repository: Nekotekina/rpcs3 # Megamouse/rpcs3 # RPCS3/rpcs3 # 
+          ref:  typei# Qt6-fun # master #
           submodules: recursive
       - name: Checkout AppImage Repo
         uses: actions/checkout@v3
@@ -47,12 +47,12 @@ jobs:
         run: |
           sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
           curl -Lvs https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          sudo add-apt-repository -y "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-14 main"
+          sudo add-apt-repository -y "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-15 main"
           sudo apt update
           sudo apt install -y build-essential libasound2-dev libpulse-dev libopenal-dev libglew-dev zlib1g-dev libedit-dev \
           libvulkan-dev libudev-dev git libevdev-dev libsdl2-2.0 libsdl2-dev libjack-dev libsndio-dev ninja-build \
           gcc-11 g++-11 libcurl4-openssl-dev ccache lld desktop-file-utils appstream libbrotli-dev libxcb-cursor-dev \
-          clang-14 clang++-14 lld-14
+          clang-15 clang++-15 lld-15
           sudo apt autoremove
           sudo apt clean
       - name: Install Qt5
@@ -97,11 +97,11 @@ jobs:
 
       - name: Build RPCS3
         run: |
-          export CC=gcc-11 # clang-14 #
-          export CXX=g++-11 # clang++-14 #
+          export CC=clang-15 # gcc-11 # 
+          export CXX=clang++-15 # g++-11 # 
           export LINKER=gold
-          export AR=/usr/bin/gcc-ar-11 # llvm-ar-14 #
-          export RANLIB=/usr/bin/gcc-ranlib-11 # llvm-ranlib-14 #
+          export AR=/usr/bin/llvm-ar-15 # gcc-ar-11 # 
+          export RANLIB=/usr/bin/llvm-ranlib-15 # gcc-ranlib-11 # 
           export CFLAGS="-fuse-linker-plugin"
           mkdir build && cd build
           cmake ..                                               \
@@ -124,7 +124,7 @@ jobs:
            
       - name: Build AppImage
         run: |
-          export CXX=g++-11 # clang++-14 #
+          export CXX=clang++-15 # g++-11 # 
           mkdir artifacts
           chmod +x ci/appimage.sh 
           ./ci/appimage.sh 
@@ -133,5 +133,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: RPCS3-Qt${{ matrix.QT }}
+          name: RPCS3-Qt${{ matrix.QT }}-llvm15
           path: artifacts/
