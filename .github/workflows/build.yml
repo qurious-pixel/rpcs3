@@ -94,6 +94,7 @@ jobs:
         run: |
           echo "fixes"
           #sed -i 's/std::min/std::min<unsigned>/g' rpcs3/rpcs3qt/osk_dialog_frame.cpp
+          ls -al /usr/lib/llvm-15/bin/
 
       - name: Build RPCS3
         run: |
