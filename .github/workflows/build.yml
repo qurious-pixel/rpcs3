@@ -79,11 +79,11 @@ jobs:
           echo PATH="$QT_BASE_DIR"/bin:"$PATH" >> $GITHUB_ENV 
           echo LD_LIBRARY_PATH="$QT_BASE_DIR"/lib/x86_64-linux-gnu:"$QT_BASE_DIR"/lib >> $GITHUB_ENV
         if: ${{ matrix.QT == 6 }}
-      - name: Build llvmlibs
-        run: |
-          curl -sLO https://github.com/RPCS3/llvm-mirror/releases/download/custom-build/llvmlibs-linux.tar.gz
-          mkdir llvmlibs
-          tar -xzf ./llvmlibs-linux.tar.gz -C llvmlibs
+      #- name: Build llvmlibs
+      #  run: |
+      #    curl -sLO https://github.com/RPCS3/llvm-mirror/releases/download/custom-build/llvmlibs-linux.tar.gz
+      #    mkdir llvmlibs
+      #    tar -xzf ./llvmlibs-linux.tar.gz -C llvmlibs
       - name: Build vulkan-sdk
         run: |
           wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
@@ -106,8 +106,6 @@ jobs:
           mkdir build && cd build
           cmake ..                                               \
               -DCMAKE_INSTALL_PREFIX=/usr                        \
-              -DBUILD_LLVM_SUBMODULE=OFF                         \
-              -DLLVM_DIR=llvmlibs/lib/cmake/llvm/                \
               -DUSE_NATIVE_INSTRUCTIONS=OFF                      \
               -DUSE_PRECOMPILED_HEADERS=OFF                      \
               -DCMAKE_C_FLAGS="$CFLAGS"                          \
@@ -121,6 +119,10 @@ jobs:
               -G Ninja
           ninja
           ls bin || true
+          #    -DLLVM_DIR=llvmlibs/lib/cmake/llvm/                \
+          #    -DBUILD_LLVM_SUBMODULE=OFF                         \
+
+
            
       - name: Build AppImage
         run: |
