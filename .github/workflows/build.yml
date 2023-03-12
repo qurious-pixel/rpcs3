@@ -5,17 +5,17 @@ on:
   
 jobs:
   MacOS:     
-    name: MacOS build of Qt6 
+    name: MacOS build of LLVM15 
     runs-on: macos-12
     env:
-      QT_VER: 6.4.2
-      QT_VER_MAIN: 6
+      QT_VER: 5.15.2
+      QT_VER_MAIN: 5
     steps:
       - name: Checkout Upstream Repo
         uses: actions/checkout@v3
         with:
-          repository: Megamouse/rpcs3 # RPCS3/rpcs3 # 
-          ref: Qt6-fun # 07395dd8fa0848268ad9818fc43a216bd3da5a1c # master #
+          repository: Nekotekina/rpcs3 # RPCS3/rpcs3 # 
+          ref: typei # Qt6-fun # 07395dd8fa0848268ad9818fc43a216bd3da5a1c # master #
           submodules: recursive
       - name: Checkout AppImage Repo
         uses: actions/checkout@v3
@@ -39,7 +39,7 @@ jobs:
 
       - name: Install packages
         run: |
-          brew install -f --overwrite llvm@14 nasm ninja git p7zip create-dmg ccache sdl2 glew cmake
+          brew install -f --overwrite llvm nasm ninja git p7zip create-dmg ccache sdl2 glew cmake
           pip install --upgrade pip
 
       #- name: Install Qt
@@ -50,7 +50,7 @@ jobs:
       #    curl -sL https://raw.githubusercontent.com/qurious-pixel/yaqti/fetch/yaqti/fetchers.py -o $HOME/hostedtoolcache/Python/$pyver/x64/lib/python${pyver%.*}/site-packages/yaqti/fetchers.py
       #    python -m yaqti install --os mac --platform desktop --version ${{ env.QT_VER }} --modules qtmultimedia --set-envs --install-deps
 
-      - name: Install Qt6
+      - name: Install Qt5
         run: |
           git clone https://github.com/engnr/qt-downloader.git
           cd qt-downloader
@@ -83,11 +83,12 @@ jobs:
           export Qt6_DIR="$Qt6_PREFIX/lib/cmake/Qt${{ env.QT_VER_MAIN }}"
           echo Qt6_DIR="$Qt6_PREFIX/lib/cmake/Qt${{ env.QT_VER_MAIN }}" >> $GITHUB_ENV
           echo SDL2_DIR="$BREW_X64_PATH/opt/sdl2/lib/cmake/SDL2" >> $GITHUB_ENV
-          echo PATH="$BREW_PATH/opt/ccache/libexec:$BREW_PATH/opt/llvm@14/bin:$WORKDIR/qt-downloader/${{ env.QT_VER }}/clang_64/bin:$BREW_BIN:$BREW_SBIN:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/Apple/usr/bin:$PATH" >> $GITHUB_ENV
+          echo PATH="$BREW_PATH/opt/ccache/libexec:$BREW_PATH/opt/llvm/bin:$WORKDIR/qt-downloader/${{ env.QT_VER }}/clang_64/bin:$BREW_BIN:$BREW_SBIN:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/Apple/usr/bin:$PATH" >> $GITHUB_ENV
           echo LDFLAGS="-L$BREW_X64_PATH/lib -Wl,-rpath,$BREW_X64_PATH/lib" >> $GITHUB_ENV
           echo CPPFLAGS="-I$BREW_X64_PATH/include -msse -msse2 -mcx16 -no-pie" >> $GITHUB_ENV
           echo LIBRARY_PATH="$BREW_X64_PATH/lib" >> $GITHUB_ENV
           echo LD_LIBRARY_PATH="$BREW_X64_PATH/lib" >> $GITHUB_ENV
+          echo LLVM_DIR="$BREW_PATH/opt/llvm" >> $GITHUB_ENV
 
       - name: Fixes
         run: |
