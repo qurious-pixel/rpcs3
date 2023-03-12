@@ -102,7 +102,7 @@ jobs:
           export LINKER=gold
           export AR=/usr/bin/llvm-ar-15 # gcc-ar-11 # 
           export RANLIB=/usr/bin/llvm-ranlib-15 # gcc-ranlib-11 # 
-          export CFLAGS="-fuse-linker-plugin"
+          #export CFLAGS="-fuse-linker-plugin"
           mkdir build && cd build
           cmake ..                                               \
               -DCMAKE_INSTALL_PREFIX=/usr                        \
