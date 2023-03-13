@@ -108,6 +108,7 @@ jobs:
           export CFLAGS="$CFLAGS -fuse-ld=${LINKER}"
           mkdir build && cd build
           cmake ..                                               \
+              -DCMAKE_BUILD_TYPE=Debug                           \
               -DCMAKE_INSTALL_PREFIX=/usr                        \
               -DUSE_NATIVE_INSTRUCTIONS=OFF                      \
               -DUSE_PRECOMPILED_HEADERS=OFF                      \
