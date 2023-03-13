@@ -119,6 +119,7 @@ jobs:
               -DUSE_SDL=OFF                                      \
               -DOpenGL_GL_PREFERENCE=LEGACY                      \
               -DCMAKE_PREFIX_PATH=$QT_BASE_DIR                   \
+              -DDISABLE_LTO=TRUE                                 \
               -G Ninja
           ninja
           ls bin || true
