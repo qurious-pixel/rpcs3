@@ -42,9 +42,12 @@ jobs:
           brew link llvm
           brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
           pip install --upgrade pip
-          ls /usr/local/opt/llvm/
-          ls /usr/local/opt/llvm/lib
-          ls /usr/local/opt/llvm/lib/cmake
+          echo "ls /usr/local/opt/llvm/cmake:"
+          ls /usr/local/opt/llvm/cmake
+          echo "brew path:"
+          ls $(brew --prefix)/opt/llvm/
+          echo "brew path cmake"
+          ls $(brew --prefix)/opt/llvm/cmake/llvm
 
 
       #- name: Install Qt
@@ -93,7 +96,7 @@ jobs:
           echo CPPFLAGS="-I$BREW_PATH/opt/llvm/include -I$BREW_X64_PATH/include -msse -msse2 -mcx16 -no-pie" >> $GITHUB_ENV
           echo LIBRARY_PATH="$BREW_X64_PATH/lib" >> $GITHUB_ENV
           echo LD_LIBRARY_PATH="$BREW_X64_PATH/lib" >> $GITHUB_ENV
-          echo LLVM_DIR="$BREW_PATH/opt/llvm" >> $GITHUB_ENV
+          echo LLVM_DIR="/usr/local/opt/llvm/cmake/llvm" >> $GITHUB_ENV
 
       - name: Fixes
         run: |
@@ -113,7 +116,7 @@ jobs:
               -DLLVM_CCACHE_BUILD=OFF -DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF \
               -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=OFF \
               -DLLVM_INCLUDE_UTILS=OFF -DLLVM_USE_PERF=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF \
-              -DUSE_NATIVE_INSTRUCTIONS=OFF -DLLVM_DIR="$BREW_PATH/opt/llvm" \
+              -DUSE_NATIVE_INSTRUCTIONS=OFF -DLLVM_DIR="/usr/local/opt/llvm/cmake/llvm" \
               -DUSE_SYSTEM_MVK=OFF -DCMAKE_PREFIX_PATH="$Qt6_PREFIX" \
               $CMAKE_EXTRA_OPTS \
               -DLLVM_TARGET_ARCH=X86_64 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_IGNORE_PATH="$BREW_PATH/lib" \
