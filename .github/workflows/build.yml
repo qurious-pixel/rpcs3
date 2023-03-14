@@ -42,8 +42,8 @@ jobs:
           brew link llvm
           brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
           pip install --upgrade pip
-          echo "ls /usr/local/opt/llvm/cmake:"
-          ls /usr/local/opt/llvm/cmake
+          #echo "ls /usr/local/opt/llvm/cmake:"
+          #ls /usr/local/opt/llvm/cmake
           echo "brew path:"
           ls $(brew --prefix)/opt/llvm/
           echo "brew path cmake"
