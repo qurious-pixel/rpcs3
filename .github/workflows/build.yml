@@ -40,7 +40,7 @@ jobs:
       - name: Install packages
         run: |
           brew link llvm
-          brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
+          brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew zstd
           pip install --upgrade pip
           #echo "ls /usr/local/opt/llvm/cmake:"
           #ls /usr/local/opt/llvm/cmake
