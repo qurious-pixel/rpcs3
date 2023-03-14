@@ -42,6 +42,10 @@ jobs:
           brew link llvm
           brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
           pip install --upgrade pip
+          ls usr/local/opt/llvm/
+          ls usr/local/opt/llvm/lib
+          ls usr/local/opt/llvm/lib/cmake
+
 
       #- name: Install Qt
       #  run: |
