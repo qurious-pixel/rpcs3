@@ -39,13 +39,17 @@ jobs:
 
       - name: Install packages
         run: |
-          echo "path is ls "$(brew --prefix)"/opt/llvm/lib/cmake/llvm/Findzstd.cmake"
-          ls "$(brew --prefix)"/opt/llvm/lib/cmake/llvm/
-          #ls !break
-          brew install llvm --HEAD
-          brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
+          curl -sSflo https://github.com/macports/macports-base/releases/download/v2.8.1/MacPorts-2.8.1-12-Monterey.pkg
+          ls .
+          installer -pkg MacPorts-2.8.1-12-Monterey.pkg -target ~
+          sudo port selfupdate
+          #echo "path is ls "$(brew --prefix)"/opt/llvm/lib/cmake/llvm/Findzstd.cmake"
+          #ls "$(brew --prefix)"/opt/llvm/lib/cmake/llvm/
+          ls !break
+          #brew install llvm --HEAD
+          #brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
           #arch -x86_64 /usr/local/homebrew/bin/brew install -f --overwrite zstd llvm 
-          pip install --upgrade pip
+          #pip install --upgrade pip
           
       #- name: Install Qt
       #  run: |
