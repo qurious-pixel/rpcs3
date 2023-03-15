@@ -45,8 +45,8 @@ jobs:
           echo "brew path:"
           echo "$BREW_PATH"
           echo "Cellar:"
-          echo "path is ls /usr/local/Cellar/zstd/1.5.4/lib"
-          ls /usr/local/Cellar/zstd/1.5.4/lib
+          echo "path is ls /usr/local/Cellar/zstd/1.5.4/lib/cmake"
+          ls /usr/local/Cellar/zstd/1.5.4/lib/cmake
           ls !break
           
       #- name: Install Qt
