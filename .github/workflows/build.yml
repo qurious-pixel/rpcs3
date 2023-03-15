@@ -16,7 +16,7 @@ jobs:
         with:
           repository: Nekotekina/rpcs3 # RPCS3/rpcs3 # 
           ref: typei # Qt6-fun # 07395dd8fa0848268ad9818fc43a216bd3da5a1c # master #
-          #submodules: recursive
+          submodules: recursive
       #- name: Checkout AppImage Repo
       #  uses: actions/checkout@v3
       #  with:
