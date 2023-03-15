@@ -42,7 +42,7 @@ jobs:
           echo "path is ls "$(brew --prefix)"/opt/llvm/lib/cmake/llvm/Findzstd.cmake"
           ls "$(brew --prefix)"/opt/llvm/lib/cmake/llvm/
           #ls !break
-          brew install llvm@15
+          brew install llvm --HEAD
           brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
           #arch -x86_64 /usr/local/homebrew/bin/brew install -f --overwrite zstd llvm 
           pip install --upgrade pip
@@ -101,8 +101,8 @@ jobs:
           echo "fixes"
           sed -i '' "s/extern const double NSAppKitVersionNumber;/const double NSAppKitVersionNumber = 1343;/g" 3rdparty/hidapi/hidapi/mac/hid.c
           sed -i '' -e 's/GLEW 1.13.0/GLEW/g' 3rdparty/CMakeLists.txt
-          mv "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake.old
-          curl -sSfl https://raw.githubusercontent.com/llvm/llvm-project/main/llvm/cmake/modules/Findzstd.cmake -o "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake
+          #mv "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake.old
+          #curl -sSfl https://raw.githubusercontent.com/llvm/llvm-project/main/llvm/cmake/modules/Findzstd.cmake -o "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake
           #diff "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake.old
 
       - name: Build RPCS3
