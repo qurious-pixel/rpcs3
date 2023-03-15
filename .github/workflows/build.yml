@@ -40,12 +40,15 @@ jobs:
       - name: Install packages
         run: |
           echo "MacPorts 2.8.1"
-          curl -sSfLO https://github.com/macports/macports-base/releases/download/v2.8.1/MacPorts-2.8.1-12-Monterey.pkg
-          sudo installer -pkg MacPorts-2.8.1-12-Monterey.pkg -target /
+          #curl -sSfLO https://github.com/macports/macports-base/releases/download/v2.8.1/MacPorts-2.8.1-12-Monterey.pkg
+          #sudo installer -pkg MacPorts-2.8.1-12-Monterey.pkg -target /
+          git clone https://github.com/macports/macports-base.git
+          cd macports-base
+          ./configure && make && sudo make install
           export PATH=/opt/local/bin:$PATH
           echo PATH=/opt/local/bin:$PATH >> $GITHUB_ENV
           sudo port selfupdate
-          sudo port install libsdl2 qt5 llvm-15 clang-15 ninja nasm ccache glew MoltenVK # vulkan-loader
+          sudo port install libsdl2 qt5 llvm-15 clang-15 ninja nasm ccache glew MoltenVK vulkan-loader vulkan-headers
           #ls !break
           #brew install llvm --HEAD
           #brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
@@ -107,7 +110,7 @@ jobs:
               -DUSE_SDL=ON -DUSE_DISCORD_RPC=OFF -DUSE_VULKAN=ON -DUSE_ALSA=OFF -DUSE_PULSE=OFF -DUSE_AUDIOUNIT=ON \
               -DWITH_LLVM=ON \
               -DUSE_NATIVE_INSTRUCTIONS=OFF \
-              -DUSE_SYSTEM_MVK=OFF \
+              -DUSE_SYSTEM_MVK=ON \
               $CMAKE_EXTRA_OPTS \
               -G Ninja
           ninja; build_status=$?;
