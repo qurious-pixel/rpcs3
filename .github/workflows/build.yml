@@ -41,7 +41,7 @@ jobs:
         run: |
           echo "path is ls /usr/local/opt/zstd/lib/cmake"
           ls /usr/local/opt/zstd/lib/cmake
-          ls !break
+          #ls !break
           brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
           #arch -x86_64 /usr/local/homebrew/bin/brew install -f --overwrite llvm 
           pip install --upgrade pip
@@ -93,7 +93,7 @@ jobs:
           echo LIBRARY_PATH="$BREW_X64_PATH/lib" >> $GITHUB_ENV
           echo LD_LIBRARY_PATH="$BREW_X64_PATH/lib" >> $GITHUB_ENV
           echo LLVM_DIR="/usr/local/opt/llvm/lib/cmake/llvm" >> $GITHUB_ENV
-          echo zstd_DIR="/usr/local/Cellar/zstd/1.5.4/lib/cmake/zstd" >> $GITHUB_ENV
+          echo zstd_DIR="/usr/local/opt/zstd/lib/cmake/zstd" >> $GITHUB_ENV
 
       - name: Fixes
         run: |
@@ -110,11 +110,11 @@ jobs:
           cmake .. \
               -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
               -DUSE_SDL=ON -DUSE_DISCORD_RPC=OFF -DUSE_VULKAN=ON -DUSE_ALSA=OFF -DUSE_PULSE=OFF -DUSE_AUDIOUNIT=ON \
-              -DLLVM_ENABLE_ZSTD=ON -DLLVM_USE_STATIC_ZSTD=ON \
+              -DWITH_LLVM=ON \
               -DUSE_NATIVE_INSTRUCTIONS=OFF -DLLVM_DIR="/usr/local/opt/llvm/lib/cmake/llvm" \
-              -DUSE_SYSTEM_MVK=OFF -DCMAKE_PREFIX_PATH="$Qt6_PREFIX;/usr/local/Cellar/zstd/1.5.4/lib/cmake/zstd" \
+              -DUSE_SYSTEM_MVK=OFF -DCMAKE_PREFIX_PATH="$Qt6_PREFIX;/usr/local/opt/zstd/lib/cmake/zstd;/usr/local/opt/llvm/lib/cmake/llvm" \
               $CMAKE_EXTRA_OPTS \
-              -DLLVM_TARGET_ARCH=X86_64 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_IGNORE_PATH="$BREW_PATH/lib" \
+              -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_IGNORE_PATH="$BREW_PATH/lib" \
               -G Ninja
           "$BREW_PATH/bin/ninja"; build_status=$?;
           ccache -s
