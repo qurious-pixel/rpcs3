@@ -41,7 +41,8 @@ jobs:
         run: |
           echo "path is ls /usr/local/Cellar/zstd/1.5.4/lib/cmake/zstd"
           ls /usr/local/Cellar/zstd/1.5.4/lib/cmake/zstd
-          ls $(brew --prefix)
+          echo "path is ls /usr/local/Homebrew"
+          ls "$(brew --prefix)/Homebrew"
           ls !break
           #brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
           #arch -x86_64 /usr/local/homebrew/bin/brew install -f --overwrite llvm 
