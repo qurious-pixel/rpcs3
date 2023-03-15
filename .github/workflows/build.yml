@@ -39,14 +39,16 @@ jobs:
 
       - name: Install packages
         run: |
-          brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew qt@5
-          arch -x86_64 /usr/local/homebrew/bin/brew install -f --overwrite llvm 
+          brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
+          #arch -x86_64 /usr/local/homebrew/bin/brew install -f --overwrite llvm 
           pip install --upgrade pip
           echo "brew path:"
           echo "$BREW_PATH"
           echo "brew path cmake llvm:"
           echo "path is ls /usr/local/opt/llvm/lib/cmake"
           ls /usr/local/opt/llvm/lib/cmake/llvm
+          pkg-config --libs zstd
+          ls !break
           
       #- name: Install Qt
       #  run: |
@@ -56,18 +58,18 @@ jobs:
       #    curl -sL https://raw.githubusercontent.com/qurious-pixel/yaqti/fetch/yaqti/fetchers.py -o $HOME/hostedtoolcache/Python/$pyver/x64/lib/python${pyver%.*}/site-packages/yaqti/fetchers.py
       #    python -m yaqti install --os mac --platform desktop --version ${{ env.QT_VER }} --modules qtmultimedia --set-envs --install-deps
 
-      #- name: Install Qt5
-      #  run: |
-      #    git clone https://github.com/engnr/qt-downloader.git
-      #    cd qt-downloader
-      #    git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
-      #    pip3 install pipenv
-      #    pipenv run pip3 install py7zr requests semantic_version lxml
-      #    mkdir -p ${{ env.QT_VER }}/clang_64/bin/
-      #    mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
-      #    touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
-      #    PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --addons qtmultimedia --opensource
-      #    cd ..
+      - name: Install Qt5
+        run: |
+          git clone https://github.com/engnr/qt-downloader.git
+          cd qt-downloader
+          git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
+          pip3 install pipenv
+          pipenv run pip3 install py7zr requests semantic_version lxml
+          mkdir -p ${{ env.QT_VER }}/clang_64/bin/
+          mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
+          touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
+          PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --addons qtmultimedia --opensource
+          cd ..
           
       - name: Environmental Variables
         run: |
@@ -86,7 +88,6 @@ jobs:
           echo WORKDIR="$(pwd)" >> $GITHUB_ENV
           export Qt6_PREFIX="$WORKDIR/qt-downloader/${{ env.QT_VER }}/macos"
           echo Qt6_PREFIX="$WORKDIR/qt-downloader/${{ env.QT_VER }}/macos" >> $GITHUB_ENV
-          echo Qt5_PREFIX=/usr/local/opt/qt@5 >> $GITHUB_ENV
           export Qt6_DIR="$Qt6_PREFIX/lib/cmake/Qt${{ env.QT_VER_MAIN }}"
           echo Qt6_DIR="$Qt6_PREFIX/lib/cmake/Qt${{ env.QT_VER_MAIN }}" >> $GITHUB_ENV
           echo SDL2_DIR="$BREW_X64_PATH/opt/sdl2/lib/cmake/SDL2" >> $GITHUB_ENV
@@ -112,11 +113,9 @@ jobs:
           cmake .. \
               -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
               -DUSE_SDL=ON -DUSE_DISCORD_RPC=OFF -DUSE_VULKAN=ON -DUSE_ALSA=OFF -DUSE_PULSE=OFF -DUSE_AUDIOUNIT=ON \
-              -DLLVM_CCACHE_BUILD=OFF -DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF -DLLVM_ENABLE_ZSTD=ON \
-              -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=OFF \
-              -DLLVM_INCLUDE_UTILS=OFF -DLLVM_USE_PERF=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF \
+              -DLLVM_ENABLE_ZSTD=ON -DLLVM_USE_STATIC_ZSTD=ON \
               -DUSE_NATIVE_INSTRUCTIONS=OFF -DLLVM_DIR="/usr/local/opt/llvm/lib/cmake/llvm" \
-              -DUSE_SYSTEM_MVK=OFF -DCMAKE_PREFIX_PATH="$Qt5_PREFIX" \
+              -DUSE_SYSTEM_MVK=OFF -DCMAKE_PREFIX_PATH="$Qt6_PREFIX" \
               $CMAKE_EXTRA_OPTS \
               -DLLVM_TARGET_ARCH=X86_64 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_IGNORE_PATH="$BREW_PATH/lib" \
               -G Ninja
