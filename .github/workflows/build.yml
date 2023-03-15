@@ -45,7 +45,7 @@ jobs:
           export PATH=/opt/local/bin:$PATH
           echo PATH=/opt/local/bin:$PATH >> $GITHUB_ENV
           sudo port selfupdate
-          sudo port install libsdl2 qt5 llvm-15 clang-15 ninja nasm ccache glew MoltenVK vulkan-loader
+          sudo port install libsdl2 qt5 llvm-15 clang-15 ninja nasm ccache glew MoltenVK # vulkan-loader
           #ls !break
           #brew install llvm --HEAD
           #brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
@@ -107,7 +107,7 @@ jobs:
               -DUSE_SDL=ON -DUSE_DISCORD_RPC=OFF -DUSE_VULKAN=ON -DUSE_ALSA=OFF -DUSE_PULSE=OFF -DUSE_AUDIOUNIT=ON \
               -DWITH_LLVM=ON \
               -DUSE_NATIVE_INSTRUCTIONS=OFF \
-              -DUSE_SYSTEM_MVK=ON \
+              -DUSE_SYSTEM_MVK=OFF \
               $CMAKE_EXTRA_OPTS \
               -G Ninja
           ninja; build_status=$?;
