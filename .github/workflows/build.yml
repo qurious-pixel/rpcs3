@@ -41,7 +41,7 @@ jobs:
         run: |
           echo "path is ls /usr/local/Cellar/zstd/1.5.4/lib/cmake/zstd"
           ls /usr/local/Cellar/zstd/1.5.4/lib/cmake/zstd
-          $(brew --prefix)
+          ls $(brew --prefix)
           ls !break
           #brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
           #arch -x86_64 /usr/local/homebrew/bin/brew install -f --overwrite llvm 
@@ -114,7 +114,7 @@ jobs:
               -DUSE_SDL=ON -DUSE_DISCORD_RPC=OFF -DUSE_VULKAN=ON -DUSE_ALSA=OFF -DUSE_PULSE=OFF -DUSE_AUDIOUNIT=ON \
               -DLLVM_ENABLE_ZSTD=ON -DLLVM_USE_STATIC_ZSTD=ON \
               -DUSE_NATIVE_INSTRUCTIONS=OFF -DLLVM_DIR="/usr/local/opt/llvm/lib/cmake/llvm" \
-              -DUSE_SYSTEM_MVK=OFF -DCMAKE_PREFIX_PATH="$Qt6_PREFIX" \
+              -DUSE_SYSTEM_MVK=OFF -DCMAKE_PREFIX_PATH="$Qt6_PREFIX;/usr/local/Cellar/zstd/1.5.4/lib/cmake/zstd" \
               $CMAKE_EXTRA_OPTS \
               -DLLVM_TARGET_ARCH=X86_64 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_IGNORE_PATH="$BREW_PATH/lib" \
               -G Ninja
