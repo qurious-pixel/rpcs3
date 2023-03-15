@@ -40,17 +40,12 @@ jobs:
       - name: Install packages
         run: |
           echo "MacPorts 2.8.1"
-          #git clone https://github.com/macports/macports-base.git
-          #cd macports-base
-          #./configure && make && sudo make install
           curl -sSfLO https://github.com/macports/macports-base/releases/download/v2.8.1/MacPorts-2.8.1-12-Monterey.pkg
-          #ls .
           sudo installer -pkg MacPorts-2.8.1-12-Monterey.pkg -target /
           export PATH=/opt/local/bin:$PATH
           echo PATH=/opt/local/bin:$PATH >> $GITHUB_ENV
-          sudo port -v selfupdate
-          #echo "path is ls "$(brew --prefix)"/opt/llvm/lib/cmake/llvm/Findzstd.cmake"
-          #ls "$(brew --prefix)"/opt/llvm/lib/cmake/llvm/
+          sudo port selfupdate
+          sudo port install libsdl2 qt5 llvm-15 clang-15 ninja nasm ccache glew
           ls !break
           #brew install llvm --HEAD
           #brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
@@ -65,18 +60,18 @@ jobs:
       #    curl -sL https://raw.githubusercontent.com/qurious-pixel/yaqti/fetch/yaqti/fetchers.py -o $HOME/hostedtoolcache/Python/$pyver/x64/lib/python${pyver%.*}/site-packages/yaqti/fetchers.py
       #    python -m yaqti install --os mac --platform desktop --version ${{ env.QT_VER }} --modules qtmultimedia --set-envs --install-deps
 
-      - name: Install Qt5
-        run: |
-          git clone https://github.com/engnr/qt-downloader.git
-          cd qt-downloader
-          git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
-          pip3 install pipenv
-          pipenv run pip3 install py7zr requests semantic_version lxml
-          mkdir -p ${{ env.QT_VER }}/clang_64/bin/
-          mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
-          touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
-          PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --addons qtmultimedia --opensource
-          cd ..
+      #- name: Install Qt5
+      #  run: |
+      #    git clone https://github.com/engnr/qt-downloader.git
+      #    cd qt-downloader
+      #    git checkout f52efee0f18668c6d6de2dec0234b8c4bc54c597
+      #    pip3 install pipenv
+      #    pipenv run pip3 install py7zr requests semantic_version lxml
+      #    mkdir -p ${{ env.QT_VER }}/clang_64/bin/
+      #    mkdir -p ${{ env.QT_VER }}/clang_64/mkspecs/
+      #    touch ${{ env.QT_VER }}/clang_64/mkspecs/qconfig.pri
+      #    PIPENV_VERBOSE=true pipenv run ./qt-downloader macos desktop ${{ env.QT_VER }} clang_64 --addons qtmultimedia --opensource
+      #    cd ..
           
       - name: Environmental Variables
         run: |
