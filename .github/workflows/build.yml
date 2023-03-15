@@ -16,30 +16,30 @@ jobs:
         with:
           repository: Nekotekina/rpcs3 # RPCS3/rpcs3 # 
           ref: typei # Qt6-fun # 07395dd8fa0848268ad9818fc43a216bd3da5a1c # master #
-          submodules: recursive
-      - name: Checkout AppImage Repo
-        uses: actions/checkout@v3
-        with:
-            clean: false
-            path: ci      
-      - name: cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.ccache
-          key: build-ccache-Qt${{ env.QT_VER_MAIN }}-${{ env.GITHUB_RUN_ID }}
-          restore-keys: |
-            build-ccache-Qt${{ env.QT_VER_MAIN }}
-            build-ccache
-      - uses: actions/setup-python@v3
-        with:
-          python-version: '3.10'
-      - uses: actions/setup-go@v3
-        with:
-          go-version: '>=1.19.0'
+          #submodules: recursive
+      #- name: Checkout AppImage Repo
+      #  uses: actions/checkout@v3
+      #  with:
+      #      clean: false
+      #      path: ci      
+      #- name: cache
+      #  uses: actions/cache@v3
+      #  with:
+      #    path: ~/.ccache
+      #    key: build-ccache-Qt${{ env.QT_VER_MAIN }}-${{ env.GITHUB_RUN_ID }}
+      #    restore-keys: |
+      #      build-ccache-Qt${{ env.QT_VER_MAIN }}
+      #      build-ccache
+      #- uses: actions/setup-python@v3
+      #  with:
+      #    python-version: '3.10'
+      #- uses: actions/setup-go@v3
+      #  with:
+      #    go-version: '>=1.19.0'
 
       - name: Install packages
         run: |
-          curl -sSflo https://github.com/macports/macports-base/releases/download/v2.8.1/MacPorts-2.8.1-12-Monterey.pkg
+          curl -sSfLo https://github.com/macports/macports-base/releases/download/v2.8.1/MacPorts-2.8.1-12-Monterey.pkg
           ls .
           installer -pkg MacPorts-2.8.1-12-Monterey.pkg -target ~
           sudo port selfupdate
