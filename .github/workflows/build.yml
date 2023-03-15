@@ -43,7 +43,7 @@ jobs:
           ls /usr/local/opt/zstd/lib/cmake
           #ls !break
           brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
-          #arch -x86_64 /usr/local/homebrew/bin/brew install -f --overwrite llvm 
+          arch -x86_64 /usr/local/homebrew/bin/brew install -f --overwrite zstd # llvm 
           pip install --upgrade pip
           
       #- name: Install Qt
