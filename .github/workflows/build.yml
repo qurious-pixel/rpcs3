@@ -102,7 +102,7 @@ jobs:
           sed -i '' -e 's/GLEW 1.13.0/GLEW/g' 3rdparty/CMakeLists.txt
           mv "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake.old
           curl -sSfl https://raw.githubusercontent.com/llvm/llvm-project/main/llvm/cmake/modules/Findzstd.cmake -o "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake
-          diff "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake.old
+          #diff "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake "$BREW_PATH"/opt/llvm/lib/cmake/llvm/Findzstd.cmake.old
 
       - name: Build RPCS3
         run: |
