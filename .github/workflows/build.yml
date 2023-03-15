@@ -44,10 +44,9 @@ jobs:
           pip install --upgrade pip
           echo "brew path:"
           echo "$BREW_PATH"
-          echo "brew path cmake llvm:"
-          echo "path is ls /usr/local/opt/llvm/lib/cmake"
-          ls /usr/local/opt/llvm/lib/cmake/llvm
-          pkg-config --libs zstd
+          echo "Cellar:"
+          echo "path is ls /usr/local/Cellar"
+          ls /usr/local/Cellar
           ls !break
           
       #- name: Install Qt
