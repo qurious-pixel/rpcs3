@@ -53,8 +53,8 @@ destroot {
     #    file copy ${output_dir}/MoltenVK/MoltenVK.xcframework ${destroot}${frameworks_dir}
     #}
 
-    file copy ${output_dir}/macOS/bin/MoltenVKShaderConverter ${destroot}${prefix}/bin
-    file attributes ${destroot}${prefix}/bin/MoltenVKShaderConverter -permissions +x
+    #file copy ${output_dir}/macOS/bin/MoltenVKShaderConverter ${destroot}${prefix}/bin
+    #file attributes ${destroot}${prefix}/bin/MoltenVKShaderConverter -permissions +x
     file copy ${output_dir}/macOS/lib/libMoltenVK.dylib ${destroot}${prefix}/lib
 
     # vulkan and vk_video are provided via vulkan-headers
