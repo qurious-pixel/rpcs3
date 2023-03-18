@@ -45,9 +45,9 @@ jobs:
           ./configure && make && sudo make install
           export PATH=/opt/local/bin:$PATH
           echo PATH=/opt/local/bin:$PATH >> $GITHUB_ENV
-          #sudo port selfupdate
-          pwd
+          sudo port selfupdate
           cd ..
+          pwd
           sudo port install libsdl2 qt5 llvm-15 clang-15 ninja nasm ccache glew vulkan-loader vulkan-headers
           sudo cp ci/sources.conf /opt/local/etc/macports/
           sudo mkdir -p /opt/local/ports/graphics/MoltenVK
