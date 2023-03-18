@@ -40,22 +40,23 @@ jobs:
       - name: Install packages
         run: |
           echo "MacPorts 2.8.1"
-          ls ci
+          ls ci && pwd
           git clone https://github.com/macports/macports-base.git
           cd macports-base
           ./configure && make && sudo make install
           export PATH=/opt/local/bin:$PATH
           echo PATH=/opt/local/bin:$PATH >> $GITHUB_ENV
-          sudo port selfupdate
-          sudo cp ../ci/sources.conf /opt/local/etc/macports/
+          #sudo port selfupdate
+          pwd
+          cd ..
+          sudo cp ci/sources.conf /opt/local/etc/macports/
           sudo mkdir -p /opt/local/ports/graphics/MoltenVK
-          sudo cp ../ci/Portfile
+          sudo cp ci/Portfile /opt/local/ports/graphics/MoltenVK/
           cd /opt/local/ports
           sudo portindex
           #sudo port install MoltenVK
           sudo port install libsdl2 qt5 llvm-15 clang-15 ninja nasm ccache glew MoltenVK vulkan-loader vulkan-headers
-          #
-          .ls !break
+          #ls !break
           #brew install llvm --HEAD
           #brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
           #arch -x86_64 /usr/local/homebrew/bin/brew install -f --overwrite zstd llvm 
