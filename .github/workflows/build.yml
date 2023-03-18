@@ -40,13 +40,14 @@ jobs:
       - name: Install packages
         run: |
           echo "MacPorts 2.8.1"
+          ls ci
           git clone https://github.com/macports/macports-base.git
           cd macports-base
           ./configure && make && sudo make install
           export PATH=/opt/local/bin:$PATH
           echo PATH=/opt/local/bin:$PATH >> $GITHUB_ENV
           sudo port selfupdate
-          sudo cp ci/source.conf /opt/local/etc/macports/
+          sudo cp ci/sources.conf /opt/local/etc/macports/
           sudo mkdir -p /opt/local/ports/graphics/MoltenVK
           sudo cp ci/Portfile
           cd /opt/local/ports
