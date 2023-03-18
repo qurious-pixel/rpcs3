@@ -49,9 +49,9 @@ destroot {
     # Xcode11 and later are required to use "xcframework"
     # Headers currently break build due to Xcode 12 ProcessXCFramework bug:
     # https://developer.apple.com/forums/thread/651043?answerId=628400022#628400022
-    if {${os.major} >= 18} {
-        file copy ${output_dir}/MoltenVK/MoltenVK.xcframework ${destroot}${frameworks_dir}
-    }
+    #if {${os.major} >= 18} {
+    #    file copy ${output_dir}/MoltenVK/MoltenVK.xcframework ${destroot}${frameworks_dir}
+    #}
 
     file copy ${output_dir}/macOS/bin/MoltenVKShaderConverter ${destroot}${prefix}/bin
     file attributes ${destroot}${prefix}/bin/MoltenVKShaderConverter -permissions +x
