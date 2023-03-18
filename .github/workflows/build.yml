@@ -16,7 +16,7 @@ jobs:
         with:
           repository: Nekotekina/rpcs3 # RPCS3/rpcs3 # 
           ref: typei # Qt6-fun # 07395dd8fa0848268ad9818fc43a216bd3da5a1c # master #
-          submodules: recursive
+          #submodules: recursive
       - name: Checkout AppImage Repo
         uses: actions/checkout@v3
         with:
@@ -48,14 +48,14 @@ jobs:
           sudo port selfupdate
           cd ..
           pwd
-          sudo port install libsdl2 qt5 llvm-15 clang-15 ninja nasm ccache glew vulkan-loader vulkan-headers
+          sudo port install MoltenVK # libsdl2 qt5 llvm-15 clang-15 ninja nasm ccache glew vulkan-loader vulkan-headers
           sudo cp ci/sources.conf /opt/local/etc/macports/
           sudo mkdir -p /opt/local/ports/graphics/MoltenVK
           sudo cp ci/Portfile /opt/local/ports/graphics/MoltenVK/
           cd /opt/local/ports
           sudo portindex
           sudo port install MoltenVK
-          #ls !break
+          ls !break
           #brew install llvm --HEAD
           #brew install -f --overwrite nasm ninja create-dmg ccache sdl2 glew
           #arch -x86_64 /usr/local/homebrew/bin/brew install -f --overwrite zstd llvm 
