@@ -30,8 +30,10 @@ cd build || exit 1
     #cp ${QT_BASE_DIR}/lib/libQt${QT}Wayland* ./appdir/usr/lib/
 
     ## Install multimedia
-    cp -r ${QT_BASE_DIR}/plugins/multimedia ./appdir/usr/plugins/
-
+    if [ -e ${QT_BASE_DIR}/plugins/multimedia ]; then
+        cp -r ${QT_BASE_DIR}/plugins/multimedia ./appdir/usr/plugins/
+    fi
+    
     # Install Qt Plugins
     curl -sL "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage" > "$QT_PLUGIN_APPIMAGE"
     chmod a+x "$QT_PLUGIN_APPIMAGE"
