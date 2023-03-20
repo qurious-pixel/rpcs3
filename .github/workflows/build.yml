@@ -93,7 +93,8 @@ jobs:
         run: |
           echo "fixes"
           #sed -i 's/std::min/std::min<unsigned>/g' rpcs3/rpcs3qt/osk_dialog_frame.cpp
-          sed -i 's/LLVM 15.0/LLVM 16.0/g' 3rdparty/llvm.cmake
+          sed -i 's/15/16/g' 3rdparty/llvm.cmake
+          sed -i 's/15/16/g' rpcs3/util/types.hpp
           ls -al /usr/lib/llvm-16/bin/
           echo PATH=/usr/lib/llvm-16/bin:"$PATH" >> $GITHUB_ENV 
           
