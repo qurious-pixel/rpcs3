@@ -93,8 +93,8 @@ jobs:
         run: |
           echo "fixes"
           #sed -i 's/std::min/std::min<unsigned>/g' rpcs3/rpcs3qt/osk_dialog_frame.cpp
-          ls -al /usr/lib/llvm-15/bin/
-          echo PATH=/usr/lib/llvm-15/bin:"$PATH" >> $GITHUB_ENV 
+          ls -al /usr/lib/llvm-16/bin/
+          echo PATH=/usr/lib/llvm-16/bin:"$PATH" >> $GITHUB_ENV 
           
 
       - name: Build RPCS3
