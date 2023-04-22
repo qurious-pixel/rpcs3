@@ -75,10 +75,9 @@ jobs:
           echo "python version is $pyver"
           curl -sLO https://files.pythonhosted.org/packages/47/42/351389ca36c7adfc5f4e92d086cdb2bdbde13f1b89ee882f4a1cab2183ac/yaqti-2021.7.29-py3-none-any.whl
           python3 -m pip install yaqti-2021.7.29-py3-none-any.whl
-          ls /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/site-packages
-          ls $HOME/.local/lib/python${pyver%.*}/site-packages/
-          curl -sL https://raw.githubusercontent.com/qurious-pixel/yaqti/fetch/yaqti/fetchers.py -o $HOME/.local/lib/python${pyver%.*}/site-packages/yaqti/fetchers.py
-          python -m yaqti install --os linux --platform desktop --version ${{ env.yaqti }} --modules gcc_64 --set-envs --install-deps          QT_BASE_DIR=$PWD/3rdparty/Qt6
+          ls /opt/hostedtoolcache/Python/${pyver}/x64/lib/python${pyver%.*}/site-packages
+          curl -sL https://raw.githubusercontent.com/qurious-pixel/yaqti/fetch/yaqti/fetchers.py -o /opt/hostedtoolcache/Python/${pyver}/x64/lib/python${pyver%.*}/site-packages/yaqti/fetchers.py
+          python -m yaqti install --os linux --platform desktop --version ${{ env.yaqti }} --modules gcc_64 --set-envs --install-deps
           echo QT_BASE_DIR="${{github.workspace}}/qt/${{ env.yaqti }}/gcc_64 >> $GITHUB_ENV
           echo Qt_DIR="${{github.workspace}}/qt/${{ env.yaqti }}/gcc_64/lib/cmake/Qt6" >> $GITHUB_ENV
           echo PATH="$QT_BASE_DIR"/bin:"$PATH" >> $GITHUB_ENV 
