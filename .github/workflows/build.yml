@@ -34,7 +34,7 @@ jobs:
             build-ccache
       - uses: actions/setup-python@v3
         with:
-          python-version: '3.10'
+          python-version: '3.11'
       - uses: actions/setup-go@v3
         with:
           go-version: '>=1.19.0'
@@ -57,7 +57,7 @@ jobs:
           sudo apt clean
       - name: Install Qt5
         run: |
-          sudo add-apt-repository -y ppa:beineri/opt-qt-5.15.2-focal
+          sudo add-apt-repository -y ppa:beineri/opt-qt-5.15.4-focal
           sudo apt install -y qt515base qt515svg qt515multimedia qt515wayland
           QT_BASE_DIR=/opt/qt515
           echo QT_BASE_DIR=/opt/qt515 >> $GITHUB_ENV
@@ -70,10 +70,11 @@ jobs:
         if: ${{ matrix.QT == 5 }}
       - name: Install Qt6
         run: |
+          pyver=$(python3 --version | awk '{print $2}')
+          echo "python version is $pyver"
           curl -sLO https://files.pythonhosted.org/packages/47/42/351389ca36c7adfc5f4e92d086cdb2bdbde13f1b89ee882f4a1cab2183ac/yaqti-2021.7.29-py3-none-any.whl
           pip install --upgrade pip
           python3 -m pip install yaqti-2021.7.29-py3-none-any.whl
-          pyver=$(python3 --version | awk '{print $2}')
           curl -sL https://raw.githubusercontent.com/qurious-pixel/yaqti/fetch/yaqti/fetchers.py -o $HOME/.local/lib/python${pyver%.*}/site-packages/yaqti/fetchers.py
           python -m yaqti install --os linux --platform desktop --version ${{ env.yaqti }} --modules gcc_64 --set-envs --install-deps          QT_BASE_DIR=$PWD/3rdparty/Qt6
           echo QT_BASE_DIR="${{github.workspace}}/qt/${{ env.yaqti }}/gcc_64 >> $GITHUB_ENV
