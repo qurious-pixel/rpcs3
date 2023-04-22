@@ -79,8 +79,10 @@ jobs:
           python -m yaqti install --os linux --platform desktop --version ${{ env.yaqti }} --modules gcc_64 --modules qtmultimedia --set-envs --install-deps
           echo QT_BASE_DIR="${{github.workspace}}/qt/${{ env.yaqti }}/gcc_64" >> $GITHUB_ENV
           echo Qt_DIR="${{github.workspace}}/qt/${{ env.yaqti }}/gcc_64/lib/cmake/Qt6" >> $GITHUB_ENV
+          export QT_BASE_DIR="${{github.workspace}}/qt/${{ env.yaqti }}/gcc_64"
           echo PATH="$QT_BASE_DIR"/bin:"$PATH" >> $GITHUB_ENV 
           echo LD_LIBRARY_PATH="$QT_BASE_DIR"/lib/x86_64-linux-gnu:"$QT_BASE_DIR"/lib >> $GITHUB_ENV
+          echo "$QT_BASE_DIR"
           echo $PATH
           ls "$QT_BASE_DIR"/bin
         env:
