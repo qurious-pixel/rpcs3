@@ -82,9 +82,7 @@ jobs:
           export QT_BASE_DIR="${{github.workspace}}/qt/${{ env.yaqti }}/gcc_64"
           echo PATH="$QT_BASE_DIR"/bin:"$PATH" >> $GITHUB_ENV 
           echo LD_LIBRARY_PATH="$QT_BASE_DIR"/lib/x86_64-linux-gnu:"$QT_BASE_DIR"/lib >> $GITHUB_ENV
-          echo "$QT_BASE_DIR"
-          echo $PATH
-          ls "$QT_BASE_DIR"/bin
+          sudo ln -sf "$QT_BASE_DIR"/bin/qmake /usr/local/bin/
         env:
           yaqti: 6.5.0
         if: ${{ matrix.QT == 6 }}
