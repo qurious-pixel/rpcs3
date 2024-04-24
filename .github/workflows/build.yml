@@ -25,7 +25,7 @@ jobs:
       run: git config --global --add safe.directory '*'
     - name: "cmake"
       run: |
-        cmake -Drpcs3_build -DUSE_SYSTEM_FFMPEG=1
+        cmake -Brpcs3_build -DUSE_SYSTEM_FFMPEG=1
         
     - name: "Build RPCS3"
       run: cmake --build rpcs3_build --parallel
