@@ -1,0 +1,24 @@
+name: Build RPCS3
+
+on:
+  workflow_call:
+
+jobs:
+  build-rpcs3:
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:latest
+    steps:
+    - name: Setup dependencies
+      run: >
+        doas apk add git cmake make gcc g++ openal-soft-dev sdl2-dev glew-dev perl-dev
+        qt6-qtbase-dev qt6-qtbase-x11 qt6-qtwayland-dev qt6-qtmultimedia-dev llvm17-static llvm17-dev llvm17-gtest
+        ffmpeg-dev ffmpeg-libavutil ffmpeg-libavfilter ffmpeg-libswresample ffmpeg-libavcodec
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        repository: qurious-pixel/rpcs3
+        ref: alpine
+        submodules: recursive
+    - name: add safe.directory
+      run: git config --global --add safe.directory '*'
