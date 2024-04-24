@@ -20,7 +20,7 @@ jobs:
       with:
         repository: qurious-pixel/rpcs3
         ref: alpine
-        submodules: recursive
+        #submodules: recursive
     - name: add safe.directory
       run: git config --global --add safe.directory '*'
     #- name: "cmake"
@@ -31,12 +31,15 @@ jobs:
     #  run: cmake --build rpcs3_build
     - name: "testing"
       run: |
+        set -x
         curl -L https://github.com/qurious-pixel/rpcs3/releases/download/alpine-appimage/RPCS3-alpine-x86_64.AppImage -o RPCS3-alpine
         ls -al .
         chmod +x RPCS3-alpine
         ./RPCS3-alpine --appimage-extract
-        mkdir -p AppDir/usr/bin 
+        mkdir -p AppDir/usr/bin
+        ls -al .
         mv squahsfs-root/usr/bin/rpcs3 AppDir/usr/bin
+        ls -al AppDir/usr/bin
         
         
     - name: "Package RPCS3"
