@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Setup dependencies
       run: >
-        apk add git cmake make gcc g++ openal-soft-dev sdl2-dev glew-dev perl-dev
+        apk add git cmake make gcc g++ openal-soft-dev sdl2-dev glew-dev perl-dev fuse3
         qt6-qtbase-dev qt6-qtbase-x11 qt6-qtwayland-dev qt6-qtmultimedia-dev llvm17-static llvm17-dev llvm17-gtest
         ffmpeg-dev ffmpeg-libavutil ffmpeg-libavfilter ffmpeg-libswresample ffmpeg-libavcodec
     - name: Checkout
@@ -27,6 +27,21 @@ jobs:
       run: |
         sed -i 's/ OpenGL::GLX//g' 3rdparty/CMakeLists.txt
         cmake -Brpcs3_build -DUSE_SYSTEM_FFMPEG=1
-        
     - name: "Build RPCS3"
-      run: cmake --build rpcs3_build --parallel
+      run: cmake --build rpcs3_build
+    - name: "Package RPCS3"
+      run: |
+        curl -L https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage -o linuxdeploy-plugin-qt
+        curl -L https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -o linuxdeploy
+        curl -L https://github.com/probonopd/go-appimage/releases/download/continuous/appimagetool-828-x86_64.AppImage -o appimagetool
+        chmod +x linuxdeploy-plugin-qt linuxdeploy appimagetool
+        mkdir -p AppDir/usr/bin
+        cp rpcs3_build/bin/rpcs3 AppDir/usr/bin
+        QMAKE=/usr/lib/qt6/bin/qmake
+        NO_STRIP=1 APPIMAGE_EXTRACT_AND_RUN=1 ./linuxdeploy --appdir AppDir --plugin qt
+        VERSION=alpine ARCH=x86_64 ./appimagetool AppDir
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rpcs3-alpine-appimage
+        path: RPCS3-alpine-x86_64.AppImage
