@@ -42,14 +42,14 @@ jobs:
     - name: "Package RPCS3"
       run: |
         set -x
-        curl -fsSLo /tmp/linuxdeploy-plugin-qt https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
-        curl -fsSLo /tmp/linuxdeploy https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-static-x86_64.AppImage
-        curl -fsSLo /tmp/appimagetool https://github.com/probonopd/go-appimage/releases/download/continuous/appimagetool-828-x86_64.AppImage
-        chmod +x /tmp/linuxdeploy-plugin-qt /tmp/linuxdeploy /tmp/appimagetool
+        curl -fsSLo /usr/bin/linuxdeploy-plugin-qt https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+        curl -fsSLo /usr/bin/linuxdeploy https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-static-x86_64.AppImage
+        curl -fsSLo /usr/bin/appimagetool https://github.com/probonopd/go-appimage/releases/download/continuous/appimagetool-828-x86_64.AppImage
+        chmod +x /usr/bin/linuxdeploy-plugin-qt /usr/bin/linuxdeploy /usr/bin/appimagetool
         mkdir -p AppDir/usr/bin
         cp rpcs3_build/bin/rpcs3 AppDir/usr/bin
         QMAKE=/usr/lib/qt6/bin/qmake
-        APPIMAGE_EXTRACT_AND_RUN=1 /tmp/linuxdeploy -V 
+        linuxdeploy -V 
         NO_STRIP=1 linuxdeploy --appdir AppDir --plugin qt
         VERSION=alpine ARCH=x86_64 appimagetool AppDir
     - name: Upload artifact
