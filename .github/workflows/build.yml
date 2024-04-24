@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Setup dependencies
       run: >
-        apk add git cmake make gcc g++ openal-soft-dev sdl2-dev glew-dev perl-dev fuse3
+        apk add git cmake make gcc g++ openal-soft-dev sdl2-dev glew-dev perl-dev fuse fuse3 curl 
         qt6-qtbase-dev qt6-qtbase-x11 qt6-qtwayland-dev qt6-qtmultimedia-dev llvm17-static llvm17-dev llvm17-gtest
         ffmpeg-dev ffmpeg-libavutil ffmpeg-libavfilter ffmpeg-libswresample ffmpeg-libavcodec
     - name: Checkout
