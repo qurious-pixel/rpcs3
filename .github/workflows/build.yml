@@ -43,7 +43,7 @@ jobs:
       run: |
         set -x
         curl -fsSLo /tmp/linuxdeploy-plugin-qt https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
-        curl -fsSLo /tmp/linuxdeploy  https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+        curl -fsSLo /tmp/linuxdeploy https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-static-x86_64.AppImage
         curl -fsSLo /tmp/appimagetool https://github.com/probonopd/go-appimage/releases/download/continuous/appimagetool-828-x86_64.AppImage
         chmod +x /tmp/linuxdeploy-plugin-qt /tmp/linuxdeploy /tmp/appimagetool
         mkdir -p AppDir/usr/bin
