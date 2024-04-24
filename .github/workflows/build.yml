@@ -25,6 +25,7 @@ jobs:
       run: git config --global --add safe.directory '*'
     - name: "cmake"
       run: |
+        sed -i 's/ OpenGL::GLX//g' 3rdparty/CMakeLists.txt
         cmake -Brpcs3_build -DUSE_SYSTEM_FFMPEG=1
         
     - name: "Build RPCS3"
