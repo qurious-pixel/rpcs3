@@ -23,3 +23,9 @@ jobs:
         submodules: recursive
     - name: add safe.directory
       run: git config --global --add safe.directory '*'
+    - name: "cmake"
+      run: |
+        cmake -Drpcs3_build -DUSE_SYSTEM_FFMPEG=1
+        
+    - name: "Build RPCS3"
+      run: cmake --build rpcs3_build --parallel
