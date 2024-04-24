@@ -8,7 +8,9 @@
 #include <DbgHelp.h>
 #include <codecvt>
 #else
+#ifdef LIBC_HAS_BACKTRACE
 #include <execinfo.h>
+#endif
 #endif
 
 namespace utils
@@ -117,6 +119,7 @@ namespace utils
 		return result;
 	}
 #else
+#ifdef LIBC_HAS_BACKTRACE
 	std::vector<void*> get_backtrace(int max_depth)
 	{
 		std::vector<void*> result(max_depth);
@@ -140,5 +143,6 @@ namespace utils
 		free(symbols);
 		return result;
 	}
+#endif
 #endif
 }
