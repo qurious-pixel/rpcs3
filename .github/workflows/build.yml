@@ -26,9 +26,9 @@ jobs:
     - name: "cmake"
       run: |
         sed -i 's/ OpenGL::GLX//g' 3rdparty/CMakeLists.txt
-        cmake -Brpcs3_build -DUSE_SYSTEM_FFMPEG=1
+        cmake -Brpcs3_build -DUSE_SYSTEM_FFMPEG=1 -DUSE_SYSTEM_SDL=1 -DUSE_SDL=1
     - name: "Build RPCS3"
-      run: cmake --build rpcs3_build
+      run: cmake --build rpcs3_build -- -j 3
     #- name: "testing"
     #  run: |
     #    set -x
