@@ -35,8 +35,8 @@ jobs:
         curl -L https://github.com/qurious-pixel/rpcs3/releases/download/alpine-appimage/RPCS3-alpine-x86_64.AppImage -o RPCS3-alpine
         chmod +x RPCS3-alpine
         ./RPCS3-alpine --appimage-extract
-        mkdir -p AppDir/usr/bin
-        mv squashfs-root/usr/bin/rpcs3 AppDir/usr/bin
+        mkdir -p rpcs3_build/bin/
+        mv squashfs-root/usr/bin/rpcs3 rpcs3_build/bin/
       
         
     - name: "Package RPCS3"
