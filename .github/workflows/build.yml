@@ -49,6 +49,7 @@ jobs:
         mkdir -p AppDir/usr/bin
         cp rpcs3_build/bin/rpcs3 AppDir/usr/bin
         QMAKE=/usr/lib/qt6/bin/qmake
+        modprobe fuse
         /tmp/appimagetool -V
         $(ls -d /tmp/.mount_linux*)/AppRun -V 
         NO_STRIP=1 linuxdeploy --appdir AppDir --plugin qt
