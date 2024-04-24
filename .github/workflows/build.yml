@@ -33,17 +33,15 @@ jobs:
       run: |
         set -x
         curl -L https://github.com/qurious-pixel/rpcs3/releases/download/alpine-appimage/RPCS3-alpine-x86_64.AppImage -o RPCS3-alpine
-        ls -al .
         chmod +x RPCS3-alpine
         ./RPCS3-alpine --appimage-extract
         mkdir -p AppDir/usr/bin
-        ls -al .
-        mv squahsfs-root/usr/bin/rpcs3 AppDir/usr/bin
-        ls -al AppDir/usr/bin
-        
+        mv squashfs-root/usr/bin/rpcs3 AppDir/usr/bin
+      
         
     - name: "Package RPCS3"
       run: |
+        set -x
         curl -L https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage -o linuxdeploy-plugin-qt
         curl -L https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -o linuxdeploy
         curl -L https://github.com/probonopd/go-appimage/releases/download/continuous/appimagetool-828-x86_64.AppImage -o appimagetool
