@@ -40,7 +40,7 @@ jobs:
     
     - name: "Package RPCS3"
       run: |
-        curl -fsSLo /usr/bin/linuxdeploy-plugin-qt https://github.com/qurious-pixel/linuxdeploy-plugin-qt/releases/download/static/linuxdeploy-static-plugin-qt-x86_64.AppImage
+        curl -fsSLo /usr/bin/linuxdeploy-plugin-qt https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-static-x86_64.AppImage
         curl -fsSLo /usr/bin/linuxdeploy https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-static-x86_64.AppImage
         curl -fsSLo /usr/bin/appimagetool https://github.com/probonopd/go-appimage/releases/download/continuous/appimagetool-828-x86_64.AppImage
         chmod +x /usr/bin/linuxdeploy-plugin-qt /usr/bin/linuxdeploy /usr/bin/appimagetool
