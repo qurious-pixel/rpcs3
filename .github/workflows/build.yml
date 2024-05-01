@@ -23,20 +23,20 @@ jobs:
         submodules: recursive
     - name: add safe.directory
       run: git config --global --add safe.directory '*'
-    - name: "cmake"
-      run: |
-        sed -i 's/ OpenGL::GLX//g' 3rdparty/CMakeLists.txt
-        cmake -Brpcs3_build -DUSE_SYSTEM_FFMPEG=1 -DUSE_SYSTEM_SDL=1 -DUSE_SDL=1
-    - name: "Build RPCS3"
-      run: cmake --build rpcs3_build -- -j 3
-    #- name: "testing"
+    #- name: "cmake"
     #  run: |
-    #    set -x
-    #    curl -L https://github.com/qurious-pixel/rpcs3/releases/download/alpine-appimage/RPCS3-alpine-x86_64.AppImage -o RPCS3-alpine
-    #    chmod +x RPCS3-alpine
-    #    ./RPCS3-alpine --appimage-extract
-    #    mkdir -p rpcs3_build/bin/
-    #    mv squashfs-root/usr/bin/rpcs3 rpcs3_build/bin 
+    #    sed -i 's/ OpenGL::GLX//g' 3rdparty/CMakeLists.txt
+    #    cmake -Brpcs3_build -DUSE_SYSTEM_FFMPEG=1 -DUSE_SYSTEM_SDL=1 -DUSE_SDL=1
+    #- name: "Build RPCS3"
+    #  run: cmake --build rpcs3_build -- -j 3
+    - name: "testing"
+      run: |
+        set -x
+        curl -L https://github.com/qurious-pixel/rpcs3/releases/download/alpine-appimage/RPCS3-alpine-x86_64.AppImage -o RPCS3-alpine
+        chmod +x RPCS3-alpine
+        ./RPCS3-alpine --appimage-extract
+        mkdir -p rpcs3_build/bin/
+        mv squashfs-root/usr/bin/rpcs3 rpcs3_build/bin 
     
     - name: "Package RPCS3"
       run: |
@@ -47,8 +47,8 @@ jobs:
         mkdir -p AppDir/usr/bin
         cp rpcs3_build/bin/rpcs3 AppDir/usr/bin
         export QMAKE=/usr/lib/qt6/bin/qmake
-        APPIMAGE_EXTRACT_AND_RUN=1 NO_STRIP=1 linuxdeploy --appdir AppDir -d rpcs3/rpcs3.desktop -i rpcs3/rpcs3.svg -e AppDir/usr/bin/rpcs3
-        APPIMAGE_EXTRACT_AND_RUN=1 NO_STRIP=1 linuxdeploy-plugin-qt --appdir AppDir
+        APPIMAGE_EXTRACT_AND_RUN=1 NO_STRIP=1 linuxdeploy --appdir AppDir -d rpcs3/rpcs3.desktop -i rpcs3/rpcs3.svg -e AppDir/usr/bin/rpcs3 --plugin qt
+        #APPIMAGE_EXTRACT_AND_RUN=1 NO_STRIP=1 linuxdeploy-plugin-qt --appdir AppDir
         APPIMAGE_EXTRACT_AND_RUN=1 VERSION=alpine ARCH=x86_64 appimagetool AppDir
     - name: Upload artifact
       uses: actions/upload-artifact@v3
