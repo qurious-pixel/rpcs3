@@ -40,10 +40,10 @@ jobs:
     
     - name: "Package RPCS3"
       run: |
-        curl -fsSLo /usr/bin/linuxdeploy https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-static-x86_64.AppImage
-        curl -fsSLo /usr/bin/linuxdeploy-plugin-qt https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-static-x86_64.AppImage
-        curl -fsSLo /usr/bin/appimagetool https://github.com/probonopd/go-appimage/releases/download/continuous/appimagetool-828-x86_64.AppImage
-        chmod +x /usr/bin/linuxdeploy-plugin-qt /usr/bin/linuxdeploy /usr/bin/appimagetool
+        curl -fsSL https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-static-x86_64.AppImage -o /usr/bin/linuxdeploy
+        curl -fsSL https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-static-x86_64.AppImage -o /usr/bin/linuxdeploy-plugin-qt
+        curl -fsSL https://github.com/probonopd/go-appimage/releases/download/continuous/appimagetool-828-x86_64.AppImage
+        chmod +x /usr/bin/linuxdeploy-plugin-qt /usr/bin/linuxdeploy /usr/bin/appimagetool -o /usr/bin/appimagetool
         mkdir -p AppDir/usr/bin
         cp rpcs3_build/bin/rpcs3 AppDir/usr/bin
         export QMAKE=/usr/lib/qt6/bin/qmake
