@@ -47,9 +47,9 @@ jobs:
         mkdir -p AppDir/usr/bin
         cp rpcs3_build/bin/rpcs3 AppDir/usr/bin
         export QMAKE=/usr/lib/qt6/bin/qmake
-        APPIMAGE_EXTRACT_AND_RUN=1 NO_STRIP=1 linuxdeploy --appdir AppDir -d rpcs3/rpcs3.desktop -i rpcs3/rpcs3.svg -e AppDir/usr/bin/rpcs3 --plugin qt
+        APPIMAGE_EXTRACT_AND_RUN=1 NO_STRIP=1 LINUXDEPLOY_OUTPUT_VERSION=alpine linuxdeploy --appdir AppDir -d rpcs3/rpcs3.desktop -i rpcs3/rpcs3.svg -e AppDir/usr/bin/rpcs3 --plugin qt --output appimage
         #APPIMAGE_EXTRACT_AND_RUN=1 NO_STRIP=1 linuxdeploy-plugin-qt --appdir AppDir
-        APPIMAGE_EXTRACT_AND_RUN=1 VERSION=alpine ARCH=x86_64 appimagetool AppDir
+        #APPIMAGE_EXTRACT_AND_RUN=1 VERSION=alpine ARCH=x86_64 appimagetool AppDir
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
