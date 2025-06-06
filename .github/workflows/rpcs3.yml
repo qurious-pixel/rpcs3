@@ -55,9 +55,18 @@ jobs:
             pkg install -y pkgconf alsa-lib pulseaudio sdl3 evdev-proto vulkan-headers vulkan-loader
       
           run: |
-            git config --global --add safe.directory ${{ github.workspace }}
+            pwd
+            ls -lah
+            whoami
+            env
+            freebsd-version
+            sysctl hw.model
+            sysctl hw.ncpu
+            sysctl hw.physmem
+            sysctl hw.usermem
+            #git config --global --add safe.directory ${{ github.workspace }}
             #.ci/build-freebsd.sh
-            git submodule -q update --init --depth 1 $(awk '/path/ && !/llvm/ && !/opencv/ && !/libpng/ && !/libsdl-org/ && !/curl/ { print $3 }' .gitmodules)
+            #git submodule -q update --init --depth 1 $(awk '/path/ && !/llvm/ && !/opencv/ && !/libpng/ && !/libsdl-org/ && !/curl/ { print $3 }' .gitmodules)
 
             CONFIGURE_ARGS="
             	-DWITH_LLVM=ON
