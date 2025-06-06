@@ -56,7 +56,29 @@ jobs:
       
           run: |
             git config --global --add safe.directory ${{ github.workspace }}
-            .ci/build-freebsd.sh
+            #.ci/build-freebsd.sh
+            git submodule -q update --init --depth 1 $(awk '/path/ && !/llvm/ && !/opencv/ && !/libpng/ && !/libsdl-org/ && !/curl/ { print $3 }' .gitmodules)
+
+            CONFIGURE_ARGS="
+            	-DWITH_LLVM=ON
+            	-DUSE_SDL=OFF
+            	-DUSE_PRECOMPILED_HEADERS=OFF
+            	-DUSE_NATIVE_INSTRUCTIONS=OFF
+            	-DUSE_SYSTEM_FFMPEG=ON
+            	-DUSE_SYSTEM_CURL=ON
+            	-DUSE_SYSTEM_LIBPNG=ON
+            	-DUSE_SYSTEM_OPENCV=ON
+            "
+            
+            # base Clang workaround (missing clang-scan-deps)
+            CONFIGURE_ARGS="$CONFIGURE_ARGS -DCMAKE_CXX_SCAN_FOR_MODULES=OFF"
+            
+            # shellcheck disable=SC2086
+            cmake -B build -G Ninja $CONFIGURE_ARGS
+            cmake --build build
+            
+            ccache --show-stats
+            ccache --zero-stats
 
 
       - name: Upload artifacts
@@ -80,10 +102,4 @@ jobs:
           export AVVER="${COMM_TAG}-${COMM_COUNT}"
           .ci/github-upload.sh
       
-      - name: Save build Ccache
-        if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
