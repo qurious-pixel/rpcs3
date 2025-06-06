@@ -50,10 +50,13 @@ jobs:
           envs: 'QT_VER_MAIN LLVM_COMPILER_VER'
           usesh: true
           prepare: |
+            pkg install "llvm$LLVM_COMPILER_VER"
             pkg install -y git ccache cmake ninja "qt$QT_VER_MAIN-multimedia" "qt$QT_VER_MAIN-svg" glew openal-soft ffmpeg
             pkg install -y pkgconf alsa-lib pulseaudio sdl3 evdev-proto vulkan-headers vulkan-loader
       
-          run: .ci/build-freebsd.sh
+          run: |
+            git config --global --add safe.directory ${{ github.workspace }}
+            .ci/build-freebsd.sh
 
 
       - name: Upload artifacts
