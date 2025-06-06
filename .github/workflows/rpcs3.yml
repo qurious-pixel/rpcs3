@@ -56,10 +56,9 @@ jobs:
       
           run: |
             set -x
-            pwd
             git config --global --add safe.directory .
             #.ci/build-freebsd.sh
-            git submodule -q update --init --depth 1 $(awk '/path/ && !/llvm/ && !/opencv/ && !/libpng/ && !/libsdl-org/ && !/curl/ { print $3 }' .gitmodules)
+            git submodule update --init --depth 1 $(awk '/path/ && !/llvm/ && !/opencv/ && !/libpng/ && !/libsdl-org/ && !/curl/ { print $3 }' .gitmodules)
 
             CONFIGURE_ARGS="
             	-DWITH_LLVM=ON
