@@ -49,7 +49,7 @@ jobs:
         with:
           envs: 'QT_VER_MAIN LLVM_COMPILER_VER'
           usesh: true
-          prepare: >
+          prepare: |
             pkg install -y git ccache cmake ninja "qt$QT_VER_MAIN-multimedia" "qt$QT_VER_MAIN-svg" glew openal-soft ffmpeg
             pkg install -y pkgconf alsa-lib pulseaudio sdl3 evdev-proto vulkan-headers vulkan-loader
       
