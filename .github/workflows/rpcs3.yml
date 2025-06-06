@@ -64,10 +64,10 @@ jobs:
           compression-level: 0
 
       - name: Deploy master build to GitHub Releases
-        if: |
-          github.event_name != 'pull_request' &&
-          github.repository == 'qurious-pixel/rpcs3' &&
-          github.ref == 'refs/heads/master' &&
+        #if: |
+        #  github.event_name != 'pull_request' &&
+        #  github.repository == 'RPCS3/rpcs3' &&
+        #  github.ref == 'refs/heads/master' &&
         env:
           RPCS3_TOKEN: ${{ secrets.RPCS3_TOKEN }}
         run: |
