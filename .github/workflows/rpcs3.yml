@@ -27,7 +27,7 @@ jobs:
     name: RPCS3 FreeBSD 
     runs-on: ubuntu-latest
     env:
-      CCACHE_DIR: /tmp/ccache_dir
+      CCACHE_DIR: ${{ github.workspace }}/ccache
       CI_HAS_ARTIFACTS: true
       ARTDIR: "/root/artifacts"
       RELEASE_MESSAGE: "/rpcs3/GitHubReleaseMessage.txt"
