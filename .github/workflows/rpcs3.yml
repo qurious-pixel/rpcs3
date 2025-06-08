@@ -49,28 +49,6 @@ jobs:
         with:
           envs: 'QT_VER_MAIN LLVM_COMPILER_VER'
           usesh: true
-          prepare: |
-            pkg install -y "llvm$LLVM_COMPILER_VER"
-            pkg install -y git ccache cmake ninja "qt$QT_VER_MAIN-multimedia" "qt$QT_VER_MAIN-svg" glew openal-soft ffmpeg
-            pkg install -y pkgconf alsa-lib pulseaudio sdl3 evdev-proto vulkan-headers vulkan-loader
-      
-          run: |
-            set -x
-            #git config --global --add safe.directory .
-            .ci/build-freebsd.sh
-            #git submodule update --init --depth 1 $(awk '/path/ && !/llvm/ && !/opencv/ && !/libpng/ && !/libsdl-org/ && !/curl/ { print $3 }' .gitmodules)
-
-
-      #- name: Upload artifacts
-      #  uses: actions/upload-artifact@main
-      #  with:
-      #    name: RPCS3 for FreeBSD
-      #    path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
-      #    compression-level: 0
-     
-      - name: Save Build Ccache
-        #if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
+          prepare: .ci/install-freebsd.sh
+          #run: .ci/build-freebsd.sh
+            
