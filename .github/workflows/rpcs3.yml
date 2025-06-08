@@ -49,8 +49,8 @@ jobs:
         id: restore-build-ccache
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-ccache-FreeBSD-${{github.run_id}}
-          restore-keys: ${{ runner.os }}-ccache-FreeBSD-
+          key: FreeBSD-ccache-${{github.run_id}}
+          restore-keys: FreeBSD-ccache-
               
       - name: FreeBSD build
         id: root
