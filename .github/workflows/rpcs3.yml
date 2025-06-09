@@ -58,7 +58,10 @@ jobs:
         with:
           envs: 'QT_VER_MAIN LLVM_COMPILER_VER CCACHE_DIR'
           usesh: true
-          run: .ci/install-freebsd.sh && ccache --show-config
+          run: |
+            .ci/install-freebsd.sh 
+            ccache --show-config
+            ls $CCACHE_DIR
       #    run: .ci/install-freebsd.sh && .ci/build-freebsd.sh
 
       - name: Save Build Ccache
