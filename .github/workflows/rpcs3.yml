@@ -51,14 +51,17 @@ jobs:
           path: ${{ env.CCACHE_DIR }}
           key: FreeBSD-ccache-${{github.run_id}}
           restore-keys: FreeBSD-ccache-
-              
+
       - name: FreeBSD build
-        id: root
-        uses: vmactions/freebsd-vm@v1
-        with:
-          envs: 'QT_VER_MAIN LLVM_COMPILER_VER'
-          usesh: true
-          run: .ci/install-freebsd.sh && .ci/build-freebsd.sh
+        run: ccache --show-config
+        
+      #- name: FreeBSD build
+      #  id: root
+      #  uses: vmactions/freebsd-vm@v1
+      #  with:
+      #    envs: 'QT_VER_MAIN LLVM_COMPILER_VER'
+      #    usesh: true
+      #    run: .ci/install-freebsd.sh && .ci/build-freebsd.sh
 
       - name: Save Build Ccache
         #if: github.ref == 'refs/heads/master'
