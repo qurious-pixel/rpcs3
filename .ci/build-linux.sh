@@ -53,8 +53,6 @@ cmake ..                                               \
     -DLLVM_DIR=/opt/llvm/lib/cmake/llvm                \
     -DSTATIC_LINK_LLVM=ON                              \
     -DENABLE_FERAL_GAMEMODE=ON                         \
-    -DBUILD_RPCS3_TESTS="${RUN_UNIT_TESTS}"            \
-    -DRUN_RPCS3_TESTS="${RUN_UNIT_TESTS}"              \
     -G Ninja
 
 ninja; build_status=$?;
