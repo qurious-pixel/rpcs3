@@ -98,7 +98,7 @@ jobs:
           ln -s ${{ env.BUILD_BUILDDIRECTORY }} my_symlinks/build
           ls -la -F
           ls -la -F my_symlinks/build
-          ctest -j -VV -C Release --test-dir my_symlinks/build --output-on-failure
+          sudo ctest -j -VV -C Release --test-dir my_symlinks/build --output-on-failure
 
       # - name: Upload artifacts
       #   uses: actions/upload-artifact@main
