@@ -98,7 +98,7 @@ jobs:
       #    sudo ln -s ${{ env.BUILD_BUILDDIRECTORY }} ${{ env.BUILDDIR }} 
       #    sudo ls -la -F ${{ env.BUILDDIR }}
       #    sudo ls -la -F ${{ env.BUILDDIR }}/rpcs3
-      #    sudo ctest -j -VV -C Release --test-dir my_symlinks/build --output-on-failure
+      #    sudo ctest -j -VV -C Release --test-dir ${{ env.BUILDDIR }} --output-on-failure
 
       - name: Save build Ccache
         if: github.ref == 'refs/heads/master'
