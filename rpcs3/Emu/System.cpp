@@ -66,9 +66,13 @@
 // TODO: Decide what to do with including the header file for GAMEMODE to work
 
 #ifdef ENABLE_FERAL_GAMEMODE
-extern "C" {
-#include "3rdparty/feralinteractive/lib/gamemode_client.h"
-}
+	#ifdef __cplusplus
+	extern "C" {
+	#endif
+		#include "3rdparty/feralinteractive/lib/gamemode_client.h"
+	#ifdef __cplusplus
+	}
+	#endif
 #endif
 
 LOG_CHANNEL(sys_log, "SYS");
