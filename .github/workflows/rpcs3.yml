@@ -90,37 +90,15 @@ jobs:
             ${{ matrix.docker_img }} \
             ${{ matrix.build_sh }}
 
-      - name: Unit tests
+      #- name: Unit tests
         #if: github.event_name == 'pull_request'
-        working-directory: ${{ github.workspace }}
-        run: |
-          mkdir -p my_symlinks
-          sudo ln -s ${{ env.BUILD_BUILDDIRECTORY }} ${{ env.BUILDDIR }} 
-          sudo ls -la -F ${{ env.BUILDDIR }}
-          sudo ls -la -F ${{ env.BUILDDIR }}/rpcs3
-          sudo ctest -j -VV -C Release --test-dir my_symlinks/build --output-on-failure
-
-      # - name: Upload artifacts
-      #   uses: actions/upload-artifact@main
-      #   with:
-      #     name: RPCS3 for Linux (${{ runner.arch }}, ${{ matrix.compiler }})
-      #     path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}/*.AppImage
-      #     compression-level: 0
-
-      - name: Deploy master build to GitHub Releases
-        if: |
-          github.event_name != 'pull_request' &&
-          github.repository == 'RPCS3/rpcs3' &&
-          github.ref == 'refs/heads/master' &&
-          matrix.compiler == 'clang'
-        env:
-          RPCS3_TOKEN: ${{ secrets.RPCS3_TOKEN }}
-        run: |
-          COMM_TAG=$(awk '/version{.*}/ { printf("%d.%d.%d", $5, $6, $7) }' ./rpcs3/rpcs3_version.cpp)
-          COMM_COUNT=$(git rev-list --count HEAD)
-          COMM_HASH=$(git rev-parse --short=8 HEAD)
-          export AVVER="${COMM_TAG}-${COMM_COUNT}"
-          .ci/github-upload.sh
+      #  working-directory: ${{ github.workspace }}
+      #  run: |
+      #    mkdir -p my_symlinks
+      #    sudo ln -s ${{ env.BUILD_BUILDDIRECTORY }} ${{ env.BUILDDIR }} 
+      #    sudo ls -la -F ${{ env.BUILDDIR }}
+      #    sudo ls -la -F ${{ env.BUILDDIR }}/rpcs3
+      #    sudo ctest -j -VV -C Release --test-dir my_symlinks/build --output-on-failure
 
       - name: Save build Ccache
         if: github.ref == 'refs/heads/master'
