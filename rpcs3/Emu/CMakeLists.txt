@@ -667,3 +667,9 @@ endif()
 if(WAYLAND_FOUND)
     target_link_libraries(rpcs3_emu PRIVATE OpenGL::EGL)
 endif()
+
+if(UNIX AND NOT APPLE)Add commentMore actions
+	if(ENABLE_FERAL_GAMEMODE)
+		target_link_libraries(rpcs3_emu PRIVATE gamemode)
+	endif()
+endif()
