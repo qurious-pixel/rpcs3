@@ -154,11 +154,11 @@ if(NOT WIN32)
 endif()
 
 ## Look for Gamemode if its installed on Linux
-if(UNIX AND NOT APPLE)Add commentMore actions
+if(UNIX AND NOT APPLE)
 	if(ENABLE_FERAL_GAMEMODE)
 		add_compile_definitions(ENABLE_FERAL_GAMEMODE)
 		add_subdirectory(3rdparty/feralinteractive EXCLUDE_FROM_ALL)
-		target_include_directories(feralinteractive INTERFACE ./3rdparty/feralinteractive)
+		target_include_directories(feralinteractive INTERFACE ./3rdparty/feralinteractive/lib)
 	endif()
 endif()
 
