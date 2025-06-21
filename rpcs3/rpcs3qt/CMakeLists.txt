@@ -205,5 +205,4 @@ target_link_libraries(rpcs3_ui
         3rdparty::pugixml
         3rdparty::libpng
         3rdparty::7zip
-        3rdparty::rtmidi
-        gamemode)
+        3rdparty::rtmidi)
