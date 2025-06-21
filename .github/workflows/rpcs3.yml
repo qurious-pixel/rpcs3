@@ -49,6 +49,11 @@ jobs:
           cache: true
           install: |
             mingw-w64-clang-x86_64-vulkan-devel
+
+      - name: View msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.msys2 }}
           run: |
             echo "$env:MSYS2_LOCATION"
             ls -la D:/a/_temp/msys64/clang64/lib/
