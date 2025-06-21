@@ -94,10 +94,10 @@ jobs:
         #if: github.event_name == 'pull_request'
         working-directory: ${{ github.workspace }}
         run: |
-          ls -la -F
-          ls -la -F rpcs3
           mkdir -p my_symlinks
           ln -s ${{ env.BUILD_BUILDDIRECTORY }} my_symlinks/build
+          ls -la -F
+          ls -la -F my_symlinks/build
           ctest -j -VV -C Release --test-dir my_symlinks/build --output-on-failure
 
       # - name: Upload artifacts
