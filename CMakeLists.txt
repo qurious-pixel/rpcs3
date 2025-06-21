@@ -50,6 +50,7 @@ option(HAS_MEMORY_BREAKPOINTS "Add support for memory breakpoints to the interpr
 option(USE_LTO "Use LTO for building" ON)
 option(BUILD_RPCS3_TESTS "Build RPCS3 unit tests." OFF)
 option(RUN_RPCS3_TESTS "Run RPCS3 unit tests. Requires BUILD_RPCS3_TESTS" OFF)
+option(ENABLE_FERAL_GAMEMODE "Enables Feral Interactive GameMode Support" OFF)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/buildfiles/cmake")
 
@@ -150,6 +151,15 @@ endif()
 
 if(NOT WIN32)
     add_compile_options(-pthread)
+endif()
+
+## Look for Gamemode if its installed on Linux
+if(UNIX AND NOT APPLE)Add commentMore actions
+	if(ENABLE_FERAL_GAMEMODE)
+		add_compile_definitions(ENABLE_FERAL_GAMEMODE)
+		add_subdirectory(3rdparty/feralinteractive EXCLUDE_FROM_ALL)
+		target_include_directories(feralinteractive INTERFACE ./3rdparty/feralinteractive)
+	endif()
 endif()
 
 # TODO: do real installation, including copying directory structure
