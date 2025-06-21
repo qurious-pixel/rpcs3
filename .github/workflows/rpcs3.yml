@@ -98,7 +98,7 @@ jobs:
           ln -s ${{ env.BUILDDIR }} my_symlinks/build
           ls -la -F
           ls -la -F my_symlinks/build
-          ls -la -F /root/rpcs3_build/rpcs3/
+          sudo ls -la -F /root/rpcs3_build/rpcs3/
           sudo ctest -j -VV -C Release --test-dir my_symlinks/build --output-on-failure
 
       # - name: Upload artifacts
