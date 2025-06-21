@@ -1,4 +1,4 @@
-project( gamemode LANGUAGES C )Add commentMore actions
+project( gamemode LANGUAGES C )
 add_library (gamemode
         "lib/gamemode_client.h"
         "lib/client_loader.c")
