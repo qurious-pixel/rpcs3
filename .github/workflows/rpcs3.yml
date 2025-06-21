@@ -48,42 +48,13 @@ jobs:
           update: true
           cache: true
           install: |
-            mingw-w64-clang-x86_64-clang
-            mingw-w64-clang-x86_64-ccache
-            mingw-w64-clang-x86_64-cmake
-            mingw-w64-clang-x86_64-lld
-            mingw-w64-clang-x86_64-ninja
-            mingw-w64-clang-x86_64-llvm
-            mingw-w64-clang-x86_64-ffmpeg
-            mingw-w64-clang-x86_64-opencv
-            mingw-w64-clang-x86_64-glew
             mingw-w64-clang-x86_64-vulkan-devel
-            mingw-w64-x86_64-vulkan-devel
-            mingw-w64-clang-x86_64-gtest
-            mingw-w64-clang-x86_64-qt6-base
-            mingw-w64-clang-x86_64-qt6-declarative
-            mingw-w64-clang-x86_64-qt6-multimedia
-            mingw-w64-clang-x86_64-qt6-svg
-            base-devel
-            curl
-            git
-            p7zip
+          run: |
+            echo "$env:MSYS2_LOCATION"
+            ls -la D:/a/_temp/msys64/clang64/lib/
 
-      - name: Restore build Ccache
-        uses: actions/cache/restore@main
-        id: restore-build-ccache
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
 
-      - name: Build RPCS3
-        shell: msys2 {0}
-        run: |
-          export CCACHE_DIR=$(cygpath -u "$CCACHE_DIR")
-          echo "CCACHE_DIR=$CCACHE_DIR"
-          .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
-          .ci/build-windows-clang.sh
+
 
       - name: Save build Ccache
         if: github.ref == 'refs/heads/master'
@@ -92,13 +63,7 @@ jobs:
           path: ${{ env.CCACHE_DIR }}
           key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@main
-        with:
-          name: RPCS3 for Windows (${{ runner.arch }}, ${{ matrix.compiler }})
-          path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
-          compression-level: 0
-          if-no-files-found: error
+
 
 
       - name: Save Build Ccache
