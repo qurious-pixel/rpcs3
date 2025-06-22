@@ -57,7 +57,7 @@ jobs:
       DEPLOY_APPIMAGE: true
       APPDIR: "/rpcs3/build/appdir"
       ARTDIR: "/root/artifacts"
-      BUILDDIR: "/root/build"
+      BUILDDIR: "/rpcs3/build/"
       RELEASE_MESSAGE: "/rpcs3/GitHubReleaseMessage.txt"
       COMPILER: ${{ matrix.compiler }}
       UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
