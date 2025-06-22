@@ -96,8 +96,9 @@ jobs:
         run: |
           sudo mkdir /rpcs3
           sudo ln -sr /home/runner/work/rpcs3/rpcs3/build /rpcs3/build
+          ls -al /home/runner/work/rpcs3/rpcs3/tests/lib/
           LIB_COPY=$(ldd /rpcs3/build/bin/rpcs3_test | grep 'not found' | awk '{print $1}')
-          for i in $LIB_COPY; do sudo ln -sv /rpcs3/tests/lib/$i /lib/$(uname -m)-linux-gnu/; done
+          for i in $LIB_COPY; do sudo mv -v /rpcs3/tests/lib/$i /lib/$(uname -m)-linux-gnu/ || :; done
           ldd /rpcs3/build/bin/rpcs3_test
           sudo ctest -j -VV -C Release --test-dir ${{ env.BUILDDIR }} --output-on-failure
 
