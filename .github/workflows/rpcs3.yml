@@ -94,9 +94,12 @@ jobs:
         #if: github.event_name == 'pull_request'
         working-directory: ${{ github.workspace }}
         run: |
-          ls -al -F ${{ env.BUILD_BUILDDIRECTORY }}
+          ls -al -F ${{ env.BUILD_BUILDDIRECTORY }}AppDir/usr/lib
           sudo mkdir /rpcs3
-          export LD_LIBRARY_PATH=${{ env.BUILD_BUILDDIRECTORY }}/AppDir/usr/lib:$LD_LIBRARY_PATH
+          export LD_LIBRARY_PATH=${{ env.BUILD_BUILDDIRECTORY }}AppDir/usr/lib:$LD_LIBRARY_PATH
+          echo $LD_LIBRARY_PATH
+          sudo echo $LD_LIBRARY_PATH
+          export LD_PRELOAD=${{ env.BUILD_BUILDDIRECTORY }}AppDir/usr/lib/libSDL3.so.0
           #sudo ln -sr ${{ env.BUILD_BUILDDIRECTORY }} ${{ env.BUILDDIR }}
           sudo ls -al -F /
           sudo ln -sr /home/runner/work/rpcs3/rpcs3/build /rpcs3/build
