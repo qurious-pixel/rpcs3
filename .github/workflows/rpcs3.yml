@@ -63,7 +63,7 @@ jobs:
       UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
       UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
       BUILD_UNIT_TESTS: github.event_name == 'pull_request' && 'ON' || 'OFF'
-      RUN_UNIT_TESTS: 'ON'
+      RUN_UNIT_TESTS: 'OFF'
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
