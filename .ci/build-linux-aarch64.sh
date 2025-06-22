@@ -10,11 +10,11 @@ git config --global --add safe.directory '*'
 # shellcheck disable=SC2046
 git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/libsdl-org/ && !/curl/ { print $3 }' .gitmodules)
 
-if [ ! -d "$BUILD_DIR" ]; then
-    mkdir "$BUILD_DIR" || exit 1
+if [ ! -d "$BUILDDIR" ]; then
+    mkdir "$BUILDDIR" || exit 1
 fi
 
-cd "$BUILD_DIR" || exit 1
+cd "$BUILDDIR" || exit 1
 
 if [ "$COMPILER" = "gcc" ]; then
     # These are set in the dockerfile
