@@ -94,13 +94,9 @@ jobs:
         #if: github.event_name == 'pull_request'
         working-directory: ${{ github.workspace }}
         run: |
-          ls -al -F ${{ github.workspace }}
-          ls -al -F ${{ github.workspace }}/build
-          ls -al -F ${{ github.workspace }}/build/AppDir/usr/lib
-          find ${{ github.workspace }}/build/AppDir/usr/lib -name *SDL*
-          export LD_LIBRARY_PATH=${{ github.workspace }}/build/AppDir/usr/lib:$LD_LIBRARY_PATH
-          sudo ln -s ${{ env.BUILD_BUILDDIRECTORY }} /rpcs3/build 
-          sudo ctest -j -VV -C Release --test-dir /rpcs3/build --output-on-failure
+          ls -al -F ${{ env.BUILD_BUILDDIRECTORY }}
+          export LD_LIBRARY_PATH=${{ env.BUILD_BUILDDIRECTORY }}/AppDir/usr/lib:$LD_LIBRARY_PATH
+          sudo ctest -j -VV -C Release --test-dir ${{ env.BUILD_BUILDDIRECTORY }} --output-on-failure
 
       - name: Save build Ccache
         #if: github.ref == 'refs/heads/master'
