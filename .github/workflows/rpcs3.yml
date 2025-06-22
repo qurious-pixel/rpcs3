@@ -97,7 +97,9 @@ jobs:
           ls -al -F ${{ env.BUILD_BUILDDIRECTORY }}
           sudo mkdir /rpcs3
           export LD_LIBRARY_PATH=${{ env.BUILD_BUILDDIRECTORY }}/AppDir/usr/lib:$LD_LIBRARY_PATH
-          sudo ln -sr ${{ env.BUILD_BUILDDIRECTORY }} ${{ env.BUILDDIR }}
+          #sudo ln -sr ${{ env.BUILD_BUILDDIRECTORY }} ${{ env.BUILDDIR }}
+          sudo ls -al -F /
+          sudo ln -sr /home/runner/work/rpcs3/rpcs3/build /rpcs3/build
           sudo ctest -j -VV -C Release --test-dir ${{ env.BUILD_BUILDDIRECTORY }} --output-on-failure
 
       - name: Save build Ccache
