@@ -1,19 +1,8 @@
 #!/bin/sh -ex
 
-if [ -z "$CIRRUS_CI" ]; then
-   cd rpcs3 || exit 1
-fi
+cd rpcs3 || exit 1
 
 shellcheck .ci/*.sh
-
-RPCS3_DIR=$(pwd)
-
-# If we're building using a CI, let's use the runner's directory
-if [ -n "$BUILDDIR" ]; then
-BUILD_DIR="$BUILDDIR"
-else
-BUILD_DIR="$RPCS3_DIR/build"
-fi
 
 git config --global --add safe.directory '*'
 
@@ -22,11 +11,7 @@ git config --global --add safe.directory '*'
 # shellcheck disable=SC2046
 git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/libsdl-org/ && !/curl/ { print $3 }' .gitmodules)
 
-if [ ! -d "$BUILD_DIR" ]; then
-    mkdir "$BUILD_DIR" || exit 1
-fi
-
-cd "$BUILD_DIR" || exit 1
+mkdir build && cd build || exit 1
 
 if [ "$COMPILER" = "gcc" ]; then
     # These are set in the dockerfile
@@ -47,7 +32,7 @@ fi
 
 export LINKER_FLAG="-fuse-ld=${LINKER}"
 
-cmake "$RPCS3_DIR"                                     \
+cmake ..                                               \
     -DCMAKE_INSTALL_PREFIX=/usr                        \
     -DUSE_NATIVE_INSTRUCTIONS=OFF                      \
     -DUSE_PRECOMPILED_HEADERS=OFF                      \
@@ -73,8 +58,9 @@ cmake "$RPCS3_DIR"                                     \
 
 ninja; build_status=$?;
 
-cd "$RPCS3_DIR"
+cd ..
 
+# If it compiled succesfully let's deploy.
 if [ "$build_status" -eq 0 ]; then
     .ci/deploy-linux.sh "x86_64"
 fi
