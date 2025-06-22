@@ -1,5 +1,7 @@
 #!/bin/sh -ex
 
+cd build || exit 1
+
 CPU_ARCH="${1:-x86_64}"
 
 if [ "$DEPLOY_APPIMAGE" = "true" ]; then
