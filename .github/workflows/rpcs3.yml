@@ -95,13 +95,11 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
           sudo mkdir /rpcs3
-          export LD_LIBRARY_PATH=${{ env.BUILDDIR }}AppDir/usr/lib/:$LD_LIBRARY_PATH
-          echo $LD_LIBRARY_PATH
           sudo ln -sr /home/runner/work/rpcs3/rpcs3/build /rpcs3/build
-          sudo ln -s /rpcs3/build/AppDir/usr/lib/libSDL3.so.0 /lib/aarch64-linux-gnu/
-          sudo ls -al /lib/aarch64-linux-gnu/libSDL3.so.0
-          sudo -E ldd /rpcs3/build/bin/rpcs3_test
-          sudo -E ctest -j -VV -C Release --test-dir ${{ env.BUILDDIR }} --output-on-failure
+          LIB_COPY=$(ldd /rpcs3/build/bin/rpcs3_test | grep 'not found' libs.txt | awk '{print $1}')
+          for i in $LIB_COPY; do sudo ln -s /rpcs3/build/AppDir/usr/lib/$i /lib/aarch64-linux-gnu/; done
+          ldd /rpcs3/build/bin/rpcs3_test
+          sudo ctest -j -VV -C Release --test-dir ${{ env.BUILDDIR }} --output-on-failure
 
       - name: Save build Ccache
         #if: github.ref == 'refs/heads/master'
