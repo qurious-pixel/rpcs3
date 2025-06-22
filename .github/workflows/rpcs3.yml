@@ -99,7 +99,7 @@ jobs:
           LIB_COPY=$(ldd /rpcs3/build/bin/rpcs3_test | grep 'not found' | awk '{print $1}')
           for i in $LIB_COPY; do sudo ln -sv /rpcs3/build/AppDir/usr/lib/$i /lib/$(uname -m)-linux-gnu/; done
           sudo apt update
-          sudo apt install -y libsndio-dev libpulse-dev libicu-dev libopengl-dev libegl-dev
+          sudo apt install -y libsndio-dev libpulse-dev libicu-dev libopengl-dev libegl-dev --reinstall
           ldd /rpcs3/build/bin/rpcs3_test
           sudo ctest -j -VV -C Release --test-dir ${{ env.BUILDDIR }} --output-on-failure
 
