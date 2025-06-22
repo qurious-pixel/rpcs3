@@ -76,6 +76,5 @@ ninja; build_status=$?;
 cd "$RPCS3_DIR"
 
 if [ "$build_status" -eq 0 ]; then
-    echo "deploy-linux placeholder"
-    # .ci/deploy-linux.sh "x86_64"
+    .ci/deploy-linux.sh "x86_64"
 fi
