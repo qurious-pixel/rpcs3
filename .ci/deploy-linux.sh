@@ -1,7 +1,6 @@
 #!/bin/sh -ex
 
-RPCS3_DIR=$(pwd)Add commentMore actions
-
+RPCS3_DIR=$(pwd)
 echo "pwd = $RPCS3_DIR"
 ls -la -F
 
