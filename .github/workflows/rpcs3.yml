@@ -20,7 +20,7 @@ env:
   BUILD_PR_NUMBER: ${{ github.event.pull_request.number }}
   BUILD_SOURCEVERSION: ${{ github.sha }}
   BUILD_ARTIFACTSTAGINGDIRECTORY: ${{ github.workspace }}/artifacts/
-  BUILD_BUILDDIRECTORY: ${{ github.workspace }}/rpcs3_build/
+  BUILD_BUILDDIRECTORY: ${{ github.workspace }}/build/
 
 jobs:
   Linux_Build:
@@ -57,7 +57,7 @@ jobs:
       DEPLOY_APPIMAGE: true
       APPDIR: "/rpcs3/build/appdir"
       ARTDIR: "/root/artifacts"
-      BUILDDIR: "/root/rpcs3_build"
+      BUILDDIR: "/root/build"
       RELEASE_MESSAGE: "/rpcs3/GitHubReleaseMessage.txt"
       COMPILER: ${{ matrix.compiler }}
       UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
@@ -94,9 +94,9 @@ jobs:
         #if: github.event_name == 'pull_request'
         working-directory: ${{ github.workspace }}
         run: |
-          ls -al -F ${{ github.workspace }}/build
-          export LD_LIBRARY_PATH=${{ github.workspace }}/build/AppDir/usr/lib:$LD_LIBRARY_PATH
-          sudo ctest -j -VV -C Release --test-dir ${{ github.workspace }}/build --output-on-failure
+          ls -al -F ${{ env.BUILD_BUILDDIRECTORY }}
+          export LD_LIBRARY_PATH=${{ env.BUILD_BUILDDIRECTORY }}/AppDir/usr/lib:$LD_LIBRARY_PATH
+          sudo ctest -j -VV -C Release --test-dir ${{ env.BUILD_BUILDDIRECTORY }} --output-on-failure
 
       - name: Save build Ccache
         #if: github.ref == 'refs/heads/master'
