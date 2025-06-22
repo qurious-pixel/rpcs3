@@ -60,7 +60,7 @@ if [ "$DEPLOY_APPIMAGE" = "true" ]; then
     echo "${SHA256SUM};${FILESIZE}B" > "$RELEASE_MESSAGE"
 fi
 
-if [ "${RUN_UNIT_TESTS}" = 'ON' ]; then
+if [ "${RUN_UNIT_TESTS}" = 'OFF' ]; then
     LIB_COPY=$(ldd /rpcs3/build/bin/rpcs3_test | awk '{print $1}')
     mkdir -p /rpcs3/tests/lib/
     for i in $LIB_COPY; do cp -av /lib/"${CPU_ARCH}"-linux-gnu/"$i" /rpcs3/tests/lib/; done
