@@ -90,15 +90,15 @@ jobs:
             ${{ matrix.docker_img }} \
             ${{ matrix.build_sh }}
 
-      #- name: Unit tests
+      - name: Unit tests
         #if: github.event_name == 'pull_request'
-      #  working-directory: ${{ github.workspace }}
-      #  run: |
-      #    mkdir -p my_symlinks
-      #    sudo ln -s ${{ env.BUILD_BUILDDIRECTORY }} ${{ env.BUILDDIR }} 
-      #    sudo ls -la -F ${{ env.BUILDDIR }}
-      #    sudo ls -la -F ${{ env.BUILDDIR }}/rpcs3
-      #    sudo ctest -j -VV -C Release --test-dir ${{ env.BUILDDIR }} --output-on-failure
+        working-directory: ${{ github.workspace }}
+        run: |
+          mkdir -p my_symlinks
+          sudo ln -s ${{ env.BUILD_BUILDDIRECTORY }} ${{ env.BUILDDIR }} 
+          sudo ls -la -F ${{ env.BUILDDIR }}
+          sudo ls -la -F ${{ env.BUILDDIR }}/rpcs3
+          sudo ctest -j -VV -C Release --test-dir ${{ env.BUILDDIR }} --output-on-failure
 
       - name: Save build Ccache
         #if: github.ref == 'refs/heads/master'
