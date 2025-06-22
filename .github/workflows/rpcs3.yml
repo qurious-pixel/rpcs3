@@ -96,9 +96,9 @@ jobs:
         run: |
           sudo mkdir /rpcs3
           sudo ln -sr /home/runner/work/rpcs3/rpcs3/build /rpcs3/build
-          uname -m
           LIB_COPY=$(ldd /rpcs3/build/bin/rpcs3_test | grep 'not found' | awk '{print $1}')
-          for i in $LIB_COPY; do sudo ln -sf /rpcs3/build/AppDir/usr/lib/$i /lib/aarch64-linux-gnu/; done
+          for i in $LIB_COPY; do sudo ln -s /rpcs3/build/AppDir/usr/lib/$i /lib/$(uname -m)-linux-gnu/; done
+          sudo apt install -y libsndio-dev libpulse-dev libicu-dev libopengl-dev libegl-dev
           ldd /rpcs3/build/bin/rpcs3_test
           sudo ctest -j -VV -C Release --test-dir ${{ env.BUILDDIR }} --output-on-failure
 
