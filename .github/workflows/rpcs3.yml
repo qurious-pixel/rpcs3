@@ -94,9 +94,9 @@ jobs:
         #if: github.event_name == 'pull_request'
         working-directory: ${{ github.workspace }}
         run: |
-          ls -al -F ${{ env.APPDIR }}
-          find ${{ env.APPDIR }} -name *SDL*
-          export LD_LIBRARY_PATH=${{ env.APPDIR }}/usr/lib:$LD_LIBRARY_PATH
+          ls -al -F ${{ github.workspace }}${{ env.APPDIR }}
+          find ${{ github.workspace }}${{ env.APPDIR }} -name *SDL*
+          export LD_LIBRARY_PATH=${{ github.workspace }}${{ env.APPDIR }}/usr/lib:$LD_LIBRARY_PATH
           sudo ln -s ${{ env.BUILD_BUILDDIRECTORY }} ${{ env.BUILDDIR }} 
           sudo ctest -j -VV -C Release --test-dir ${{ env.BUILDDIR }} --output-on-failure
 
