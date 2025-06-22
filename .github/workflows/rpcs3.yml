@@ -98,9 +98,9 @@ jobs:
           export LD_PRELOAD=${{ env.BUILDDIR }}AppDir/usr/lib/libSDL3.so.0
           echo $LD_PRELOAD
           sudo ln -sr /home/runner/work/rpcs3/rpcs3/build /rpcs3/build
-          sudo ldconfig
-          sudo ldd /rpcs3/build/bin/rpcs3_test
-          sudo ctest -j -VV -C Release --test-dir ${{ env.BUILDDIR }} --output-on-failure
+          sudo -E ldconfig
+          sudo -E ldd /rpcs3/build/bin/rpcs3_test
+          sudo -E ctest -j -VV -C Release --test-dir ${{ env.BUILDDIR }} --output-on-failure
 
       - name: Save build Ccache
         #if: github.ref == 'refs/heads/master'
