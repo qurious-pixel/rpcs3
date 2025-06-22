@@ -75,12 +75,7 @@ ninja; build_status=$?;
 
 cd "$RPCS3_DIR"
 
-# If it compiled succesfully let's deploy.
-# Azure and Cirrus publish PRs as artifacts only.
-# {   [ "$CI_HAS_ARTIFACTS" = "true" ];
-# } && SHOULD_DEPLOY="true" || SHOULD_DEPLOY="false"
-
-if [ "$build_status" -eq 0 ] && [ "$SHOULD_DEPLOY" = "true" ]; then
+if [ "$build_status" -eq 0 ]; then
     echo "deploy-linux placeholder"
     # .ci/deploy-linux.sh "x86_64"
 fi
