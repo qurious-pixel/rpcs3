@@ -96,7 +96,7 @@ jobs:
         run: |
           ls -al -F ${{ env.APPDIR }}
           find ${{ env.APPDIR }} -name *SDL*
-          export PATH=${{ env.APPDIR }}/usr/lib:$PATH
+          export LD_LIBRARY_PATH=${{ env.APPDIR }}/usr/lib:$LD_LIBRARY_PATH
           sudo ln -s ${{ env.BUILD_BUILDDIRECTORY }} ${{ env.BUILDDIR }} 
           sudo ctest -j -VV -C Release --test-dir ${{ env.BUILDDIR }} --output-on-failure
 
