@@ -30,6 +30,11 @@ else
     export RANLIB=/usr/bin/llvm-ranlib-"$LLVMVER"
 fi
 
+if command -v gamemoded >/dev/null 2>&1
+then
+    export GAMEMODE_AVAILABLE="ON"
+fi
+
 export LINKER_FLAG="-fuse-ld=${LINKER}"
 
 cmake ..                                               \
@@ -49,6 +54,7 @@ cmake ..                                               \
     -DUSE_SYSTEM_FFMPEG=OFF                            \
     -DUSE_SYSTEM_OPENCV=ON                             \
     -DUSE_DISCORD_RPC=ON                               \
+    -DGAMEMODE_ENABLE = "$GAMEMODE_AVAILABLE"          \
     -DOpenGL_GL_PREFERENCE=LEGACY                      \
     -DLLVM_DIR=/opt/llvm/lib/cmake/llvm                \
     -DSTATIC_LINK_LLVM=ON                              \
