@@ -30,13 +30,13 @@ else
     export RANLIB=/usr/bin/llvm-ranlib-"$LLVMVER"
 fi
 
-sudo apt update
-sudo apt install -y gamemode-dev 
+#sudo apt update
+#sudo apt install -y gamemode-dev 
 
-if command -v gamemoded >/dev/null 2>&1
-then
+#if command -v gamemoded >/dev/null 2>&1
+#then
     export GAMEMODE_AVAILABLE="ON"
-fi
+#fi
 
 export LINKER_FLAG="-fuse-ld=${LINKER}"
 
