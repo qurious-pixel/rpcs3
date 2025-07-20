@@ -65,10 +65,13 @@ jobs:
         UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
         BUILD_UNIT_TESTS: github.event_name == 'pull_request' && 'ON' || 'OFF'
         RUN_UNIT_TESTS: 'OFF'
-        BUILD_SCRIPT: ${{ matrix.build.sh }}
+        BUILD_SCRIPT: ${{ matrix.build_sh }}
       volumes: 
         - .:/rpcs3
-        - ./ccache:/root/.ccache
+        - CCACHE_DIR:/root/.ccache
+        # - ./ccache:/root/.ccache
+    
+    name: RPCS3 Linux ${{ matrix.os }} ${{ matrix.compiler }}
 
     steps:
       - name: Checkout repository
