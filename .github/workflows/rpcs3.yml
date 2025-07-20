@@ -67,9 +67,9 @@ jobs:
         RUN_UNIT_TESTS: 'OFF'
       volumes: 
         - $PWD:/rpcs3
-        - ${{ env.CCACHE_DIR }}:/root/.ccache
-        - ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}:${{ env.ARTDIR }}
-        - ${{ env.BUILD_BUILDDIRECTORY }}:${{ env.BUILDDIR }}
+        - $CCACHE_DIR:/root/.ccache
+        - $BUILD_ARTIFACTSTAGINGDIRECTORY:$ARTDIR
+        - $BUILD_BUILDDIRECTORY:$BUILDDIR
 
     steps:
       - name: Checkout repository
