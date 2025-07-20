@@ -31,7 +31,7 @@ jobs:
       CCACHE_DIR: "/root/ccache"
       DEPLOY_APPIMAGE: true
       APPDIR: "/rpcs3/build/appdir"
-      ARTDIR: "/root/artifacts"
+      ARTDIR: "/root/artifacts/"
       BUILDDIR: "/rpcs3/build/"
       RELEASE_MESSAGE: "/rpcs3/GitHubReleaseMessage.txt"
       COMPILER: ${{ matrix.compiler }}
@@ -85,7 +85,7 @@ jobs:
           restore-keys: ${{ matrix.os }}-ccache-${{ matrix.compiler }}-
 
       - name: Docker setup and build
-        run: ${{ matrix.build_sh }}
+        run: ${{ matrix.build_sh }} && ls -af ${{ env.ARTDIR }}
 
       - name: Unit tests
         #if: github.event_name == 'pull_request'
