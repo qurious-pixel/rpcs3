@@ -65,8 +65,8 @@ jobs:
             compiler: gcc
     container: 
       image: ${{ matrix.docker_img }}
-      volumes: 
-        - .:/rpcs3
+      #volumes: 
+      #  - .:/rpcs3
     
     name: RPCS3 Linux ${{ matrix.os }} ${{ matrix.compiler }}
 
