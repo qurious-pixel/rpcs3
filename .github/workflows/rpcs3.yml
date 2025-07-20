@@ -64,6 +64,7 @@ jobs:
           .\vcpkg\vcpkg.exe install
           ffmpeg[avcodec,avformat,swscale,swresample]
           libpng
+          llvm
           opencv
           qtbase
           qtmultimedia
@@ -73,19 +74,6 @@ jobs:
           zlib
           --triplet $env:VCPKG_TRIPLET
           --clean-after-build
-          ###
-          #ffmpeg[avcodec,avformat,swscale,swresample]
-          #llvm
-          #opencv
-          #qtbase
-          #qtsvg
-          #qtmultimedia
-          #qttools
-          #zlib
-          #vulkan
-          #libpng
-          #--triplet $env:VCPKG_TRIPLET
-          #--clean-after-build
 
       - name: Save vcpkg cache
         #if: github.ref == 'refs/heads/master'
