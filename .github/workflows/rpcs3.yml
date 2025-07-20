@@ -56,7 +56,7 @@ jobs:
             vcpkg/installed
             vcpkg/buildtrees
           key: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-test
-          #restore-keys: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-
+          restore-keys: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-
 
       - name: Install dependencies with vcpkg
         shell: pwsh
@@ -88,9 +88,9 @@ jobs:
             vcpkg/buildtrees
           key: ${{ steps.restore-vcpkg-cache.outputs.cache-primary-key }}
 
-      - name: Save Build Ccache
-        #if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
+      #- name: Save Build Ccache
+      #  #if: github.ref == 'refs/heads/master'
+      #  uses: actions/cache/save@main
+      #  with:
+      #    path: ${{ env.CCACHE_DIR }}
+      #    key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
