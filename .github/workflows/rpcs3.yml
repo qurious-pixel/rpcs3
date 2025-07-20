@@ -69,6 +69,7 @@ jobs:
           qtsvg
           qtmultimedia
           qttools
+          vulkan
           --triplet $env:VCPKG_TRIPLET
           --clean-after-build
           ###
