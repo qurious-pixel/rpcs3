@@ -28,7 +28,7 @@ jobs:
     #if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
     runs-on: ${{ matrix.os }}
     env:
-      CCACHE_DIR: /root/ccache
+      CCACHE_DIR: "/root/ccache"
       DEPLOY_APPIMAGE: true
       APPDIR: "/rpcs3/build/appdir"
       ARTDIR: "/root/artifacts"
@@ -39,7 +39,6 @@ jobs:
       UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
       BUILD_UNIT_TESTS: github.event_name == 'pull_request' && 'ON' || 'OFF'
       RUN_UNIT_TESTS: 'OFF'
-      BUILD_SCRIPT: ${{ matrix.build_sh }}
     strategy:
       fail-fast: false
       matrix:
@@ -66,7 +65,6 @@ jobs:
             compiler: gcc
     container: 
       image: ${{ matrix.docker_img }}
-      #env:
       volumes: 
         - .:/rpcs3
     
@@ -82,12 +80,12 @@ jobs:
         uses: actions/cache/restore@main
         id: restore-build-ccache
         with:
-          path: /root/ccache
+          path: ${{ env.CCACHE_DIR }}
           key: ${{ matrix.os }}-ccache-${{ matrix.compiler }}-${{github.run_id}}
           restore-keys: ${{ matrix.os }}-ccache-${{ matrix.compiler }}-
 
       - name: Docker setup and build
-        run: ${BUILD_SCRIPT} && echo ccache && ls -al /root/ccache/
+        run: ${{ matrix.build_sh }}
 
       - name: Unit tests
         #if: github.event_name == 'pull_request'
@@ -101,7 +99,7 @@ jobs:
         #if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
-          path: /root/ccache
+          path: ${{ env.CCACHE_DIR }}
           key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
       - name: Upload artifacts
