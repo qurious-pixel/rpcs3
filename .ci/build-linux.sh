@@ -1,6 +1,6 @@
 #!/bin/sh -ex
 
-cd rpcs3 || exit 1
+# cd rpcs3 || exit 1
 
 shellcheck .ci/*.sh
 
