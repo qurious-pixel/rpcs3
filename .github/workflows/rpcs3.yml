@@ -81,8 +81,11 @@ jobs:
       - name: ccache path
         run: |
           ccache --show-config 
-          RAND=$(awk 'BEGIN{srand();printf("%d", 65536*rand())}')
-          touch /root/ccache/$RAND.txt
+          #RAND=$(awk 'BEGIN{srand();printf("%d", 65536*rand())}')
+          #touch /root/ccache/$RAND.txt
+          ls -al /
+          ls -al /rpcs3
+          ls -al /root
           ls -al /root/ccache/
 
       - name: Restore build Ccache
