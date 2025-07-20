@@ -78,13 +78,13 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: ccache path
-        run: |
-          ccache --show-config 
-          #RAND=$(awk 'BEGIN{srand();printf("%d", 65536*rand())}')
+      #- name: ccache path
+      #  run: |
+      #    ccache --show-config 
+      #    #RAND=$(awk 'BEGIN{srand();printf("%d", 65536*rand())}')
           #touch /root/ccache/$RAND.txt
-          echo .cache && ls -al /root/.cache/
-          echo ccache && ls -al /root/ccache/
+       #   echo .cache && ls -al /root/.cache/
+       #   echo ccache && ls -al /root/ccache/
 
       - name: Restore build Ccache
         uses: actions/cache/restore@main
@@ -94,8 +94,8 @@ jobs:
           key: ${{ matrix.os }}-ccache-${{ matrix.compiler }}-${{github.run_id}}
           restore-keys: ${{ matrix.os }}-ccache-${{ matrix.compiler }}-
 
-      #- name: Docker setup and build
-      #  run: ${BUILD_SCRIPT}
+      - name: Docker setup and build
+        run: ${BUILD_SCRIPT} && echo ccache && ls -al /root/ccache/
 
       #- name: Unit tests
         #if: github.event_name == 'pull_request'
