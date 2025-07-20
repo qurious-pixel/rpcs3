@@ -106,10 +106,11 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: RPCS3 for Linux (${{ runner.arch }}, ${{ matrix.compiler }})
-          path: ${{ env.ARTDIR }}/*.AppImage
+          path: ./artifacts/*.AppImage
           compression-level: 0
 
       - name: Check BUILDSTAGINGARTIFACT dir
         run: |
-          pwd
-          ls -AN artifacts
+          mkdir -p ${{ env.BUILD_BUILDDIRECTORY }}
+          mv ./artifacts/*.AppImage ${{ env.BUILD_BUILDDIRECTORY }}
+          ls -AN ${{ env.BUILD_BUILDDIRECTORY }}
