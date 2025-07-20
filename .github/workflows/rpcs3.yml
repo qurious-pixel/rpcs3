@@ -54,7 +54,7 @@ jobs:
     container: 
       image: ${{ matrix.docker_img }}
       env:
-        CCACHE_DIR: /rpcs3/ccache
+        CCACHE_DIR: /ccache
         DEPLOY_APPIMAGE: true
         APPDIR: "/rpcs3/build/appdir"
         ARTDIR: "/root/artifacts"
@@ -68,7 +68,7 @@ jobs:
         BUILD_SCRIPT: ${{ matrix.build_sh }}
       volumes: 
         - .:/rpcs3
-        - ./ccache:/rpcs3/ccache
+        #- ./ccache:/ccache
     
     name: RPCS3 Linux ${{ matrix.os }} ${{ matrix.compiler }}
 
