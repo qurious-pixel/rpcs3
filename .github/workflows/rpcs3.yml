@@ -65,6 +65,7 @@ jobs:
         UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
         BUILD_UNIT_TESTS: github.event_name == 'pull_request' && 'ON' || 'OFF'
         RUN_UNIT_TESTS: 'OFF'
+        BUILD_SCRIPT: ${{ matrix.build.sh }}
       volumes: 
         - .:/rpcs3
         - ./ccache:/root/.ccache
@@ -75,16 +76,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Restore build Ccache
-        uses: actions/cache/restore@main
-        id: restore-build-ccache
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-${{github.run_id}}
-          restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
+      #- name: Restore build Ccache
+      #  uses: actions/cache/restore@main
+      #  id: restore-build-ccache
+      #  with:
+      #    path: ${{ env.CCACHE_DIR }}
+      #    key: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-${{github.run_id}}
+      #    restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
 
       - name: Docker setup and build
-        run: ${{ matrix.build_sh }}
+        run: $BUILD_SCRIPT
 
       - name: Unit tests
         #if: github.event_name == 'pull_request'
@@ -96,12 +97,12 @@ jobs:
           LIB_COPY=$(ldd /rpcs3/build/bin/rpcs3_test | grep 'not found' | awk '{print $1}')
           for i in $LIB_COPY; do sudo ln -sv /home/runner/work/rpcs3/rpcs3/tests/lib/$i /lib/$(uname -m)-linux-gnu/ || :; done
           ldd /rpcs3/build/bin/rpcs3_test
-          sudo ctest -j -VV -C Release --test-dir ${{ env.BUILDDIR }} --output-on-failure
+          sudo ctest -j -VV -C Release --test-dir ${BUILDDIR} --output-on-failure
 
-      - name: Save build Ccache
+      #- name: Save build Ccache
         #if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
+      #  uses: actions/cache/save@main
+      #  with:
+      #    path: ${{ env.CCACHE_DIR }}
+      #    key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
