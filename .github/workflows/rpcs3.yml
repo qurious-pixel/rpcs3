@@ -67,7 +67,7 @@ jobs:
       image: ${{ matrix.docker_img }}
       volumes: 
         - .:/rpcs3
-        - $BUILD_ARTIFACTSTAGINGDIRECTORY:/root/artifacts/
+        - ${{ github.workspace }}/artifacts/:/root/artifacts/
     
     name: RPCS3 Linux ${{ matrix.os }} ${{ matrix.compiler }}
 
