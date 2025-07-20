@@ -25,6 +25,19 @@ jobs:
   Linux_Build:
     # Only run push event on master branch of main repo, but run all PRs
     if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+    runs-on: ${{ matrix.os }}
+    env:
+      CCACHE_DIR: "/root/ccache"
+      DEPLOY_APPIMAGE: true
+      APPDIR: "/rpcs3/build/appdir"
+      ARTDIR: "/rpcs3/artifacts/"
+      BUILDDIR: "/rpcs3/build/"
+      RELEASE_MESSAGE: "/rpcs3/GitHubReleaseMessage.txt"
+      COMPILER: ${{ matrix.compiler }}
+      UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
+      UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
+      BUILD_UNIT_TESTS: github.event_name == 'pull_request' && 'ON' || 'OFF'
+      RUN_UNIT_TESTS: 'OFF'
     strategy:
       fail-fast: false
       matrix:
@@ -45,63 +58,55 @@ jobs:
             compiler: clang
             UPLOAD_COMMIT_HASH: a1d35836e8d45bfc6f63c26f0a3e5d46ef622fe1
             UPLOAD_REPO_FULL_NAME: "rpcs3/rpcs3-binaries-linux-arm64"
+          - os: ubuntu-24.04-arm
+            docker_img: "rpcs3/rpcs3-ci-jammy-aarch64:1.6"
+            build_sh: "/rpcs3/.ci/build-linux-aarch64.sh"
+            compiler: gcc
+    container: 
+      image: ${{ matrix.docker_img }}
+      volumes: 
+        - ${{ github.workspace }}:/rpcs3
+    
     name: RPCS3 Linux ${{ matrix.os }} ${{ matrix.compiler }}
-    runs-on: ${{ matrix.os }}
-    env:
-      CCACHE_DIR: ${{ github.workspace }}/ccache
-      CI_HAS_ARTIFACTS: true
-      DEPLOY_APPIMAGE: true
-      APPDIR: "/rpcs3/build/appdir"
-      ARTDIR: "/root/artifacts"
-      BUILDDIR: "/root/rpcs3_build"
-      RELEASE_MESSAGE: "/rpcs3/GitHubReleaseMessage.txt"
-      COMPILER: ${{ matrix.compiler }}
-      UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
-      UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
-      BUILD_UNIT_TESTS: github.event_name == 'pull_request' && 'ON' || 'OFF'
-      RUN_UNIT_TESTS: 'OFF'
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
         with:
           fetch-depth: 0
 
-      - name: Setup Cache
-        uses: actions/cache@main
+      - name: Restore build Ccache
+        uses: actions/cache/restore@main
+        id: restore-build-ccache
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-${{github.run_id}}
-          restore-keys: | 
-            ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
+          key: ${{ matrix.os }}-ccache-${{ matrix.compiler }}-${{github.run_id}}
+          restore-keys: ${{ matrix.os }}-ccache-${{ matrix.compiler }}-
 
       - name: Docker setup and build
-        run: |
-          docker pull --quiet ${{ matrix.docker_img }}
-          docker run                      \
-            -v $PWD:/rpcs3              \
-            --env-file .ci/docker.env \
-            -v ${{ env.CCACHE_DIR }}:/root/.ccache  \
-            -v ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}:${{ env.ARTDIR }} \
-            -v ${{ env.BUILD_BUILDDIRECTORY }}:${{ env.BUILDDIR }} \
-            ${{ matrix.docker_img }} \
-            ${{ matrix.build_sh }}
+        run: ${{ matrix.build_sh }}
 
       - name: Unit tests
         if: github.event_name == 'pull_request'
         working-directory: ${{ github.workspace }}
         run: |
-          ls -la -F
-          ls -la -F rpcs3
           mkdir -p my_symlinks
-          ln -s ${{ env.BUILDDIR }} my_symlinks/build
+          ln -s ${BUILDDIR} my_symlinks/build
           ctest -j -VV -C Release --test-dir my_symlinks/build --output-on-failure
 
-      # - name: Upload artifacts
-      #   uses: actions/upload-artifact@main
-      #   with:
-      #     name: RPCS3 for Linux (${{ runner.arch }}, ${{ matrix.compiler }})
-      #     path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}/*.AppImage
-      #     compression-level: 0
+      - name: Save build Ccache
+        if: github.ref == 'refs/heads/master'
+        uses: actions/cache/save@main
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@main
+        with:
+          name: RPCS3 for Linux (${{ runner.arch }}, ${{ matrix.compiler }})
+          path: ${{ env.ARTDIR }}/*.AppImage
+          compression-level: 0
 
       - name: Deploy master build to GitHub Releases
         if: |
@@ -116,6 +121,8 @@ jobs:
           COMM_COUNT=$(git rev-list --count HEAD)
           COMM_HASH=$(git rev-parse --short=8 HEAD)
           export AVVER="${COMM_TAG}-${COMM_COUNT}"
+          mkdir -p ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
+          mv ${{ env.ARTDIR }}/*.AppImage ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
           .ci/github-upload.sh
 
   Windows_Build:

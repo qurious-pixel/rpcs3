@@ -2,9 +2,6 @@
 
 RPCS3_DIR=$(pwd)
 
-echo "pwd = $RPCS3_DIR"
-ls -la -F
-
 # If we're building using a CI, let's use the runner's directory
 if [ -n "$BUILDDIR" ]; then
 BUILD_DIR="$BUILDDIR"
@@ -14,14 +11,6 @@ fi
 echo "BUILD_DIR = $BUILD_DIR"
 
 cd "$BUILD_DIR" || exit 1
-
-echo "pwd = $(pwd)"
-ls -la -F
-
-echo "cd $RPCS3_DIR/rpcs3"
-cd "$RPCS3_DIR/rpcs3"
-echo "pwd = $(pwd)"
-ls -la -F
 
 CPU_ARCH="${1:-x86_64}"
 
@@ -76,7 +65,8 @@ if [ "$DEPLOY_APPIMAGE" = "true" ]; then
 
     # If we're building using a CI, let's copy over the AppImage artifact
     if [ -n "$BUILD_ARTIFACTSTAGINGDIRECTORY" ]; then
-        cp "$RPCS3_APPIMAGE" "$ARTDIR"
+        mkdir -p "$BUILD_ARTIFACTSTAGINGDIRECTORY"
+        cp "$RPCS3_APPIMAGE" "$BUILD_ARTIFACTSTAGINGDIRECTORY"
     fi
 
     FILESIZE=$(stat -c %s ./rpcs3*.AppImage)
