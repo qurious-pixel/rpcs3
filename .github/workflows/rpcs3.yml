@@ -33,7 +33,8 @@ jobs:
             arch: win64
     env:
       CCACHE_DIR: 'C:\ccache'
-      VCPKG_TRIPLET: x64-windows-rel
+      VCPKG_TRIPLET: x64-windows-release
+      VCPKG_BUILD_TYPE: release
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
@@ -60,19 +61,23 @@ jobs:
       - name: Install dependencies with vcpkg
         shell: pwsh
         run: >-
-          .\vcpkg\vcpkg.exe install 
-          ffmpeg[avcodec,avformat,swscale,swresample]
-          llvm
-          opencv
-          qtbase
-          qtsvg
-          qtmultimedia
-          qttools
-          zlib
-          vulkan
+          .\vcpkg\vcpkg.exe install
           libpng
           --triplet $env:VCPKG_TRIPLET
           --clean-after-build
+          ###
+          #ffmpeg[avcodec,avformat,swscale,swresample]
+          #llvm
+          #opencv
+          #qtbase
+          #qtsvg
+          #qtmultimedia
+          #qttools
+          #zlib
+          #vulkan
+          #libpng
+          #--triplet $env:VCPKG_TRIPLET
+          #--clean-after-build
 
       - name: Save vcpkg cache
         #if: github.ref == 'refs/heads/master'
