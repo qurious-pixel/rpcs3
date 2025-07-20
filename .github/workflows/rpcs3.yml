@@ -56,7 +56,7 @@ jobs:
             vcpkg/installed
             vcpkg/buildtrees
           key: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-test
-          restore-keys: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-
+          #restore-keys: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-
 
       - name: Install dependencies with vcpkg
         shell: pwsh
