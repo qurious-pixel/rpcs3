@@ -61,7 +61,7 @@ jobs:
         shell: pwsh
         run: >
           .\vcpkg\vcpkg.exe install
-            ffmpeg[avcodec,avformat,swscale,swresample]
+            ffmpeg[core,ffmpeg,avcodec,avformat,swscale,swresample]
             llvm
             opencv
             qtbase
