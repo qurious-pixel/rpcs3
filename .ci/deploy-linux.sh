@@ -62,7 +62,7 @@ if [ "$DEPLOY_APPIMAGE" = "true" ]; then
 
     # If we're building using a CI, let's copy over the AppImage artifact
     if [ -n "$BUILD_ARTIFACTSTAGINGDIRECTORY" ]; then
-        mkdir -p "$ARTDIR"
+        #mkdir -p "$ARTDIR"
         cp "$RPCS3_APPIMAGE" "$ARTDIR"
     fi
 
