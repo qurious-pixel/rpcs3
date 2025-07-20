@@ -67,7 +67,7 @@ jobs:
         RUN_UNIT_TESTS: 'OFF'
       volumes: 
         - .:/rpcs3
-        - $CCACHE_DIR:/root/.ccache
+        - ${CCACHE_DIR}:/root/.ccache
 
     steps:
       - name: Checkout repository
