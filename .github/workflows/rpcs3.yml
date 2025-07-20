@@ -25,7 +25,7 @@ env:
 jobs:
   Linux_Build:
     # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+    #if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
