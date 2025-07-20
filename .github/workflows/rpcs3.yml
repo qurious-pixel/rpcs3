@@ -103,3 +103,9 @@ jobs:
           path: /root/ccache
           key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@main
+        with:
+          name: RPCS3 for Linux (${{ runner.arch }}, ${{ matrix.compiler }})
+          path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}/*.AppImage
+          compression-level: 0
