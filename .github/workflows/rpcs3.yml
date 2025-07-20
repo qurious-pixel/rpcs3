@@ -54,7 +54,7 @@ jobs:
     container: 
       image: ${{ matrix.docker_img }}
       env:
-        CCACHE_DIR: /ccache
+        CCACHE_DIR: /root/ccache
         DEPLOY_APPIMAGE: true
         APPDIR: "/rpcs3/build/appdir"
         ARTDIR: "/root/artifacts"
@@ -68,7 +68,7 @@ jobs:
         BUILD_SCRIPT: ${{ matrix.build_sh }}
       volumes: 
         - .:/rpcs3
-        #- ./ccache:/ccache
+        - ./ccache:/root/ccache
     
     name: RPCS3 Linux ${{ matrix.os }} ${{ matrix.compiler }}
 
@@ -81,15 +81,15 @@ jobs:
       - name: ccache path
         run: |
           ccache --show-config 
-          pwd
-          mkdir -p $PWD/ccache
-          ls -al $PWD/ccache
+          RAND=$(awk 'BEGIN{srand();printf("%d", 65536*rand())}')
+          touch /root/ccache/$RAND.txt
+          ls -al /root/ccache/
 
       - name: Restore build Ccache
         uses: actions/cache/restore@main
         id: restore-build-ccache
         with:
-          path: /ccache
+          path: /root/ccache
           key: ${{ matrix.os }}-ccache-${{ matrix.compiler }}-${{github.run_id}}
           restore-keys: ${{ matrix.os }}-ccache-${{ matrix.compiler }}-
 
@@ -108,6 +108,6 @@ jobs:
         #if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
-          path: /ccache
+          path: /root/ccache
           key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
