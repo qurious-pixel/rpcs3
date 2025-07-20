@@ -68,8 +68,6 @@ jobs:
       volumes: 
         - $PWD:/rpcs3
         - $CCACHE_DIR:/root/.ccache
-        - $BUILD_ARTIFACTSTAGINGDIRECTORY:$ARTDIR
-        - $BUILD_BUILDDIRECTORY:$BUILDDIR
 
     steps:
       - name: Checkout repository
