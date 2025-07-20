@@ -85,7 +85,7 @@ jobs:
         uses: actions/cache/restore@main
         id: restore-build-ccache
         with:
-          path: ${{ env.CCACHE_DIR }}
+          path: $CCACHE_DIR
           key: ${{ matrix.os }}-ccache-${{ matrix.compiler }}-${{github.run_id}}
           restore-keys: ${{ matrix.os }}-ccache-${{ matrix.compiler }}-
 
