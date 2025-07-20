@@ -68,7 +68,7 @@ jobs:
         BUILD_SCRIPT: ${{ matrix.build_sh }}
       volumes: 
         - .:/rpcs3
-        - ./ccache:/root/ccache
+        #- ./ccache:/root/ccache
     
     name: RPCS3 Linux ${{ matrix.os }} ${{ matrix.compiler }}
 
@@ -83,8 +83,8 @@ jobs:
           ccache --show-config 
           #RAND=$(awk 'BEGIN{srand();printf("%d", 65536*rand())}')
           #touch /root/ccache/$RAND.txt
-          ls -al /root/.cache/
-          ls -al /root/ccache/
+          echo .cache && ls -al /root/.cache/
+          echo ccache && ls -al /root/ccache/
 
       - name: Restore build Ccache
         uses: actions/cache/restore@main
