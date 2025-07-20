@@ -31,7 +31,7 @@ jobs:
       CCACHE_DIR: "/root/ccache"
       DEPLOY_APPIMAGE: true
       APPDIR: "/rpcs3/build/appdir"
-      ARTDIR: "/root/artifacts/"
+      ARTDIR: "/rpcs3/artifacts/"
       BUILDDIR: "/rpcs3/build/"
       RELEASE_MESSAGE: "/rpcs3/GitHubReleaseMessage.txt"
       COMPILER: ${{ matrix.compiler }}
@@ -106,11 +106,11 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: RPCS3 for Linux (${{ runner.arch }}, ${{ matrix.compiler }})
-          path: ./artifacts/*.AppImage
+          path: ${{ env.ARTDIR }}/*.AppImage
           compression-level: 0
 
       - name: Check BUILDSTAGINGARTIFACT dir
         run: |
           mkdir -p ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
-          mv ./artifacts/*.AppImage ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
+          mv ${{ env.ARTDIR }}/*.AppImage ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
           ls -AN ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
