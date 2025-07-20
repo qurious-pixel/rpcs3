@@ -27,6 +27,19 @@ jobs:
     # Only run push event on master branch of main repo, but run all PRs
     #if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
     runs-on: ${{ matrix.os }}
+    env:
+      CCACHE_DIR: /root/ccache
+      DEPLOY_APPIMAGE: true
+      APPDIR: "/rpcs3/build/appdir"
+      ARTDIR: "/root/artifacts"
+      BUILDDIR: "/rpcs3/build/"
+      RELEASE_MESSAGE: "/rpcs3/GitHubReleaseMessage.txt"
+      COMPILER: ${{ matrix.compiler }}
+      UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
+      UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
+      BUILD_UNIT_TESTS: github.event_name == 'pull_request' && 'ON' || 'OFF'
+      RUN_UNIT_TESTS: 'OFF'
+      BUILD_SCRIPT: ${{ matrix.build_sh }}
     strategy:
       fail-fast: false
       matrix:
@@ -53,19 +66,7 @@ jobs:
             compiler: gcc
     container: 
       image: ${{ matrix.docker_img }}
-      env:
-        CCACHE_DIR: /root/ccache
-        DEPLOY_APPIMAGE: true
-        APPDIR: "/rpcs3/build/appdir"
-        ARTDIR: "/root/artifacts"
-        BUILDDIR: "/rpcs3/build/"
-        RELEASE_MESSAGE: "/rpcs3/GitHubReleaseMessage.txt"
-        COMPILER: ${{ matrix.compiler }}
-        UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
-        UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
-        BUILD_UNIT_TESTS: github.event_name == 'pull_request' && 'ON' || 'OFF'
-        RUN_UNIT_TESTS: 'OFF'
-        BUILD_SCRIPT: ${{ matrix.build_sh }}
+      options: "--env-file .ci/docker.env"
       volumes: 
         - .:/rpcs3
     
@@ -107,5 +108,5 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: RPCS3 for Linux (${{ runner.arch }}, ${{ matrix.compiler }})
-          path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}/*.AppImage
+          path: ${{ env.ARTDIR }}/*.AppImage
           compression-level: 0
