@@ -33,7 +33,7 @@ jobs:
             arch: win64
     env:
       CCACHE_DIR: 'C:\ccache'
-      VCPKG_TRIPLET: x64-windows
+      VCPKG_TRIPLET: x64-windows-release
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
