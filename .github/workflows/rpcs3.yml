@@ -5,8 +5,8 @@ defaults:
     shell: bash
 on:
   push:
-    branches:
-      - master # Only trigger push event on 'master' branch
+    #branches:
+      #- master # Only trigger push event on 'master' branch
   pull_request:
   workflow_dispatch:
 
@@ -78,6 +78,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Unit tests
+        run: |
+          echo "os" && echo ${{ matrix.os }}
+          echo "compiler" && echo ${{ matrix.compiler }}
+          echo "run_id" && echo ${{github.run_id}}
+        
       #- name: Restore build Ccache
       #  uses: actions/cache/restore@main
       #  id: restore-build-ccache
@@ -99,7 +105,7 @@ jobs:
           LIB_COPY=$(ldd /rpcs3/build/bin/rpcs3_test | grep 'not found' | awk '{print $1}')
           for i in $LIB_COPY; do sudo ln -sv /home/runner/work/rpcs3/rpcs3/tests/lib/$i /lib/$(uname -m)-linux-gnu/ || :; done
           ldd /rpcs3/build/bin/rpcs3_test
-          sudo ctest -j -VV -C Release --test-dir ${BUILDDIR} --output-on-failure
+          ctest -j -VV -C Release --test-dir ${BUILDDIR} --output-on-failure
 
       #- name: Save build Ccache
         #if: github.ref == 'refs/heads/master'
