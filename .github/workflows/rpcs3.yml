@@ -23,7 +23,7 @@ env:
 
 jobs:
   Windows_Build_ClangCL:
-    if: always()
+    if: "!cancelled()"
     name: RPCS3 Windows Clang-CL
     runs-on: windows-2025
     strategy:
