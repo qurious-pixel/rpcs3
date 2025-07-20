@@ -70,8 +70,8 @@ jobs:
             zlib
             vulkan
             libpng
-            --triplet $env:VCPKG_TRIPLET
-            --clean-after-build
+            .\vcpkg\vcpkg.exe install --triplet $env:VCPKG_TRIPLET
+            .\vcpkg\vcpkg.exe install --clean-after-build
 
       - name: Save vcpkg cache
         #if: github.ref == 'refs/heads/master'
