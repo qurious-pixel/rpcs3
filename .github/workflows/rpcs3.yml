@@ -61,7 +61,6 @@ jobs:
         shell: pwsh
         run: >
           .\vcpkg\vcpkg.exe install
-            ffmpeg[core,ffmpeg,avcodec,avformat,swscale,swresample]
             llvm
             opencv
             qtbase
@@ -71,6 +70,7 @@ jobs:
             zlib
             vulkan
             libpng
+            ffmpeg[core,ffmpeg,avcodec,avformat,swscale,swresample]
             --triplet $env:VCPKG_TRIPLET
             --clean-after-build
 
