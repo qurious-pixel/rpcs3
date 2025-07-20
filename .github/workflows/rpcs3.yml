@@ -26,6 +26,7 @@ jobs:
   Linux_Build:
     # Only run push event on master branch of main repo, but run all PRs
     if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -50,20 +51,26 @@ jobs:
           #  docker_img: "rpcs3/rpcs3-ci-jammy-aarch64:1.6"
           #  build_sh: "/rpcs3/.ci/build-linux-aarch64.sh"
           #  compiler: gcc
-    name: RPCS3 Linux ${{ matrix.os }} ${{ matrix.compiler }}
-    runs-on: ${{ matrix.os }}
-    env:
-      CCACHE_DIR: ${{ github.workspace }}/ccache
-      DEPLOY_APPIMAGE: true
-      APPDIR: "/rpcs3/build/appdir"
-      ARTDIR: "/root/artifacts"
-      BUILDDIR: "/rpcs3/build/"
-      RELEASE_MESSAGE: "/rpcs3/GitHubReleaseMessage.txt"
-      COMPILER: ${{ matrix.compiler }}
-      UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
-      UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
-      BUILD_UNIT_TESTS: github.event_name == 'pull_request' && 'ON' || 'OFF'
-      RUN_UNIT_TESTS: 'OFF'
+    container: 
+      image: ${{ matrix.docker_img }}
+      env:
+        CCACHE_DIR: ${{ github.workspace }}/ccache
+        DEPLOY_APPIMAGE: true
+        APPDIR: "/rpcs3/build/appdir"
+        ARTDIR: "/root/artifacts"
+        BUILDDIR: "/rpcs3/build/"
+        RELEASE_MESSAGE: "/rpcs3/GitHubReleaseMessage.txt"
+        COMPILER: ${{ matrix.compiler }}
+        UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
+        UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
+        BUILD_UNIT_TESTS: github.event_name == 'pull_request' && 'ON' || 'OFF'
+        RUN_UNIT_TESTS: 'OFF'
+      volumes: 
+        - $PWD:/rpcs3
+        - ${{ env.CCACHE_DIR }}:/root/.ccache
+        - ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}:${{ env.ARTDIR }}
+        - ${{ env.BUILD_BUILDDIRECTORY }}:${{ env.BUILDDIR }}
+      		
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
@@ -79,16 +86,7 @@ jobs:
           restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
 
       - name: Docker setup and build
-        run: |
-          docker pull --quiet ${{ matrix.docker_img }}
-          docker run \
-            -v $PWD:/rpcs3 \
-            --env-file .ci/docker.env \
-            -v ${{ env.CCACHE_DIR }}:/root/.ccache  \
-            -v ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}:${{ env.ARTDIR }} \
-            -v ${{ env.BUILD_BUILDDIRECTORY }}:${{ env.BUILDDIR }} \
-            ${{ matrix.docker_img }} \
-            ${{ matrix.build_sh }}
+        run: ${{ matrix.build_sh }}
 
       - name: Unit tests
         #if: github.event_name == 'pull_request'
