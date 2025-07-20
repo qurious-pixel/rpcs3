@@ -93,13 +93,9 @@ jobs:
         #if: github.event_name == 'pull_request'
         working-directory: ${{ github.workspace }}
         run: |
-          sudo mkdir /rpcs3
-          sudo ln -sr /home/runner/work/rpcs3/rpcs3/build /rpcs3/build
-          ls -al /home/runner/work/rpcs3/rpcs3/tests/lib/
-          LIB_COPY=$(ldd /rpcs3/build/bin/rpcs3_test | grep 'not found' | awk '{print $1}')
-          for i in $LIB_COPY; do sudo ln -sv /home/runner/work/rpcs3/rpcs3/tests/lib/$i /lib/$(uname -m)-linux-gnu/ || :; done
-          ldd /rpcs3/build/bin/rpcs3_test
-          ctest -j -VV -C Release --test-dir ${BUILDDIR} --output-on-failure
+          mkdir -p my_symlinks
+          ln -s ${BUILDDIR} my_symlinks/build
+          ctest -j -VV -C Release --test-dir my_symlinks/build --output-on-failure
 
       - name: Save build Ccache
         #if: github.ref == 'refs/heads/master'
