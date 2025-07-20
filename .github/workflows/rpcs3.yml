@@ -64,6 +64,11 @@ jobs:
           .\vcpkg\vcpkg.exe install
           libpng
           zlib
+          opencv
+          qtbase
+          qtsvg
+          qtmultimedia
+          qttools
           --triplet $env:VCPKG_TRIPLET
           --clean-after-build
           ###
