@@ -67,7 +67,6 @@ jobs:
       image: ${{ matrix.docker_img }}
       volumes: 
         - ${{ github.workspace }}:/rpcs3
-        - ${{ github.workspace }}/artifacts:/rpcs3/artifacts/
     
     name: RPCS3 Linux ${{ matrix.os }} ${{ matrix.compiler }}
 
@@ -111,4 +110,4 @@ jobs:
           compression-level: 0
 
       - name: Check BUILDSTAGINGARTIFACT dir
-        run: ls -Af ${{ github.workspace }}/artifacts/
+        run: ls -AN ${{ github.workspace }}
