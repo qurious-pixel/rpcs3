@@ -68,8 +68,7 @@ jobs:
         BUILD_SCRIPT: ${{ matrix.build_sh }}
       volumes: 
         - .:/rpcs3
-        - CCACHE_DIR:/root/.ccache
-        # - ./ccache:/root/.ccache
+        - ./ccache:/root/.ccache
     
     name: RPCS3 Linux ${{ matrix.os }} ${{ matrix.compiler }}
 
@@ -88,7 +87,7 @@ jobs:
       #    restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
 
       - name: Docker setup and build
-        run: $BUILD_SCRIPT
+        run: ${BUILD_SCRIPT}
 
       - name: Unit tests
         #if: github.event_name == 'pull_request'
