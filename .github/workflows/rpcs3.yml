@@ -81,7 +81,9 @@ jobs:
       - name: ccache path
         run: |
           ccache --show-config 
-          ls -al /ccache
+          pwd
+          mkdir -p $PWD/ccache
+          ls -al $PWD/ccache
 
       - name: Restore build Ccache
         uses: actions/cache/restore@main
