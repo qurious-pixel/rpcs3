@@ -9,16 +9,17 @@
 
 #ifdef _WIN32
 #include <winsock2.h>
+#include <ws2tcpip.h>
 #else
 #ifdef __clang__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
 #endif
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #ifdef __clang__
-#pragma GCC diagnostic pop
+#pragma clang diagnostic pop
 #endif
 #endif
 
@@ -28,13 +29,13 @@
 #include <flatbuffers/flatbuffers.h>
 
 #ifdef __clang__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wold-style-cast"
-#pragma GCC diagnostic ignored "-Wextern-c-compat"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wextern-c-compat"
 #endif
 #include <wolfssl/ssl.h>
 #ifdef __clang__
-#pragma GCC diagnostic pop
+#pragma clang diagnostic pop
 #endif
 
 #include "rpcn_types.h"
@@ -227,6 +228,7 @@ namespace rpcn
 		atomic_t<bool> authentified = false;
 		atomic_t<bool> want_conn    = false;
 		atomic_t<bool> want_auth    = false;
+		u32 binding_address = 0;
 		std::binary_semaphore sem_connected, sem_authentified;
 		std::mutex mutex_connected, mutex_authentified;
 
@@ -253,7 +255,7 @@ namespace rpcn
 		void handle_message(std::vector<u8> data);
 
 	private:
-		rpcn_client();
+		rpcn_client(u32 binding_address);
 
 		void rpcn_reader_thread();
 		void rpcn_writer_thread();
@@ -287,7 +289,7 @@ namespace rpcn
 		~rpcn_client();
 		rpcn_client(rpcn_client& other)    = delete;
 		void operator=(const rpcn_client&) = delete;
-		static std::shared_ptr<rpcn_client> get_instance(bool check_config = false);
+		static std::shared_ptr<rpcn_client> get_instance(u32 binding_address, bool check_config = false);
 		rpcn_state wait_for_connection();
 		rpcn_state wait_for_authentified();
 		bool terminate_connection();

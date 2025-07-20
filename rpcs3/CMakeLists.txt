@@ -13,23 +13,23 @@ set(CMAKE_CXX_STANDARD 20)
 set(ADDITIONAL_LIBS "")
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     #on some Linux distros shm_unlink and similar functions are in librt only
-    set(ADDITIONAL_LIBS ${ADDITIONAL_LIBS} "rt")
+    list(APPEND ADDITIONAL_LIBS "rt")
 elseif(NOT WIN32 AND NOT CMAKE_CXX_FLAGS MATCHES "LIBICONV_PLUG")
     #it seems like glibc includes the iconv functions we use but other libc
     #implementations like the one on OSX don't seem implement them
-    set(ADDITIONAL_LIBS ${ADDITIONAL_LIBS} "iconv")
+    list(APPEND ADDITIONAL_LIBS "iconv")
 endif()
 
 if(UNIX AND NOT APPLE AND NOT ANDROID)
-    add_definitions(-DDATADIR="${CMAKE_INSTALL_FULL_DATADIR}/rpcs3")
+    add_compile_definitions(DATADIR="${CMAKE_INSTALL_FULL_DATADIR}/rpcs3")
     # Optionally enable X11 for window management
     find_package(X11)
     if(X11_FOUND)
-        add_definitions(-DHAVE_X11)
+        add_compile_definitions(HAVE_X11)
     endif()
     find_package(Wayland)
     if(WAYLAND_FOUND)
-        add_definitions(-DHAVE_WAYLAND)
+        add_compile_definitions(HAVE_WAYLAND)
     endif()
 endif()
 
@@ -67,8 +67,8 @@ if (NOT ANDROID)
         PUBLIC
             3rdparty::stblib
             3rdparty::libevdev
-        PRIVATE
             rpcs3_emu
+        PRIVATE
             rpcs3_ui
             3rdparty::discordRPC
             3rdparty::qt6
@@ -154,11 +154,11 @@ if (NOT ANDROID)
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/GuiConfigs $<TARGET_FILE_DIR:rpcs3>/GuiConfigs)
     elseif(WIN32)
         add_custom_command(TARGET rpcs3 POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:OpenAL::OpenAL> $<TARGET_FILE_DIR:rpcs3>
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/Icons $<TARGET_FILE_DIR:rpcs3>/Icons
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/GuiConfigs $<TARGET_FILE_DIR:rpcs3>/GuiConfigs
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/test $<TARGET_FILE_DIR:rpcs3>/test
             COMMAND "${WINDEPLOYQT_EXECUTABLE}" --no-compiler-runtime --no-opengl-sw --no-patchqt
-                --no-translations --no-system-d3d-compiler --no-system-dxc-compiler --no-ffmpeg --no-quick-import
+                --no-translations --no-system-d3d-compiler --no-system-dxc-compiler --no-quick-import
                 --plugindir "$<IF:$<CXX_COMPILER_ID:MSVC>,$<TARGET_FILE_DIR:rpcs3>/plugins,$<TARGET_FILE_DIR:rpcs3>/share/qt6/plugins>"
                 --verbose 0 "$<TARGET_FILE:rpcs3>")
     endif()
@@ -187,10 +187,7 @@ if (NOT ANDROID)
 endif()
 
 # Unit tests
-if(BUILD_RPCS3_TESTS AND CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_C_COMPILER_ID STREQUAL "GNU")
-    message(STATUS "FIXME: Unit tests are currently not linking with GCC")
-elseif(BUILD_RPCS3_TESTS)
-    enable_testing()
+if(BUILD_RPCS3_TESTS)
     find_package(GTest REQUIRED)
 
     message(STATUS "Building unit tests...")
@@ -202,11 +199,13 @@ elseif(BUILD_RPCS3_TESTS)
             tests/test.cpp
             tests/test_fmt.cpp
             tests/test_simple_array.cpp
+            tests/test_address_range.cpp
     )
 
     target_link_libraries(rpcs3_test
         PRIVATE
             rpcs3_lib
+            rpcs3_emu
             GTest::gtest
     )
 

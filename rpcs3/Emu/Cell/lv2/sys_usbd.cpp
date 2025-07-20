@@ -38,6 +38,9 @@
 #include "Emu/Io/usio.h"
 #include "Emu/Io/usio_config.h"
 #include "Emu/Io/midi_config_types.h"
+#ifdef HAVE_SDL3
+#include "Emu/Io/LogitechG27.h"
+#endif
 
 #include <libusb.h>
 
@@ -208,7 +211,11 @@ private:
 
 
 		// GT5 Wheels&co
+#ifdef HAVE_SDL3
+		{0x046D, 0xC283, 0xC29B, "lgFF_c283_c29b", &usb_device_logitech_g27::get_num_emu_devices, &usb_device_logitech_g27::make_instance},
+#else
 		{0x046D, 0xC283, 0xC29B, "lgFF_c283_c29b", nullptr, nullptr},
+#endif
 		{0x044F, 0xB653, 0xB653, "Thrustmaster RGT FFB Pro", nullptr, nullptr},
 		{0x044F, 0xB65A, 0xB65A, "Thrustmaster F430", nullptr, nullptr},
 		{0x044F, 0xB65D, 0xB65D, "Thrustmaster FFB", nullptr, nullptr},
@@ -278,8 +285,10 @@ private:
 
 	libusb_context* ctx = nullptr;
 
+#ifndef _WIN32
 #if LIBUSB_API_VERSION >= 0x01000102
 	libusb_hotplug_callback_handle callback_handle {};
+#endif
 #endif
 
 	bool hotplug_supported = false;
@@ -295,12 +304,14 @@ void LIBUSB_CALL callback_transfer(struct libusb_transfer* transfer)
 	usbh.transfer_complete(transfer);
 }
 
+#ifndef _WIN32
 #if LIBUSB_API_VERSION >= 0x01000102
 static int LIBUSB_CALL hotplug_callback(libusb_context* /*ctx*/, libusb_device * /*dev*/, libusb_hotplug_event event, void * /*user_data*/)
 {
 	handle_hotplug_event(event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED);
 	return 0;
 }
+#endif
 #endif
 
 #if LIBUSB_API_VERSION >= 0x0100010A
@@ -590,9 +601,11 @@ usb_handler_thread::~usb_handler_thread()
 			libusb_free_transfer(transfers[index].transfer);
 	}
 
+#ifndef _WIN32
 #if LIBUSB_API_VERSION >= 0x01000102
 	if (ctx && hotplug_supported)
 		libusb_hotplug_deregister_callback(ctx, callback_handle);
+#endif
 #endif
 
 	if (ctx)

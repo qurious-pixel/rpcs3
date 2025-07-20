@@ -112,6 +112,7 @@ struct EmuCallbacks
 	std::function<void(bool)> enable_display_sleep;
 	std::function<void()> check_microphone_permissions;
 	std::function<std::unique_ptr<class video_source>()> make_video_source;
+	std::function<void(bool)> enable_gamemode;
 };
 
 namespace utils
@@ -210,7 +211,7 @@ public:
 		std::source_location src_loc = std::source_location::current()) const;
 
 	// Blocking call from the GUI thread
-	void BlockingCallFromMainThread(std::function<void()>&& func, std::source_location src_loc = std::source_location::current()) const;
+	void BlockingCallFromMainThread(std::function<void()>&& func, bool track_emu_state = true, std::source_location src_loc = std::source_location::current()) const;
 
 	enum class stop_counter_t : u64{};
 

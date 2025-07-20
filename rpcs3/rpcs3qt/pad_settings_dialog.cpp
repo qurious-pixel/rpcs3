@@ -26,8 +26,6 @@
 
 LOG_CHANNEL(cfg_log, "CFG");
 
-inline std::string sstr(const QString& _in) { return _in.toStdString(); }
-
 cfg_input_configurations g_cfg_input_configs;
 
 inline bool CreateConfigFile(const QString& dir, const QString& name)
@@ -183,6 +181,13 @@ pad_settings_dialog::pad_settings_dialog(std::shared_ptr<gui_settings> gui_setti
 	ui->chooseClass->addItem(tr("Top Shot Elite"),     u32{CELL_PAD_FAKE_TYPE_TOP_SHOT_ELITE});
 	ui->chooseClass->addItem(tr("Top Shot Fearmaster"),u32{CELL_PAD_FAKE_TYPE_TOP_SHOT_FEARMASTER});
 	ui->chooseClass->addItem(tr("uDraw GameTablet"),   u32{CELL_PAD_FAKE_TYPE_GAMETABLET});
+	ui->chooseClass->addItem(tr("Copilot for Player 1"), u32{CELL_PAD_FAKE_TYPE_COPILOT_1});
+	ui->chooseClass->addItem(tr("Copilot for Player 2"), u32{CELL_PAD_FAKE_TYPE_COPILOT_2});
+	ui->chooseClass->addItem(tr("Copilot for Player 3"), u32{CELL_PAD_FAKE_TYPE_COPILOT_3});
+	ui->chooseClass->addItem(tr("Copilot for Player 4"), u32{CELL_PAD_FAKE_TYPE_COPILOT_4});
+	ui->chooseClass->addItem(tr("Copilot for Player 5"), u32{CELL_PAD_FAKE_TYPE_COPILOT_5});
+	ui->chooseClass->addItem(tr("Copilot for Player 6"), u32{CELL_PAD_FAKE_TYPE_COPILOT_6});
+	ui->chooseClass->addItem(tr("Copilot for Player 7"), u32{CELL_PAD_FAKE_TYPE_COPILOT_7});
 
 	connect(ui->chooseClass, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this](int index)
 	{
@@ -1388,7 +1393,7 @@ void pad_settings_dialog::ChangeHandler()
 	}
 	else
 	{
-		handler = sstr(ui->chooseHandler->currentData().toString());
+		handler = ui->chooseHandler->currentData().toString().toStdString();
 		device = player_config->device.to_string();
 		buddy_device = player_config->buddy_device.to_string();
 	}
@@ -1511,7 +1516,7 @@ void pad_settings_dialog::ChangeHandler()
 		{
 			const QString device_name = name_string + QString::number(i);
 			const QString device_name_localized = GetLocalizedPadName(m_handler->m_type, device_name, i);
-			ui->chooseDevice->addItem(device_name_localized, QVariant::fromValue(pad_device_info{ sstr(device_name), device_name_localized, true }));
+			ui->chooseDevice->addItem(device_name_localized, QVariant::fromValue(pad_device_info{ device_name.toStdString(), device_name_localized, true }));
 		}
 		force_enable = true;
 		break;
@@ -1619,7 +1624,7 @@ void pad_settings_dialog::ChangeConfig(const QString& config_file)
 	if (config_file.isEmpty())
 		return;
 
-	m_config_file = sstr(config_file);
+	m_config_file = config_file.toStdString();
 
 	// Load in order to get the pad handlers
 	if (!g_cfg_input.load(m_title_id, m_config_file, true))

@@ -52,6 +52,7 @@ enum class emu_settings_type
 	MaxPreemptCount,
 	SPUProfiler,
 	DisableSpinOptimization,
+	EnabledSPUEventsBusyLoop,
 
 	// Graphics
 	Renderer,
@@ -185,6 +186,7 @@ enum class emu_settings_type
 	ShowMouseAndKeyboardToggleHint,
 	WindowTitleFormat,
 	PauseDuringHomeMenu,
+	EnableGamemode,
 
 	// Network
 	InternetStatus,
@@ -250,6 +252,7 @@ inline static const std::map<emu_settings_type, cfg_location> settings_location 
 	{ emu_settings_type::MaxPreemptCount,          { "Core", "Max CPU Preempt Count"}},
 	{ emu_settings_type::SPUProfiler,              { "Core", "SPU Profiler"}},
 	{ emu_settings_type::DisableSpinOptimization,  { "Core", "Disable SPU GETLLAR Spin Optimization"}},
+	{ emu_settings_type::EnabledSPUEventsBusyLoop, { "Core", "SPU Reservation Busy Waiting Enabled"}},
 
 	// Graphics Tab
 	{ emu_settings_type::Renderer,                   { "Video", "Renderer"}},
@@ -386,6 +389,7 @@ inline static const std::map<emu_settings_type, cfg_location> settings_location 
 	{ emu_settings_type::SilenceAllLogs,                  { "Miscellaneous", "Silence All Logs" }},
 	{ emu_settings_type::WindowTitleFormat,               { "Miscellaneous", "Window Title Format" }},
 	{ emu_settings_type::PauseDuringHomeMenu,             { "Miscellaneous", "Pause Emulation During Home Menu" }},
+	{ emu_settings_type::EnableGamemode,             	  { "Miscellaneous", "Enable GameMode" }},
 
 	// Networking
 	{ emu_settings_type::InternetStatus, { "Net", "Internet enabled"}},

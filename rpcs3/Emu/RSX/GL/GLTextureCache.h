@@ -69,7 +69,10 @@ namespace gl
 		void create(u16 w, u16 h, u16 depth, u16 mipmaps, gl::texture* image, u32 rsx_pitch, bool managed,
 				gl::texture::format gl_format = gl::texture::format::rgba, gl::texture::type gl_type = gl::texture::type::ubyte, bool swap_bytes = false)
 		{
-			if (vram_texture && !managed_texture && get_protection() == utils::protection::no)
+			auto new_texture = static_cast<gl::viewable_image*>(image);
+			ensure(!exists() || !is_managed() || vram_texture == new_texture);
+
+			if (vram_texture != new_texture && !managed_texture && get_protection() == utils::protection::no)
 			{
 				// In-place image swap, still locked. Likely a color buffer that got rebound as depth buffer or vice-versa.
 				gl::as_rtt(vram_texture)->on_swap_out();
@@ -81,8 +84,6 @@ namespace gl
 				}
 			}
 
-			auto new_texture = static_cast<gl::viewable_image*>(image);
-			ensure(!exists() || !is_managed() || vram_texture == new_texture);
 			vram_texture = new_texture;
 
 			if (managed)
@@ -147,7 +148,7 @@ namespace gl
 			}
 		}
 
-		void dma_transfer(gl::command_context& cmd, gl::texture* src, const areai& /*src_area*/, const utils::address_range& /*valid_range*/, u32 pitch)
+		void dma_transfer(gl::command_context& cmd, gl::texture* src, const areai& /*src_area*/, const utils::address_range32& /*valid_range*/, u32 pitch)
 		{
 			init_buffer(src);
 			glGetError();
@@ -599,7 +600,7 @@ namespace gl
 			copy_transfer_regions_impl(cmd, dst->image(), region);
 		}
 
-		cached_texture_section* create_new_texture(gl::command_context& cmd, const utils::address_range &rsx_range, u16 width, u16 height, u16 depth, u16 mipmaps, u32 pitch,
+		cached_texture_section* create_new_texture(gl::command_context& cmd, const utils::address_range32 &rsx_range, u16 width, u16 height, u16 depth, u16 mipmaps, u32 pitch,
 			u32 gcm_format, rsx::texture_upload_context context, rsx::texture_dimension_extended type, bool swizzled, rsx::component_order swizzle_flags, rsx::flags32_t /*flags*/) override
 		{
 			const rsx::image_section_attributes_t search_desc = { .gcm_format = gcm_format, .width = width, .height = height, .depth = depth, .mipmaps = mipmaps };
@@ -707,7 +708,7 @@ namespace gl
 
 		cached_texture_section* create_nul_section(
 			gl::command_context& /*cmd*/,
-			const utils::address_range& rsx_range,
+			const utils::address_range32& rsx_range,
 			const rsx::image_section_attributes_t& attrs,
 			const rsx::GCM_tile_reference& /*tile*/,
 			bool /*memory_load*/) override
@@ -725,7 +726,7 @@ namespace gl
 			return &cached;
 		}
 
-		cached_texture_section* upload_image_from_cpu(gl::command_context& cmd, const utils::address_range& rsx_range, u16 width, u16 height, u16 depth, u16 mipmaps, u32 pitch, u32 gcm_format,
+		cached_texture_section* upload_image_from_cpu(gl::command_context& cmd, const utils::address_range32& rsx_range, u16 width, u16 height, u16 depth, u16 mipmaps, u32 pitch, u32 gcm_format,
 			rsx::texture_upload_context context, const std::vector<rsx::subresource_layout>& subresource_layout, rsx::texture_dimension_extended type, bool input_swizzled) override
 		{
 			auto section = create_new_texture(cmd, rsx_range, width, height, depth, mipmaps, pitch, gcm_format, context, type, input_swizzled,

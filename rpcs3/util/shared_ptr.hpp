@@ -207,7 +207,10 @@ namespace stx
 		}
 	};
 
-#ifndef _MSC_VER
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#elif !defined(_MSC_VER)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Winvalid-offsetof"
 #endif
@@ -316,7 +319,9 @@ namespace stx
 		return make_single<std::remove_reference_t<T>>(std::forward<T>(value));
 	}
 
-#ifndef _MSC_VER
+#ifdef __clang__
+#pragma clang diagnostic pop
+#elif !defined(_MSC_VER)
 #pragma GCC diagnostic pop
 #endif
 
@@ -576,15 +581,13 @@ namespace stx
 	template <typename T>
 	class atomic_ptr
 	{
-	public:
+	private:
 		struct fat_ptr
 		{
 			uptr ptr{};
 			u32 is_non_null{};
 			u32 ref_ctr{};
 		};
-
-	private:
 
 		mutable atomic_t<fat_ptr> m_val{fat_ptr{}};
 
@@ -1117,19 +1120,24 @@ namespace stx
 			return static_cast<volatile const void*>(observe()) == r.get();
 		}
 
+		atomic_t<u32> &get_wait_atomic()
+		{
+			return *utils::bless<atomic_t<u32>>(&m_val.raw().is_non_null);
+		}
+
 		void wait(std::nullptr_t, atomic_wait_timeout timeout = atomic_wait_timeout::inf)
 		{
-			utils::bless<atomic_t<u32>>(&m_val.raw().is_non_null)->wait(0, timeout);
+			get_wait_atomic().wait(0, timeout);
 		}
 
 		void notify_one()
 		{
-			utils::bless<atomic_t<u32>>(&m_val.raw().is_non_null)->notify_one();
+			get_wait_atomic().notify_one();
 		}
 
 		void notify_all()
 		{
-			utils::bless<atomic_t<u32>>(&m_val.raw().is_non_null)->notify_all();
+			get_wait_atomic().notify_all();
 		}
 	};
 

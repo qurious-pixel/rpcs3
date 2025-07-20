@@ -638,6 +638,7 @@ public:
 	virtual ~spu_thread() override;
 	void cleanup();
 	void cpu_init();
+	void init_spu_decoder();
 
 	static const u32 id_base = 0x02000000; // TODO (used to determine thread type)
 	static const u32 id_step = 1;
@@ -801,9 +802,18 @@ public:
 	u32 last_getllar = umax; // LS address of last GETLLAR (if matches current GETLLAR we can let the thread rest)
 	u32 last_getllar_gpr1 = umax;
 	u32 last_getllar_addr = umax;
+	u32 last_getllar_lsa = umax;
 	u32 getllar_spin_count = 0;
 	u32 getllar_busy_waiting_switch = umax; // umax means the test needs evaluation, otherwise it's a boolean
 	u64 getllar_evaluate_time = 0;
+
+	u32 eventstat_raddr = 0;
+	u32 eventstat_getllar = 0;
+	u64 eventstat_block_counter = 0;
+	u64 eventstat_spu_group_restart = 0;
+	u64 eventstat_spin_count = 0;
+	u64 eventstat_evaluate_time = 0;
+	u32 eventstat_busy_waiting_switch = 0;
 
 	std::vector<mfc_cmd_dump> mfc_history;
 	u64 mfc_dump_idx = 0;
@@ -828,6 +838,7 @@ public:
 	bool stop_flag_removal_protection = false;
 
 	std::array<std::array<u8, 4>, SPU_LS_SIZE / 128> getllar_wait_time{};
+	std::array<std::array<u8, 16>, SPU_LS_SIZE / 128> eventstat_wait_time{};
  
 	void push_snr(u32 number, u32 value);
 	static void do_dma_transfer(spu_thread* _this, const spu_mfc_cmd& args, u8* ls);

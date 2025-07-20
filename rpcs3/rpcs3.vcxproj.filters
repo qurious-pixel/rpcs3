@@ -996,6 +996,9 @@
     <ClCompile Include="Input\sdl_pad_handler.cpp">
       <Filter>Io\SDL</Filter>
     </ClCompile>
+    <ClCompile Include="Input\sdl_instance.cpp">
+      <Filter>Io\SDL</Filter>
+    </ClCompile>
     <ClCompile Include="rpcs3qt\config_checker.cpp">
       <Filter>Gui\log</Filter>
     </ClCompile>
@@ -1140,6 +1143,15 @@
     <ClCompile Include="QTGeneratedFiles\Release\moc_emulated_pad_settings_dialog.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="rpcs3qt\emulated_logitech_g27_settings_dialog.cpp">
+      <Filter>Gui\settings</Filter>
+    </ClCompile>
+    <ClCompile Include="QTGeneratedFiles\Debug\moc_emulated_logitech_g27_settings_dialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="QTGeneratedFiles\Release\moc_emulated_logitech_g27_settings_dialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
     <ClCompile Include="rpcs3qt\localized_emu.cpp">
       <Filter>Gui\settings</Filter>
     </ClCompile>
@@ -1195,6 +1207,9 @@
       <Filter>Gui\widgets</Filter>
     </ClCompile>
     <ClCompile Include="rpcs3.cpp">
+      <Filter>rpcs3</Filter>
+    </ClCompile>
+    <ClCompile Include="gamemode_control.cpp">
       <Filter>rpcs3</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1352,6 +1367,9 @@
     <ClInclude Include="Input\sdl_pad_handler.h">
       <Filter>Io\SDL</Filter>
     </ClInclude>
+    <ClInclude Include="Input\sdl_instance.h">
+      <Filter>Io\SDL</Filter>
+    </ClInclude>
     <ClInclude Include="QTGeneratedFiles\ui_shortcut_dialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
@@ -1416,6 +1434,9 @@
       <Filter>Gui\utils</Filter>
     </ClInclude>
     <ClInclude Include="rpcs3.h">
+      <Filter>rpcs3</Filter>
+    </ClInclude>
+    <ClInclude Include="gamemode_control.h">
       <Filter>rpcs3</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1735,6 +1756,9 @@
     <CustomBuild Include="rpcs3qt\emulated_pad_settings_dialog.h">
       <Filter>Gui\settings</Filter>
     </CustomBuild>
+    <CustomBuild Include="rpcs3qt\emulated_logitech_g27_settings_dialog.h">
+      <Filter>Gui\settings</Filter>
+    </CustomBuild>
     <CustomBuild Include="rpcs3qt\midi_creator.h">
       <Filter>Gui\settings</Filter>
     </CustomBuild>
@@ -1788,12 +1812,6 @@
     <None Include="..\Utilities\git-version-gen.cmd">
       <Filter>Scripts</Filter>
     </None>
-    <None Include="..\.cirrus.yml">
-      <Filter>CI</Filter>
-    </None>
-    <None Include="..\azure-pipelines.yml">
-      <Filter>CI</Filter>
-    </None>
     <None Include="..\.ci\build-freebsd.sh">
       <Filter>CI</Filter>
     </None>
@@ -1801,6 +1819,9 @@
       <Filter>CI</Filter>
     </None>
     <None Include="..\.ci\build-mac.sh">
+      <Filter>CI</Filter>
+    </None>
+    <None Include="..\.ci\build-windows-clang.sh">
       <Filter>CI</Filter>
     </None>
     <None Include="..\.ci\deploy-linux.sh">
@@ -1812,12 +1833,6 @@
     <None Include="..\.ci\deploy-windows.sh">
       <Filter>CI</Filter>
     </None>
-    <None Include="..\.ci\export-azure-vars.sh">
-      <Filter>CI</Filter>
-    </None>
-    <None Include="..\.ci\export-cirrus-vars.sh">
-      <Filter>CI</Filter>
-    </None>
     <None Include="..\.ci\get_keys-windows.sh">
       <Filter>CI</Filter>
     </None>
@@ -1825,6 +1840,9 @@
       <Filter>CI</Filter>
     </None>
     <None Include="..\.ci\setup-windows.sh">
+      <Filter>CI</Filter>
+    </None>
+    <None Include="..\.ci\setup-windows-ci-vars.sh">
       <Filter>CI</Filter>
     </None>
     <None Include="..\.ci\install-freebsd.sh">
@@ -1885,6 +1903,21 @@
       <Filter>Darwin</Filter>
     </None>
     <None Include="..\.github\workflows\rpcs3.yml">
+      <Filter>CI</Filter>
+    </None>
+    <None Include="..\.ci\deploy-llvm.sh">
+      <Filter>CI</Filter>
+    </None>
+    <None Include="..\.ci\generate-qt-ts.sh">
+      <Filter>CI</Filter>
+    </None>
+    <None Include="..\.ci\setup-llvm.sh">
+      <Filter>CI</Filter>
+    </None>
+    <None Include="..\.github\workflows\llvm.yml">
+      <Filter>CI</Filter>
+    </None>
+    <None Include="..\.github\workflows\qt-ts.yml">
       <Filter>CI</Filter>
     </None>
   </ItemGroup>

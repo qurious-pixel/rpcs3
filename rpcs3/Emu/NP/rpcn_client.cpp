@@ -23,8 +23,8 @@
 #include <WS2tcpip.h>
 #else
 #ifdef __clang__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
 #endif
 #include <sys/time.h>
 #include <sys/types.h>
@@ -37,7 +37,7 @@
 #include <poll.h>
 #include <netdb.h>
 #ifdef __clang__
-#pragma GCC diagnostic pop
+#pragma clang diagnostic pop
 #endif
 #endif
 
@@ -212,6 +212,7 @@ namespace rpcn
 		case rpcn::rpcn_state::failure_input: return localized_string_id::RPCN_ERROR_INVALID_INPUT;
 		case rpcn::rpcn_state::failure_wolfssl: return localized_string_id::RPCN_ERROR_WOLFSSL;
 		case rpcn::rpcn_state::failure_resolve: return localized_string_id::RPCN_ERROR_RESOLVE;
+		case rpcn::rpcn_state::failure_binding: return localized_string_id::RPCN_ERROR_BINDING;
 		case rpcn::rpcn_state::failure_connect: return localized_string_id::RPCN_ERROR_CONNECT;
 		case rpcn::rpcn_state::failure_id: return localized_string_id::RPCN_ERROR_LOGIN_ERROR;
 		case rpcn::rpcn_state::failure_id_already_logged_in: return localized_string_id::RPCN_ERROR_ALREADY_LOGGED;
@@ -316,8 +317,8 @@ namespace rpcn
 
 	// Constructor, destructor & singleton manager
 
-	rpcn_client::rpcn_client()
-		: sem_connected(0), sem_authentified(0), sem_reader(0), sem_writer(0), sem_rpcn(0),
+	rpcn_client::rpcn_client(u32 binding_address)
+		: binding_address(binding_address), sem_connected(0), sem_authentified(0), sem_reader(0), sem_writer(0), sem_rpcn(0),
 		  thread_rpcn(std::thread(&rpcn_client::rpcn_thread, this)),
 		  thread_rpcn_reader(std::thread(&rpcn_client::rpcn_reader_thread, this)),
 		  thread_rpcn_writer(std::thread(&rpcn_client::rpcn_writer_thread, this))
@@ -349,7 +350,7 @@ namespace rpcn
 		sem_authentified.release();
 	}
 
-	std::shared_ptr<rpcn_client> rpcn_client::get_instance(bool check_config)
+	std::shared_ptr<rpcn_client> rpcn_client::get_instance(u32 binding_address, bool check_config)
 	{
 		if (check_config && g_cfg.net.psn_status != np_psn_status::psn_rpcn)
 		{
@@ -362,7 +363,7 @@ namespace rpcn
 		sptr = instance.lock();
 		if (!sptr)
 		{
-			sptr = std::shared_ptr<rpcn_client>(new rpcn_client());
+			sptr = std::shared_ptr<rpcn_client>(new rpcn_client(binding_address));
 			sptr->register_friend_cb(overlay_friend_callback, nullptr);
 			instance = sptr;
 		}
@@ -1074,6 +1075,16 @@ namespace rpcn
 				return false;
 			}
 
+			sockaddr_in sock_addr = {.sin_family = AF_INET};
+			sock_addr.sin_addr.s_addr = binding_address;
+
+			if (binding_address != 0 && ::bind(sockfd, reinterpret_cast<const sockaddr*>(&sock_addr), sizeof(sock_addr)) == -1)
+			{
+				rpcn_log.error("bind: Failed to bind RPCN client socket to binding address(%s): 0x%x!", np::ip_to_string(binding_address), get_native_error());
+				state = rpcn_state::failure_binding;
+				return false;
+			}
+
 			if (::connect(sockfd, reinterpret_cast<struct sockaddr*>(&addr_rpcn), sizeof(addr_rpcn)) != 0)
 			{
 				rpcn_log.error("connect: Failed to connect to RPCN server!");
@@ -1618,17 +1629,6 @@ namespace rpcn
 	{
 		flatbuffers::FlatBufferBuilder builder(1024);
 
-		flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<BinAttr>>> final_binattrinternal_vec;
-		if (req->roomBinAttrInternalNum && req->roomBinAttrInternal)
-		{
-			std::vector<flatbuffers::Offset<BinAttr>> davec;
-			for (u32 i = 0; i < req->roomBinAttrInternalNum; i++)
-			{
-				auto bin = CreateBinAttr(builder, req->roomBinAttrInternal[i].id, builder.CreateVector(req->roomBinAttrInternal[i].ptr.get_ptr(), req->roomBinAttrInternal[i].size));
-				davec.push_back(bin);
-			}
-			final_binattrinternal_vec = builder.CreateVector(davec);
-		}
 		flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<IntAttr>>> final_searchintattrexternal_vec;
 		if (req->roomSearchableIntAttrExternalNum && req->roomSearchableIntAttrExternal)
 		{
@@ -1640,28 +1640,74 @@ namespace rpcn
 			}
 			final_searchintattrexternal_vec = builder.CreateVector(davec);
 		}
+
+		// WWE SmackDown vs. RAW 2009 passes roomBinAttrExternal in roomSearchableBinAttrExternal so we parse based on attribute ids
+
+		flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<BinAttr>>> final_binattrinternal_vec;
 		flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<BinAttr>>> final_searchbinattrexternal_vec;
+		flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<BinAttr>>> final_binattrexternal_vec;
+
+		std::vector<flatbuffers::Offset<BinAttr>> davec_binattrinternal;
+		std::vector<flatbuffers::Offset<BinAttr>> davec_searchable_binattrexternal;
+		std::vector<flatbuffers::Offset<BinAttr>> davec_binattrexternal;
+
+		auto put_binattr = [&](SceNpMatching2AttributeId id, flatbuffers::Offset<BinAttr> bin)
+		{
+			switch (id)
+			{
+			case SCE_NP_MATCHING2_ROOM_BIN_ATTR_INTERNAL_1_ID:
+			case SCE_NP_MATCHING2_ROOM_BIN_ATTR_INTERNAL_2_ID:
+				davec_binattrinternal.push_back(bin);
+				break;
+			case SCE_NP_MATCHING2_ROOM_BIN_ATTR_EXTERNAL_1_ID:
+			case SCE_NP_MATCHING2_ROOM_BIN_ATTR_EXTERNAL_2_ID:
+				davec_binattrexternal.push_back(bin);
+				break;
+			case SCE_NP_MATCHING2_ROOM_SEARCHABLE_BIN_ATTR_EXTERNAL_1_ID:
+				davec_searchable_binattrexternal.push_back(bin);
+				break;
+			default:
+				rpcn_log.error("Unexpected bin attribute id in createjoin_room request: 0x%x", id);
+				break;
+			}
+		};
+
+		if (req->roomBinAttrInternalNum && req->roomBinAttrInternal)
+		{
+			for (u32 i = 0; i < req->roomBinAttrInternalNum; i++)
+			{
+				auto bin = CreateBinAttr(builder, req->roomBinAttrInternal[i].id, builder.CreateVector(req->roomBinAttrInternal[i].ptr.get_ptr(), req->roomBinAttrInternal[i].size));
+				put_binattr(req->roomBinAttrInternal[i].id, bin);
+			}
+		}
+
 		if (req->roomSearchableBinAttrExternalNum && req->roomSearchableBinAttrExternal)
 		{
-			std::vector<flatbuffers::Offset<BinAttr>> davec;
 			for (u32 i = 0; i < req->roomSearchableBinAttrExternalNum; i++)
 			{
 				auto bin = CreateBinAttr(builder, req->roomSearchableBinAttrExternal[i].id, builder.CreateVector(req->roomSearchableBinAttrExternal[i].ptr.get_ptr(), req->roomSearchableBinAttrExternal[i].size));
-				davec.push_back(bin);
+				put_binattr(req->roomSearchableBinAttrExternal[i].id, bin);
 			}
-			final_searchbinattrexternal_vec = builder.CreateVector(davec);
 		}
-		flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<BinAttr>>> final_binattrexternal_vec;
+
 		if (req->roomBinAttrExternalNum && req->roomBinAttrExternal)
 		{
-			std::vector<flatbuffers::Offset<BinAttr>> davec;
 			for (u32 i = 0; i < req->roomBinAttrExternalNum; i++)
 			{
 				auto bin = CreateBinAttr(builder, req->roomBinAttrExternal[i].id, builder.CreateVector(req->roomBinAttrExternal[i].ptr.get_ptr(), req->roomBinAttrExternal[i].size));
-				davec.push_back(bin);
+				put_binattr(req->roomBinAttrExternal[i].id, bin);
 			}
-			final_binattrexternal_vec = builder.CreateVector(davec);
 		}
+
+		if (!davec_binattrinternal.empty())
+			final_binattrinternal_vec = builder.CreateVector(davec_binattrinternal);
+
+		if (!davec_searchable_binattrexternal.empty())
+			final_searchbinattrexternal_vec = builder.CreateVector(davec_searchable_binattrexternal);
+
+		if (!davec_binattrexternal.empty())
+			final_binattrexternal_vec = builder.CreateVector(davec_binattrexternal);
+
 		flatbuffers::Offset<flatbuffers::Vector<u8>> final_roompassword;
 		if (req->roomPassword)
 			final_roompassword = builder.CreateVector(req->roomPassword->data, 8);
@@ -1873,28 +1919,54 @@ namespace rpcn
 			}
 			final_searchintattrexternal_vec = builder.CreateVector(davec);
 		}
+
 		flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<BinAttr>>> final_searchbinattrexternal_vec;
+		flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<BinAttr>>> final_binattrexternal_vec;
+
+		std::vector<flatbuffers::Offset<BinAttr>> davec_searchable_binattrexternal;
+		std::vector<flatbuffers::Offset<BinAttr>> davec_binattrexternal;
+
+		auto put_binattr = [&](SceNpMatching2AttributeId id, flatbuffers::Offset<BinAttr> bin)
+		{
+			switch (id)
+			{
+			case SCE_NP_MATCHING2_ROOM_BIN_ATTR_EXTERNAL_1_ID:
+			case SCE_NP_MATCHING2_ROOM_BIN_ATTR_EXTERNAL_2_ID:
+				davec_binattrexternal.push_back(bin);
+				break;
+			case SCE_NP_MATCHING2_ROOM_SEARCHABLE_BIN_ATTR_EXTERNAL_1_ID:
+				davec_searchable_binattrexternal.push_back(bin);
+				break;
+			default:
+				rpcn_log.error("Unexpected bin attribute id in set_roomdata_external request: 0x%x", id);
+				break;
+			}
+		};
+
 		if (req->roomSearchableBinAttrExternalNum && req->roomSearchableBinAttrExternal)
 		{
-			std::vector<flatbuffers::Offset<BinAttr>> davec;
 			for (u32 i = 0; i < req->roomSearchableBinAttrExternalNum; i++)
 			{
 				auto bin = CreateBinAttr(builder, req->roomSearchableBinAttrExternal[i].id, builder.CreateVector(req->roomSearchableBinAttrExternal[i].ptr.get_ptr(), req->roomSearchableBinAttrExternal[i].size));
-				davec.push_back(bin);
+				put_binattr(req->roomSearchableBinAttrExternal[i].id, bin);
 			}
-			final_searchbinattrexternal_vec = builder.CreateVector(davec);
 		}
-		flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<BinAttr>>> final_binattrexternal_vec;
+
 		if (req->roomBinAttrExternalNum && req->roomBinAttrExternal)
 		{
-			std::vector<flatbuffers::Offset<BinAttr>> davec;
 			for (u32 i = 0; i < req->roomBinAttrExternalNum; i++)
 			{
 				auto bin = CreateBinAttr(builder, req->roomBinAttrExternal[i].id, builder.CreateVector(req->roomBinAttrExternal[i].ptr.get_ptr(), req->roomBinAttrExternal[i].size));
-				davec.push_back(bin);
+				put_binattr(req->roomBinAttrExternal[i].id, bin);
 			}
-			final_binattrexternal_vec = builder.CreateVector(davec);
 		}
+
+		if (!davec_searchable_binattrexternal.empty())
+			final_searchbinattrexternal_vec = builder.CreateVector(davec_searchable_binattrexternal);
+
+		if (!davec_binattrexternal.empty())
+			final_binattrexternal_vec = builder.CreateVector(davec_binattrexternal);
+
 		auto req_finished = CreateSetRoomDataExternalRequest(builder, req->roomId, final_searchintattrexternal_vec, final_searchbinattrexternal_vec, final_binattrexternal_vec);
 		builder.Finish(req_finished);
 

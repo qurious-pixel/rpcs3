@@ -29,6 +29,10 @@ if(USE_ASAN)
     set_source_files_properties(../../Utilities/Thread.cpp PROPERTIES COMPILE_DEFINITIONS USE_ASAN)
 endif()
 
+if(NOT USE_SYSTEM_OPENAL)
+    target_compile_definitions(rpcs3_emu PUBLIC AL_LIBTYPE_STATIC)
+endif()
+
 if(HAS_MEMORY_BREAKPOINTS)
     target_compile_definitions(rpcs3_emu PRIVATE RPCS3_HAS_MEMORY_BREAKPOINTS)
 endif()
@@ -418,6 +422,8 @@ target_sources(rpcs3_emu PRIVATE
     Io/usb_device.cpp
     Io/usb_vfs.cpp
     Io/usio.cpp
+    Io/LogitechG27.cpp
+    Io/LogitechG27Config.cpp
 )
 
 # Np
@@ -509,6 +515,7 @@ target_sources(rpcs3_emu PRIVATE
     RSX/Overlays/overlay_video.cpp
     RSX/Overlays/Shaders/shader_loading_dialog.cpp
     RSX/Overlays/Shaders/shader_loading_dialog_native.cpp
+    RSX/Program/CgBinaryProgram.cpp
     RSX/Program/CgBinaryFragmentProgram.cpp
     RSX/Program/CgBinaryVertexProgram.cpp
     RSX/Program/FragmentProgramDecompiler.cpp

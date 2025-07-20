@@ -13,9 +13,9 @@ fi
 
 git config --global --add safe.directory '*'
 
-# Pull all the submodules except llvm, opencv, sdl and curl
+# Pull all the submodules except some
 # shellcheck disable=SC2046
-git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/libsdl-org/ && !/curl/ { print $3 }' .gitmodules)
+git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/libsdl-org/ && !/curl/ && !/zlib/ { print $3 }' .gitmodules)
 
 if [ ! -d "$BUILD_DIR" ]; then
     mkdir "$BUILD_DIR" || exit 1

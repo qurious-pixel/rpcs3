@@ -32,13 +32,13 @@
 #include <QTimer>
 #include <QCheckBox>
 #include <QMessageBox>
+#include <QMenu>
+#include <QTextDocumentFragment>
 #include <algorithm>
 #include <functional>
 
 #include "rpcs3qt/debugger_add_bp_window.h"
 #include "util/asm.hpp"
-
-constexpr auto qstr = QString::fromStdString;
 
 constexpr auto s_pause_flags = cpu_flag::dbg_pause + cpu_flag::dbg_global_pause;
 
@@ -125,7 +125,8 @@ debugger_frame::debugger_frame(std::shared_ptr<gui_settings> gui_settings, QWidg
 	m_regs = new QPlainTextEdit(this);
 	m_regs->setLineWrapMode(QPlainTextEdit::NoWrap);
 	m_regs->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
-
+	m_regs->setContextMenuPolicy(Qt::CustomContextMenu);
+	
 	m_debugger_list->setFont(m_mono);
 	m_misc_state->setFont(m_mono);
 	m_regs->setFont(m_mono);
@@ -157,6 +158,8 @@ debugger_frame::debugger_frame(std::shared_ptr<gui_settings> gui_settings, QWidg
 	QWidget* body = new QWidget(this);
 	body->setLayout(vbox_p_main);
 	setWidget(body);
+
+	connect(m_regs, &QPlainTextEdit::customContextMenuRequested, this, &debugger_frame::OnRegsContextMenu);
 
 	connect(m_go_to_addr, &QAbstractButton::clicked, this, &debugger_frame::ShowGotoAddressDialog);
 	connect(m_go_to_pc, &QAbstractButton::clicked, this, [this]() { ShowPC(true); });
@@ -1025,7 +1028,7 @@ void debugger_frame::UpdateUnitList()
 		std::function<cpu_thread*()> func_cpu = make_check_cpu(std::addressof(cpu), true);
 
 		// Space at the end is to pad a gap on the right
-		cpu_list.emplace_back(qstr((id >> 24 == 0x55 ? "RSX[0x55555555]" : cpu.get_name()) + ' '), std::move(func_cpu));
+		cpu_list.emplace_back(QString::fromStdString((id >> 24 == 0x55 ? "RSX[0x55555555]" : cpu.get_name()) + ' '), std::move(func_cpu));
 
 		if (old_cpu_ptr == std::addressof(cpu))
 		{
@@ -1368,7 +1371,7 @@ void debugger_frame::WritePanels()
 	int loc = m_misc_state->verticalScrollBar()->value();
 	int hloc = m_misc_state->horizontalScrollBar()->value();
 	m_misc_state->clear();
-	m_misc_state->setPlainText(qstr(cpu->dump_misc()));
+	m_misc_state->setPlainText(QString::fromStdString(cpu->dump_misc()));
 	m_misc_state->verticalScrollBar()->setValue(loc);
 	m_misc_state->horizontalScrollBar()->setValue(hloc);
 
@@ -1377,7 +1380,7 @@ void debugger_frame::WritePanels()
 	m_regs->clear();
 	m_last_reg_state.clear();
 	cpu->dump_regs(m_last_reg_state, m_dump_reg_func_data);
-	m_regs->setPlainText(qstr(m_last_reg_state));
+	m_regs->setPlainText(QString::fromStdString(m_last_reg_state));
 	m_regs->verticalScrollBar()->setValue(loc);
 	m_regs->horizontalScrollBar()->setValue(hloc);
 
@@ -1701,4 +1704,37 @@ void debugger_frame::EnableButtons(bool enable)
 	m_btn_step->setEnabled(step);
 	m_btn_step_over->setEnabled(step);
 	m_btn_run->setEnabled(enable);
+}
+
+void debugger_frame::OnRegsContextMenu(const QPoint& pos)
+{
+	QMenu* menu = m_regs->createStandardContextMenu();
+	QAction* memory_viewer_action = new QAction(tr("Show in Memory Viewer"), menu);
+
+	connect(memory_viewer_action, &QAction::triggered, this, &debugger_frame::RegsShowMemoryViewerAction);
+
+	menu->addSeparator();
+	menu->addAction(memory_viewer_action);
+	menu->exec(m_regs->mapToGlobal(pos));
+}
+
+void debugger_frame::RegsShowMemoryViewerAction()
+{
+	const QTextCursor cursor = m_regs->textCursor();
+	if (!cursor.hasSelection())
+	{
+		QMessageBox::warning(this, tr("No Selection"), tr("Please select a hex value first."));
+		return;
+	}
+
+	const QTextDocumentFragment frag(cursor);
+	const QString selected = frag.toPlainText().trimmed();
+	u64 pc = 0;
+	if (!parse_hex_qstring(selected, &pc))
+	{
+		QMessageBox::critical(this, tr("Invalid Hex"), tr("“%0” is not a valid 32-bit hex value.").arg(selected));
+		return;
+	}
+
+	memory_viewer_panel::ShowAtPC(static_cast<u32>(pc), make_check_cpu(get_cpu()));
 }

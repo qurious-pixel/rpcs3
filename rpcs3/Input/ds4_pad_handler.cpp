@@ -589,7 +589,7 @@ void ds4_pad_handler::check_add_device(hid_device* hidDevice, hid_enumerated_dev
 	if (!devinfo)
 	{
 		ds4_log.error("check_add_device: hid_get_device_info failed! error=%s", hid_error(hidDevice));
-		hid_close(hidDevice);
+		HidDevice::close(hidDevice);
 		return;
 	}
 
@@ -646,7 +646,7 @@ int ds4_pad_handler::send_output_report(DS4Device* device)
 
 	const auto config = device->config;
 	if (config == nullptr)
-		return -2; // hid_write and hid_write_control return -1 on error
+		return -2; // hid_write returns -1 on error
 
 	// write rumble state
 	ds4_output_report_common common{};
@@ -837,18 +837,12 @@ PadHandlerBase::connection ds4_pad_handler::update_connection(const std::shared_
 	if (dev->hidDevice == nullptr)
 	{
 		// try to reconnect
-#ifdef ANDROID
-		if (hid_device* hid_dev = hid_libusb_wrap_sys_device(dev->path, -1))
-#else
-		if (hid_device* hid_dev = hid_open_path(dev->path.c_str()))
-#endif
+		if (hid_device* hid_dev = dev->open())
 		{
 			if (hid_set_nonblocking(hid_dev, 1) == -1)
 			{
 				ds4_log.error("Reconnecting Device %s: hid_set_nonblocking failed with error %s", dev->path, hid_error(hid_dev));
 			}
-
-			dev->hidDevice = hid_dev;
 
 			if (!dev->has_calib_data)
 			{

@@ -259,7 +259,7 @@ void ds3_pad_handler::check_add_device(hid_device* hidDevice, hid_enumerated_dev
 		if (res <= 0 || buf[0] != 0x0)
 		{
 			ds3_log.error("check_add_device: hid_get_feature_report 0x0 failed! result=%d, buf[0]=0x%x, error=%s", res, buf[0], hid_error(hidDevice));
-			hid_close(hidDevice);
+			HidDevice::close(hidDevice);
 			return;
 		}
 	}
@@ -270,7 +270,7 @@ void ds3_pad_handler::check_add_device(hid_device* hidDevice, hid_enumerated_dev
 	if (res < 0)
 	{
 		ds3_log.error("check_add_device: hid_init_sixaxis_usb failed! (result=%d, error=%s)", res, hid_error(hidDevice));
-		hid_close(hidDevice);
+		HidDevice::close(hidDevice);
 		return;
 	}
 #endif
@@ -281,7 +281,7 @@ void ds3_pad_handler::check_add_device(hid_device* hidDevice, hid_enumerated_dev
 	if (hid_set_nonblocking(hidDevice, 1) == -1)
 	{
 		ds3_log.error("check_add_device: hid_set_nonblocking failed! Reason: %s", hid_error(hidDevice));
-		hid_close(hidDevice);
+		HidDevice::close(hidDevice);
 		return;
 	}
 
@@ -513,17 +513,12 @@ PadHandlerBase::connection ds3_pad_handler::update_connection(const std::shared_
 
 	if (dev->hidDevice == nullptr)
 	{
-#ifdef ANDROID
-		if (hid_device* hid_dev = hid_libusb_wrap_sys_device(dev->path, -1))
-#else
-		if (hid_device* hid_dev = hid_open_path(dev->path.c_str()))
-#endif
+		if (hid_device* hid_dev = dev->open())
 		{
 			if (hid_set_nonblocking(hid_dev, 1) == -1)
 			{
 				ds3_log.error("Reconnecting Device %s: hid_set_nonblocking failed with error %s", dev->path, hid_error(hid_dev));
 			}
-			dev->hidDevice = hid_dev;
 		}
 		else
 		{
