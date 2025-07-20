@@ -111,6 +111,6 @@ jobs:
 
       - name: Check BUILDSTAGINGARTIFACT dir
         run: |
-          mkdir -p ${{ env.BUILD_BUILDDIRECTORY }}
-          mv ./artifacts/*.AppImage ${{ env.BUILD_BUILDDIRECTORY }}
-          ls -AN ${{ env.BUILD_BUILDDIRECTORY }}
+          mkdir -p ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
+          mv ./artifacts/*.AppImage ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
+          ls -AN ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
