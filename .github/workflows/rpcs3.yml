@@ -110,4 +110,6 @@ jobs:
           compression-level: 0
 
       - name: Check BUILDSTAGINGARTIFACT dir
-        run: ls -AN
+        run: |
+          pwd
+          ls -AN artifacts
