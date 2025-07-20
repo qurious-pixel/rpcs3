@@ -79,7 +79,9 @@ jobs:
           fetch-depth: 0
       
       - name: ccache path
-        run: ccache --show-config 
+        run: |
+          ccache --show-config 
+          ls -al /ccache
 
       - name: Restore build Ccache
         uses: actions/cache/restore@main
