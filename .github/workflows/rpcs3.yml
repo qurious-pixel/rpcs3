@@ -77,20 +77,14 @@ jobs:
         uses: actions/checkout@main
         with:
           fetch-depth: 0
-
-      - name: Unit tests
-        run: |
-          echo "os" && echo ${{ matrix.os }}
-          echo "compiler" && echo ${{ matrix.compiler }}
-          echo "run_id" && echo ${{github.run_id}}
-        
-      #- name: Restore build Ccache
-      #  uses: actions/cache/restore@main
-      #  id: restore-build-ccache
-      #  with:
-      #    path: ${{ env.CCACHE_DIR }}
-      #    key: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-${{github.run_id}}
-      #    restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
+      
+      - name: Restore build Ccache
+        uses: actions/cache/restore@main
+        id: restore-build-ccache
+        with:
+          path: ${CCACHE_DIR}
+          key: ${{ matrix.os }}-ccache-${{ matrix.compiler }}-${{github.run_id}}
+          restore-keys: ${{ matrix.os }}-ccache-${{ matrix.compiler }}-
 
       - name: Docker setup and build
         run: ${BUILD_SCRIPT}
@@ -107,10 +101,10 @@ jobs:
           ldd /rpcs3/build/bin/rpcs3_test
           ctest -j -VV -C Release --test-dir ${BUILDDIR} --output-on-failure
 
-      #- name: Save build Ccache
+      - name: Save build Ccache
         #if: github.ref == 'refs/heads/master'
-      #  uses: actions/cache/save@main
-      #  with:
-      #    path: ${{ env.CCACHE_DIR }}
-      #    key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
+        uses: actions/cache/save@main
+        with:
+          path: ${CCACHE_DIR}
+          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
