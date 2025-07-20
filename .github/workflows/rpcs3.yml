@@ -63,6 +63,7 @@ jobs:
         run: >-
           .\vcpkg\vcpkg.exe install
           libpng
+          zlib
           --triplet $env:VCPKG_TRIPLET
           --clean-after-build
           ###
