@@ -59,10 +59,3 @@ if [ "$DEPLOY_APPIMAGE" = "true" ]; then
     SHA256SUM=$(sha256sum ./rpcs3*.AppImage | awk '{ print $1 }')
     echo "${SHA256SUM};${FILESIZE}B" > "$RELEASE_MESSAGE"
 fi
-
-if [ "${RUN_UNIT_TESTS}" = 'OFF' ]; then
-    LIB_COPY=$(ldd /rpcs3/build/bin/rpcs3_test | awk '{print $1}')
-    mkdir -p /rpcs3/tests/lib/
-    for i in $LIB_COPY; do cp -av /rpcs3/build/AppDir/usr/lib/"$i" /rpcs3/tests/lib/ || :; done
-    for i in $LIB_COPY; do cp -nv /lib/"${CPU_ARCH}"-linux-gnu/"$i" /rpcs3/tests/lib/ || :; done
-fi
