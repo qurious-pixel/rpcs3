@@ -64,7 +64,7 @@ jobs:
           .\vcpkg\vcpkg.exe install
           ffmpeg[avcodec,avformat,swscale,swresample]
           libpng
-          llvm
+          llvm[clang,core,tools,lld,target-x86]:x64-windows-release
           opencv
           qtbase
           qtmultimedia
