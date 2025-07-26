@@ -112,10 +112,11 @@ jobs:
       - name: Add LLVM and Ninja to PATH
         shell: pwsh
         run: |
-          git clone https://github.com/llvm/llvm-project.git
-          cd llvm-project
-          cmake -DLLVM_ENABLE_PROJECTS=clang -G "Visual Studio 17 2022" -A x64 -Thost=x64 ..\llvm
-
+          git clone --verbose https://github.com/llvm/llvm-project.git
+          cd llvm-project\llvm
+          cmake -Bbuild -DLLVM_ENABLE_PROJECTS=clang -G "Visual Studio 17 2022" -A x64 -Thost=x64
+          cmake --build build
+          
       #- name: Add LLVM and Ninja to PATH
       #  shell: pwsh
       #  run: |
