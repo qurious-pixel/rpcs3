@@ -61,8 +61,8 @@ jobs:
         shell: pwsh
         run: |
           mkdir llvm
-          curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
-          set PATH=%PATH%;C:\a\rpcs3\rpcs3\llvm\bin
+          curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
+          Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
           Get-ChildItem -Path C:\a\rpcs3\rpcs3\llvm
           clang-cl.exe --version
 
