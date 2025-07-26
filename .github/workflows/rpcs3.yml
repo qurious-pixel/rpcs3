@@ -62,16 +62,16 @@ jobs:
         shell: pwsh
         run: >-
           .\vcpkg\vcpkg.exe install
-          ffmpeg[avcodec,avformat,swscale,swresample]
-          libpng
-          llvm:x64-windows-release
-          opencv
-          qtbase
-          qtmultimedia
-          qtsvg
-          qttools
-          vulkan
-          zlib
+          #ffmpeg[avcodec,avformat,swscale,swresample]
+          #libpng
+          #llvm:x64-windows-release
+          #opencv
+          #qtbase
+          #qtmultimedia
+          #qtsvg
+          #qttools
+          #vulkan
+          #zlib
           --triplet $env:VCPKG_TRIPLET
           --clean-after-build
           --debug
