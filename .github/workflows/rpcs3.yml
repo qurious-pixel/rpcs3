@@ -47,8 +47,6 @@ jobs:
         with:
           cmake-version: '3.29.0'
         
-
-
       #- name: Restore LLVM Cache
       #  uses: actions/cache/restore@main
       #  id: llvm-cache
@@ -81,34 +79,34 @@ jobs:
       #    Add-Content -Path $env:GITHUB_PATH -Value "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin"
       #    Add-Content -Path $env:GITHUB_PATH -Value "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja"
 
-      #- name: Restore build Ccache
-      #  uses: actions/cache/restore@main
-      #  id: restore-build-ccache
-      #  with:
-      #    path: ${{ env.CCACHE_DIR }}
-      #    key: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-${{github.run_id}}
-      #    restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
+      - name: Restore build Ccache
+        uses: actions/cache/restore@main
+        id: restore-build-ccache
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-${{github.run_id}}
+          restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
 
-      #- name: Setup CI Variables
-      #  run: .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
+      - name: Setup CI Variables
+        run: .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
 
-      #- name: Build RPCS3
-      #  shell: cmd
-      #  run: |
-      #    call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
-      #    powershell -ExecutionPolicy Bypass -File .ci/build-windows-clang-cl.ps1
+      - name: Build RPCS3
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
+          powershell -ExecutionPolicy Bypass -File .ci/build-windows-clang-cl.ps1
 
-      #- name: Save build Ccache
-      #  if: github.ref == 'refs/heads/master'
-      #  uses: actions/cache/save@main
-      #  with:
-      #    path: ${{ env.CCACHE_DIR }}
-      #    key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
+      - name: Save build Ccache
+        #if: github.ref == 'refs/heads/master'
+        uses: actions/cache/save@main
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
-      #- name: Upload artifacts
-      #  uses: actions/upload-artifact@main
-      #  with:
-      #    name: RPCS3 for Windows (clang-cl)
-      #    path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
-      #    compression-level: 0
-      #    if-no-files-found: error
+      - name: Upload artifacts
+        uses: actions/upload-artifact@main
+        with:
+          name: RPCS3 for Windows (clang-cl)
+          path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
+          compression-level: 0
+          if-no-files-found: error
