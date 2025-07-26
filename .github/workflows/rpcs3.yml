@@ -52,14 +52,14 @@ jobs:
       - name: 'Setup NuGet Credentials for vcpkg'
         shell: 'bash'
         run: |
-          mono `./dependencies/vcpkg/vcpkg fetch nuget | tail -n 1` \
+          mono `./vcpkg/vcpkg.exe fetch nuget | tail -n 1` \
           sources add \
           -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
           -storepasswordincleartext \
           -name "GitHub" \
           -username "${{ github.repository_owner }}" \
           -password "${{ secrets.GITHUB_TOKEN }}"
-          mono `./dependencies/vcpkg/vcpkg fetch nuget | tail -n 1` \
+          mono `./vcpkg/vcpkg.exe fetch nuget | tail -n 1` \
           setapikey "${{ secrets.GITHUB_TOKEN }}" \
           -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
         
