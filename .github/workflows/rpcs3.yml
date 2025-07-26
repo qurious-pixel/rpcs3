@@ -49,36 +49,36 @@ jobs:
         shell: pwsh
         run: .\vcpkg\bootstrap-vcpkg.bat
 
-      - name: 'Setup NuGet Credentials for vcpkg'
-        shell: 'bash'
-        run: |
-          `./vcpkg/vcpkg.exe fetch nuget | tail -n 1` \
-          sources add \
-          -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
-          -storepasswordincleartext \
-          -name "GitHub" \
-          -username "${{ github.repository_owner }}" \
-          -password "${{ secrets.GITHUB_TOKEN }}"
-          `./vcpkg/vcpkg.exe fetch nuget | tail -n 1` \
-          setapikey "${{ secrets.GITHUB_TOKEN }}" \
-          -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+      #- name: 'Setup NuGet Credentials for vcpkg'
+      #  shell: 'bash'
+      #  run: |
+      #    `./vcpkg/vcpkg.exe fetch nuget | tail -n 1` \
+      #    sources add \
+      #    -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
+      #    -storepasswordincleartext \
+      #    -name "GitHub" \
+      #    -username "${{ github.repository_owner }}" \
+      #    -password "${{ secrets.GITHUB_TOKEN }}"
+      #    `./vcpkg/vcpkg.exe fetch nuget | tail -n 1` \
+      #    setapikey "${{ secrets.GITHUB_TOKEN }}" \
+      #    -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
         
-      #- name: Restore vcpkg cache
-      #  uses: actions/cache/restore@main
-      #  id: restore-vcpkg-cache
-      #  with:
-      #    path: |
-      #      vcpkg/installed
-      #      vcpkg/buildtrees
-      #    key: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-${{github.run_id}}
-      #    restore-keys: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-
+      - name: Restore vcpkg cache
+        uses: actions/cache/restore@main
+        id: restore-vcpkg-cache
+        with:
+          path: |
+            vcpkg/installed
+            vcpkg/buildtrees
+          key: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-${{github.run_id}}
+          restore-keys: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-
 
       - name: Install dependencies with vcpkg
         shell: pwsh
         run: >-
           .\vcpkg\vcpkg.exe install
           #ffmpeg[avcodec,avformat,swscale,swresample]
-          #libpng
+          libpng
           #llvm:x64-windows-release
           #opencv
           #qtbase
@@ -92,14 +92,14 @@ jobs:
           --debug
           #llvm
 
-      #- name: Save vcpkg cache
-      #  #if: github.ref == 'refs/heads/master'
-      #  uses: actions/cache/save@main
-      #  with:
-      #    path: |
-      #      vcpkg/installed
-      #      vcpkg/buildtrees
-      #    key: ${{ steps.restore-vcpkg-cache.outputs.cache-primary-key }}
+      - name: Save vcpkg cache
+        #if: github.ref == 'refs/heads/master'
+        uses: actions/cache/save@main
+        with:
+          path: |
+            vcpkg/installed
+            vcpkg/buildtrees
+          key: ${{ steps.restore-vcpkg-cache.outputs.cache-primary-key }}
 
       #- name: Add LLVM and Ninja to PATH
       #  shell: pwsh
