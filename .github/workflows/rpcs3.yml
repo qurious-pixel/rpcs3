@@ -122,8 +122,8 @@ jobs:
         run: |
           git clone --verbose https://github.com/llvm/llvm-project.git
           cd llvm-project\llvm
-          cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS=clang -DLLVM_ALL_TARGETS=X86 -G "Visual Studio 17 2022" -A x64 -Thost=x64
-          cmake --build build
+          cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS=clang,lld -DLLVM_ALL_TARGETS=X86 -G "Visual Studio 17 2022" -A x64 -Thost=x64
+          #cmake --build build
 
       - name: Save LLVM Cache
         #if: github.ref == 'refs/heads/master'
