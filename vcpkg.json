@@ -3,30 +3,8 @@
   "version-string": "1.0",
   "builtin-baseline": "f0fb3ddba5135b80982668de39dbaa139c00d281",
   "dependencies": [
-     {
-      "name": "ffmpeg",
-      "features": [
-        "avcodec",
-        "avformat",
-        "swscale",
-        "swresample"
-      ],
-      "default-features": false
-    },
     "libpng",
-    "llvm",
-    "opencv",
-    "qtbase",
-    "qtmultimedia",
-    "qtsvg",
-    "qttools",
     "vulkan",
     "zlib"
-  ],
-  "overrides": [
-    {
-      "name": "llvm",
-      "version": "17.0.2"
-    }
   ]
 }
