@@ -12,7 +12,7 @@ on:
 
 concurrency:
   group: ${{ github.ref }}-${{ github.event_name }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   BUILD_REPOSITORY_NAME: ${{ github.repository }}
@@ -82,16 +82,16 @@ jobs:
         shell: pwsh
         run: >-
           .\vcpkg\vcpkg.exe install
-          #ffmpeg[avcodec,avformat,swscale,swresample]
+          ffmpeg[avcodec,avformat,swscale,swresample]
           libpng
           #llvm:x64-windows-release
-          #opencv
-          #qtbase
-          #qtmultimedia
-          #qtsvg
-          #qttools
-          #vulkan
-          #zlib
+          opencv
+          qtbase
+          qtmultimedia
+          qtsvg
+          qttools
+          vulkan
+          zlib
           --triplet $env:VCPKG_TRIPLET
           --clean-after-build
           --classic
