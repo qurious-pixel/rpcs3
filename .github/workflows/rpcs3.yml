@@ -95,15 +95,16 @@ jobs:
         id: llvm-cache
         with:
           path: ./llvm
-          key: ${{ runner.os }}-llvm-cache-${{github.run_id}}
+          key: ${{ runner.os }}-llvm-dl-cache-${{github.run_id}}
           restore-keys: ${{ runner.os }}-llvm-cache-
           
-      - name: Add LLVM and Ninja to PATH
-        shell: pwsh
+      - name: Add LLVM
+        shell: bash
         run: |
-          mkdir llvm
-          curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
-          Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
+          if [ ! -e llvm ]; then
+            mkdir llvm
+            curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
+          fi
 
       - name: Save LLVM Cache
         #if: github.ref == 'refs/heads/master'
@@ -121,7 +122,9 @@ jobs:
           restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
 
       - name: Setup CI Variables
-        run: .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
+        run: |
+          .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
+          ${{ github.workspace }}/llvm/bin >> $GITHUB_PATH
 
       - name: Build RPCS3
         shell: cmd
