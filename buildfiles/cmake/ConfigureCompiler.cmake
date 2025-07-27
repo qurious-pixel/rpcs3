@@ -1,10 +1,19 @@
 # Check and configure compiler options for RPCS3
 
 if(MSVC)
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+		check_cxx_compiler_flag("-msse -msse2 -mcx16" COMPILER_X86)
+		if (COMPILER_X86)
+			add_compile_options(-msse -msse2 -mcx16 -mavx -mavx2 -mavx512f -mavx512vbmi -mavx512vl -mavx512dq -mavx512vpopcntdq -maes -mrtm -mpclmul -mmwaitx -mwaitpkg)
+		endif()
+		add_link_options(/dynamicbase)
+	else()
+		add_compile_options(/Zc:throwingNew- /constexpr:steps16777216)
+		add_link_options(/DYNAMICBASE)
+	endif()
 	add_compile_definitions(
 		_CRT_SECURE_NO_DEPRECATE=1 _CRT_NON_CONFORMING_SWPRINTFS=1 _SCL_SECURE_NO_WARNINGS=1
 		NOMINMAX _ENABLE_EXTENDED_ALIGNED_STORAGE=1 _HAS_EXCEPTIONS=0)
-	add_link_options(/DYNAMICBASE)
 
 	#TODO: Some of these could be cleaned up
 	add_compile_options(/wd4805) # Comparing boolean and int
@@ -16,9 +25,6 @@ if(MSVC)
 
 	# Increase stack limit to 8 MB
 	add_link_options(/STACK:8388608,1048576)
-	if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
- 		check_cxx_compiler_flag("-msse -msse2 -mcx16" COMPILER_X86)
-   	endif()
 else()
 	check_cxx_compiler_flag("-march=native" COMPILER_SUPPORTS_MARCH_NATIVE)
 	check_cxx_compiler_flag("-msse -msse2 -mcx16" COMPILER_X86)
@@ -111,6 +117,5 @@ else()
 	# Specify C++ library to use as standard C++ when using clang (not required on linux due to GNU)
 	if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND (APPLE OR WIN32))
 		add_compile_options(-stdlib=libc++)
-  		add_compile_options(-mcx16)
 	endif()
 endif()
