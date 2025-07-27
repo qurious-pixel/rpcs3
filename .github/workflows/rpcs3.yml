@@ -124,6 +124,11 @@ jobs:
 
       - name: Setup CI Variables
         run: .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
+        
+      - name: install DIA SDK
+        run: |
+          mkdir -p "C:/Program Files (x86)/Microsoft Visual Studio/2019/Professional" || true
+          cp -r "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/DIA SDK" "C:/Program Files (x86)/Microsoft Visual Studio/2019/Professional/DIA SDK"
 
       - name: Build RPCS3
         shell: cmd
