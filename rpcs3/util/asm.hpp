@@ -296,7 +296,7 @@ namespace utils
 
 	inline u64 udiv128(u64 high, u64 low, u64 divisor, u64* remainder = nullptr)
 	{
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 		u64 rem = 0;
 		u64 r = _udiv128(high, low, divisor, &rem);
 
