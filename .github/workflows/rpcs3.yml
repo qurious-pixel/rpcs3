@@ -101,10 +101,10 @@ jobs:
       - name: Add LLVM
         shell: pwsh
         run: |
-          if [ ! -e llvm ]; then
+          if (!(Test-Path -Path C:\a\rpcs3\rpcs3\llvm\)) {
             mkdir llvm
             curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
-          fi
+          }
           Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
 
       - name: Save LLVM Cache
@@ -123,8 +123,7 @@ jobs:
           restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
 
       - name: Setup CI Variables
-        run: |
-          .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
+        run: .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
 
       - name: Build RPCS3
         shell: cmd
