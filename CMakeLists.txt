@@ -116,7 +116,6 @@ if(MSVC)
             message(AUTHOR_WARNING "Debug build currently can not work with static CRT.")
         endif()
     endif()
-    add_compile_options(/MP)
 endif()
 
 if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
