@@ -249,30 +249,30 @@ public:
 	}
 };
 
-#if defined(ARCH_X64) && !defined(_MSC_VER)
-//using __m128i = long long __attribute__((vector_size(16)));
-//using __m128d = double __attribute__((vector_size(16)));
-//using __m128 = float __attribute__((vector_size(16)));
+#if defined(ARCH_X64) && !defined(_MSC_VER) && !defined(__m128)
+using __m128i = long long __attribute__((vector_size(16)));
+using __m128d = double __attribute__((vector_size(16)));
+using __m128 = float __attribute__((vector_size(16)));
 #endif
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || defined(__clang__)
 using u128 = __uint128_t;
 using s128 = __int128_t;
 #else
-/*
+
 extern "C"
 {
 	union __m128;
 	union __m128i;
 	struct __m128d;
 
-	uchar _addcarry_u64(uchar, u64, u64, u64*);
-	uchar _subborrow_u64(uchar, u64, u64, u64*);
+	constexpr uchar _addcarry_u64(uchar, u64, u64, u64*);
+	constexpr uchar _subborrow_u64(uchar, u64, u64, u64*);
 	u64 __shiftleft128(u64, u64, uchar);
 	u64 __shiftright128(u64, u64, uchar);
 	u64 _umul128(u64, u64, u64*);
 }
-*/
+
 // Unsigned 128-bit integer implementation (TODO)
 struct alignas(16) u128
 {
@@ -579,7 +579,7 @@ struct s128 : u128
 // Optimization for u64*u64=u128
 constexpr u128 u128_from_mul(u64 a, u64 b)
 {
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 	if (!std::is_constant_evaluated())
 	{
 		u64 hi;
