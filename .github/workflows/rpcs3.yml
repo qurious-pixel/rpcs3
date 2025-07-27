@@ -124,7 +124,7 @@ jobs:
       - name: Setup CI Variables
         run: |
           .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
-          C:\a\rpcs3\rpcs3\llvm\bin >> $env:GITHUB_PATH
+          Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
 
       - name: Build RPCS3
         shell: cmd
