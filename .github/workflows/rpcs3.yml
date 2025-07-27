@@ -47,7 +47,7 @@ jobs:
 
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
-        if: ${{ matrix.compiler == clang }}
+        if: ${{ matrix.compiler == 'clang' }}
         with:
           msystem: ${{ matrix.msys2 }}
           update: true
@@ -76,13 +76,13 @@ jobs:
             p7zip
 
       - name: Clone and bootstrap vcpkg
-        if: ${{ matrix.compiler == clang-cl }}
+        if: ${{ matrix.compiler == 'clang-cl' }}
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
 
       - name: Restore vcpkg cache
-        if: ${{ matrix.compiler == clang-cl }}
+        if: ${{ matrix.compiler == 'clang-cl' }}
         uses: actions/cache/restore@main
         id: restore-vcpkg-cache
         with:
@@ -93,7 +93,7 @@ jobs:
           restore-keys: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-
 
       - name: Install dependencies with vcpkg
-        if: ${{ matrix.compiler == clang-cl }}
+        if: ${{ matrix.compiler == 'clang-cl' }}
         shell: pwsh
         run: >-
           .\vcpkg\vcpkg.exe install
@@ -110,7 +110,7 @@ jobs:
           --clean-after-build
 
       - name: Save vcpkg cache
-        if: ${{ matrix.compiler == clang-cl && steps.restore-vcpkg-cache.outputs.cache-hit != 'true' }}
+        if: ${{ matrix.compiler == 'clang-cl' && steps.restore-vcpkg-cache.outputs.cache-hit != 'true' }}
         #if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
@@ -120,7 +120,7 @@ jobs:
           key: ${{ steps.restore-vcpkg-cache.outputs.cache-primary-key }}
 
       - name: Restore LLVM Cache
-        if: ${{ matrix.compiler == clang-cl }} 
+        if: ${{ matrix.compiler == 'clang-cl' }} 
         uses: actions/cache/restore@main
         id: llvm-cache
         with:
@@ -129,7 +129,7 @@ jobs:
           restore-keys: ${{ runner.os }}-llvm-cache-
           
       - name: Add LLVM
-        if: ${{ matrix.compiler == clang-cl }}
+        if: ${{ matrix.compiler == 'clang-cl' }}
         shell: pwsh
         run: |
           if (!(Test-Path -Path C:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\)) {
@@ -140,7 +140,7 @@ jobs:
           Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin"
 
       - name: Save LLVM Cache
-        if: ${{ matrix.compiler == clang-cl && steps.llvm-cache.outputs.cache-hit != 'true' }}
+        if: ${{ matrix.compiler == 'clang-cl' && steps.llvm-cache.outputs.cache-hit != 'true' }}
         #if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
@@ -156,7 +156,7 @@ jobs:
           restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
 
       - name: Build RPCS3
-        if: ${{ matrix.compiler == clang }}
+        if: ${{ matrix.compiler == 'clang' }}
         shell: msys2 {0}
         run: |
           export CCACHE_DIR=$(cygpath -u "$CCACHE_DIR")
@@ -165,7 +165,7 @@ jobs:
           .ci/build-windows-clang.sh
 
       - name: Build RPCS3
-        if: ${{ matrix.compiler == clang-cl }}
+        if: ${{ matrix.compiler == 'clang-cl' }}
         shell: cmd
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
