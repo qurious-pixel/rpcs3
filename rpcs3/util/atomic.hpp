@@ -8,7 +8,7 @@
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif
 
-#ifdef _MSC_VER
+#ifdef _WIN32
 #pragma warning(push)
 #pragma warning(disable: 4996)
 
