@@ -1,7 +1,6 @@
 # Check and configure compiler options for RPCS3
 
 if(MSVC)
-	add_compile_options(/Zc:throwingNew- /constexpr:steps16777216)
 	add_compile_definitions(
 		_CRT_SECURE_NO_DEPRECATE=1 _CRT_NON_CONFORMING_SWPRINTFS=1 _SCL_SECURE_NO_WARNINGS=1
 		NOMINMAX _ENABLE_EXTENDED_ALIGNED_STORAGE=1 _HAS_EXCEPTIONS=0)
