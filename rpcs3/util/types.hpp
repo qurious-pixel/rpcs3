@@ -250,9 +250,9 @@ public:
 };
 
 #if defined(ARCH_X64) && !defined(_MSC_VER)
-using __m128i = long long __attribute__((vector_size(16)));
-using __m128d = double __attribute__((vector_size(16)));
-using __m128 = float __attribute__((vector_size(16)));
+//using __m128i = long long __attribute__((vector_size(16)));
+//using __m128d = double __attribute__((vector_size(16)));
+//using __m128 = float __attribute__((vector_size(16)));
 #endif
 
 #ifndef _MSC_VER
