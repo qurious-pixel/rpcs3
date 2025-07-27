@@ -9,7 +9,7 @@
 #endif
 
 #ifdef _WIN32
-#include <winnt.h>
+#include <intrin.h>
 #endif
 
 #ifdef _WIN32
