@@ -3,12 +3,12 @@
 #include "util/types.hpp"
 #include <functional>
 
-#ifndef _WIN32
+#ifndef _MSC_VER
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4996)
 
@@ -71,7 +71,7 @@ namespace utils
 
 FORCE_INLINE void atomic_fence_consume()
 {
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 	_ReadWriteBarrier();
 #else
 	__atomic_thread_fence(__ATOMIC_CONSUME);
@@ -80,7 +80,7 @@ FORCE_INLINE void atomic_fence_consume()
 
 FORCE_INLINE void atomic_fence_acquire()
 {
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 	_ReadWriteBarrier();
 #else
 	__atomic_thread_fence(__ATOMIC_ACQUIRE);
@@ -89,7 +89,7 @@ FORCE_INLINE void atomic_fence_acquire()
 
 FORCE_INLINE void atomic_fence_release()
 {
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 	_ReadWriteBarrier();
 #else
 	__atomic_thread_fence(__ATOMIC_RELEASE);
@@ -98,7 +98,7 @@ FORCE_INLINE void atomic_fence_release()
 
 FORCE_INLINE void atomic_fence_acq_rel()
 {
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 	_ReadWriteBarrier();
 #else
 	__atomic_thread_fence(__ATOMIC_ACQ_REL);
@@ -107,7 +107,7 @@ FORCE_INLINE void atomic_fence_acq_rel()
 
 FORCE_INLINE void atomic_fence_seq_cst()
 {
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 	_ReadWriteBarrier();
 	_InterlockedOr(static_cast<long*>(_AddressOfReturnAddress()), 0);
 	_ReadWriteBarrier();
@@ -118,7 +118,7 @@ FORCE_INLINE void atomic_fence_seq_cst()
 #endif
 }
 
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 #pragma warning(pop)
 #endif
 
@@ -278,7 +278,7 @@ struct atomic_storage
 
 	using type = get_uint_t<sizeof(T)>;
 
-#if !defined(_WIN32) || !defined(_M_X64)
+#if !defined(_MSC_VER) || !defined(_M_X64)
 
 #if defined(__ATOMIC_HLE_ACQUIRE) && defined(__ATOMIC_HLE_RELEASE)
 	static constexpr int s_hle_ack = __ATOMIC_SEQ_CST | __ATOMIC_HLE_ACQUIRE;
@@ -408,7 +408,7 @@ struct atomic_storage
 
 	/* Second part: MSVC-specific */
 
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 	static inline T add_fetch(T& dest, T value)
 	{
 		return atomic_storage<T>::fetch_add(dest, value) + value;
@@ -478,7 +478,7 @@ struct atomic_storage
 		}
 #endif
 
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 		return _interlockedbittestandset(reinterpret_cast<long*>(dst), bit) != 0;
 #elif defined(ARCH_X64)
 		bool result;
@@ -505,7 +505,7 @@ struct atomic_storage
 		}
 #endif
 
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 		return _interlockedbittestandreset(reinterpret_cast<long*>(dst), bit) != 0;
 #elif defined(ARCH_X64)
 		bool result;
@@ -532,7 +532,7 @@ struct atomic_storage
 		}
 #endif
 
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 		while (true)
 		{
 			// Keep trying until we actually invert desired bit
@@ -557,7 +557,7 @@ struct atomic_storage
 template <typename T>
 struct atomic_storage<T, 1> : atomic_storage<T, 0>
 {
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 	static inline bool compare_exchange(T& dest, T& comp, T exch)
 	{
 		const char v = std::bit_cast<char>(comp);
@@ -627,7 +627,7 @@ struct atomic_storage<T, 1> : atomic_storage<T, 0>
 template <typename T>
 struct atomic_storage<T, 2> : atomic_storage<T, 0>
 {
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 	static inline bool compare_exchange(T& dest, T& comp, T exch)
 	{
 		const short v = std::bit_cast<short>(comp);
@@ -709,7 +709,7 @@ struct atomic_storage<T, 2> : atomic_storage<T, 0>
 template <typename T>
 struct atomic_storage<T, 4> : atomic_storage<T, 0>
 {
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 	static inline bool compare_exchange(T& dest, T& comp, T exch)
 	{
 		const long v = std::bit_cast<long>(comp);
@@ -805,7 +805,7 @@ struct atomic_storage<T, 4> : atomic_storage<T, 0>
 template <typename T>
 struct atomic_storage<T, 8> : atomic_storage<T, 0>
 {
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 	static inline bool compare_exchange(T& dest, T& comp, T exch)
 	{
 		const llong v = std::bit_cast<llong>(comp);
@@ -901,7 +901,7 @@ struct atomic_storage<T, 8> : atomic_storage<T, 0>
 template <typename T>
 struct atomic_storage<T, 16> : atomic_storage<T, 0>
 {
-#if defined(_M_X64) && defined(_WIN32)
+#if defined(_M_X64) && defined(_MSC_VER)
 	static inline T load(const T& dest)
 	{
 		atomic_fence_acquire();
@@ -1158,7 +1158,7 @@ struct atomic_storage<T, 16> : atomic_storage<T, 0>
 	// TODO
 };
 
-#ifndef _WIN32
+#ifndef _MSC_VER
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Weffc++"
 #endif
@@ -1798,7 +1798,7 @@ struct std::common_type<atomic_t<T, Align>, T2> : std::common_type<T, std::commo
 template <typename T, typename T2, usz Align2>
 struct std::common_type<T, atomic_t<T2, Align2>> : std::common_type<std::common_type_t<T>, T2> {};
 
-#ifndef _WIN32
+#ifndef _MSC_VER
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 #endif
