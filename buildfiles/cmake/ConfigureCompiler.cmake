@@ -16,6 +16,9 @@ if(MSVC)
 
 	# Increase stack limit to 8 MB
 	add_link_options(/STACK:8388608,1048576)
+	if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+ 		check_cxx_compiler_flag("-msse -msse2 -mcx16" COMPILER_X86)
+   	endif()
 else()
 	check_cxx_compiler_flag("-march=native" COMPILER_SUPPORTS_MARCH_NATIVE)
 	check_cxx_compiler_flag("-msse -msse2 -mcx16" COMPILER_X86)
