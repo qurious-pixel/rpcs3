@@ -259,7 +259,7 @@ public:
 using u128 = __uint128_t;
 using s128 = __int128_t;
 #else
-
+/*
 extern "C"
 {
 	union __m128;
@@ -272,7 +272,7 @@ extern "C"
 	u64 __shiftright128(u64, u64, uchar);
 	u64 _umul128(u64, u64, u64*);
 }
-
+*/
 // Unsigned 128-bit integer implementation (TODO)
 struct alignas(16) u128
 {
