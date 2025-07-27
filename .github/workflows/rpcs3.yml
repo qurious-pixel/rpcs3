@@ -77,6 +77,7 @@ jobs:
 
       - name: Clone and bootstrap vcpkg
         if: ${{ matrix.compiler == 'clang-cl' }}
+        shell: pwsh
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
