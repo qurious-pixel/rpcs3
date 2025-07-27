@@ -38,6 +38,8 @@ jobs:
 
     env:
       CCACHE_DIR: 'C:\ccache'
+      VCPKG_TRIPLET: x64-windows-release
+      VCPKG_BUILD_TYPE: release
     name: RPCS3 Windows ${{ matrix.compiler }}
     steps:
       - name: Checkout repository
