@@ -5,8 +5,8 @@ defaults:
     shell: bash
 on:
   push:
-    #branches:
-    #  - master # Only trigger push event on 'master' branch
+    branches:
+      - master # Only trigger push event on 'master' branch
   pull_request:
   workflow_dispatch:
 
@@ -166,6 +166,12 @@ jobs:
           echo "CCACHE_DIR=$CCACHE_DIR"
           .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
           .ci/build-windows-clang.sh
+          
+      - name: install DIA SDK
+        if: ${{ matrix.compiler == 'clang-cl' }}      
+        run: |
+          mkdir -p "C:/Program Files (x86)/Microsoft Visual Studio/2019/Professional" || true
+          cp -r "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/DIA SDK" "C:/Program Files (x86)/Microsoft Visual Studio/2019/Professional/DIA SDK"
 
       - name: Build RPCS3
         if: ${{ matrix.compiler == 'clang-cl' }}
