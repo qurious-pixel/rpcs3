@@ -19,6 +19,7 @@ add_library(rpcs3_emu STATIC
     perf_monitor.cpp
     IPC_config.cpp
     IPC_socket.cpp
+    ../../Utilities/JITLLVM.cpp
 )
 
 if(USE_LTO)
