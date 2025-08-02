@@ -110,7 +110,7 @@ jobs:
       - name: Add LLVM
         shell: pwsh
         run: |
-            curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C 3rdparty/llvm/llvm --strip-components=1
+            curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C 3rdparty/llvm --strip-components=1
             Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\3rdparty\llvm\llvm\bin"
 
       - name: Save LLVM Cache
