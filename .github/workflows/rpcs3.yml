@@ -107,11 +107,18 @@ jobs:
       #      curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
       #    }
       #    Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
+      - name: Download and extract prebuilt vcpkg
+        if: env.USE_PREBUILT_VCPKG_INSTALL == 'true'
+        run: |
+          curl -L -o vcpkg.7z.001 https://github.com/Megamouse/rpcs3/releases/download/vcpkg-prebuilt-v1.0/vcpkg.7z.001
+          curl -L -o vcpkg.7z.002 https://github.com/Megamouse/rpcs3/releases/download/vcpkg-prebuilt-v1.0/vcpkg.7z.002
+          curl -L -o vcpkg.7z.003 https://github.com/Megamouse/rpcs3/releases/download/vcpkg-prebuilt-v1.0/vcpkg.7z.003
+          curl -L -o vcpkg.7z.004 https://github.com/Megamouse/rpcs3/releases/download/vcpkg-prebuilt-v1.0/vcpkg.7z.004
+          7z x vcpkg.7z.001 -o.\
+          
       - name: Add LLVM
         shell: pwsh
-        run: |
-            curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C 3rdparty/llvm/llvm --strip-components=1
-            Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\3rdparty\llvm\llvm\bin"
+        run: Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
 
       - name: Save LLVM Cache
         #if: github.ref == 'refs/heads/master'
