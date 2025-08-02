@@ -19,7 +19,6 @@ add_library(rpcs3_emu STATIC
     perf_monitor.cpp
     IPC_config.cpp
     IPC_socket.cpp
-    ../../Utilities/JITLLVM.cpp
 )
 
 if(USE_LTO)
@@ -91,6 +90,7 @@ endif()
 target_include_directories(rpcs3_emu PUBLIC "${CMAKE_SOURCE_DIR}")
 
 set_source_files_properties("../../Utilities/JITLLVM.cpp" "../../Utilities/JITASM.cpp" PROPERTIES
+    COMPILE_FLAGS "$<IF:$<CXX_COMPILER_ID:MSVC>,/GR-; /MT,-fno-rtti>"
     SKIP_PRECOMPILE_HEADERS ON
 )
 ##     COMPILE_FLAGS "$<IF:$<CXX_COMPILER_ID:MSVC>,/GR-,-fno-rtti>"   ##
