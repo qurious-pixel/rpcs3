@@ -108,7 +108,6 @@ jobs:
       #    }
       #    Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
       - name: Download and extract prebuilt vcpkg
-        if: env.USE_PREBUILT_VCPKG_INSTALL == 'true'
         run: |
           curl -L -o vcpkg.7z.001 https://github.com/Megamouse/rpcs3/releases/download/vcpkg-prebuilt-v1.0/vcpkg.7z.001
           curl -L -o vcpkg.7z.002 https://github.com/Megamouse/rpcs3/releases/download/vcpkg-prebuilt-v1.0/vcpkg.7z.002
