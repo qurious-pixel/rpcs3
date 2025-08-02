@@ -46,7 +46,7 @@ if(WITH_LLVM)
 		endif()
 
 		# LLVM needs to be built out-of-tree
-		add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/llvm/llvm ${CMAKE_CURRENT_BINARY_DIR}/llvm_build EXCLUDE_FROM_ALL)
+		add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/llvm ${CMAKE_CURRENT_BINARY_DIR}/llvm_build EXCLUDE_FROM_ALL)
 		set(LLVM_DIR "${CMAKE_CURRENT_BINARY_DIR}/llvm_build/lib/cmake/llvm/")
 
 		set(STATIC_LINK_LLVM ON CACHE BOOL "Link against LLVM statically. This will get set to ON if you build LLVM from the submodule." FORCE)
@@ -58,9 +58,14 @@ if(WITH_LLVM)
 	else()
 		message(STATUS "Using prebuilt or system LLVM")
 
-		if (LLVM_DIR AND NOT IS_ABSOLUTE "${LLVM_DIR}")
-			# change relative LLVM_DIR to be relative to the source dir
-			set(LLVM_DIR ${CMAKE_SOURCE_DIR}/${LLVM_DIR})
+		if (LLVM_DIR)
+			message(STATUS "LLVM_DIR: ${LLVM_DIR}")
+
+			if (NOT IS_ABSOLUTE "${LLVM_DIR}")
+				# change relative LLVM_DIR to be relative to the source dir
+				set(LLVM_DIR ${CMAKE_SOURCE_DIR}/${LLVM_DIR})
+				message(STATUS "Changed LLVM_DIR to relative path: ${LLVM_DIR}")
+			endif()
 		endif()
 
 		find_package(LLVM CONFIG)
