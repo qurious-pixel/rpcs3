@@ -99,14 +99,19 @@ jobs:
           key: ${{ runner.os }}-llvm-dl-cache-${{github.run_id}}
           restore-keys: ${{ runner.os }}-llvm-cache-
           
+      #- name: Add LLVM
+      #  shell: pwsh
+      #  run: |
+      #    if (!(Test-Path -Path C:\a\rpcs3\rpcs3\llvm\)) {
+      #      mkdir llvm
+      #      curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
+      #    }
+      #    Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
       - name: Add LLVM
         shell: pwsh
         run: |
-          if (!(Test-Path -Path C:\a\rpcs3\rpcs3\llvm\)) {
-            mkdir llvm
-            curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
-          }
-          Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
+            curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C 3rdparty/llvm/llvm --strip-components=1
+            Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\3rdparty\llvm\llvm\bin"
 
       - name: Save LLVM Cache
         #if: github.ref == 'refs/heads/master'
