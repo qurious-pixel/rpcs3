@@ -117,7 +117,7 @@ if(MSVC)
         endif()
     endif()
     if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        add_compile_options(/MP /MT)
+        add_compile_options(/MP)
     endif()
 endif()
 
