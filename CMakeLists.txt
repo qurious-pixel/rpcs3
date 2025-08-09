@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.28)
 
+cmake_policy(SET CMP0091 NEW)
+
 find_program(CCACHE_PATH ccache HINTS ENV PATH)
 if(CCACHE_PATH)
   message(STATUS "Using ccache: ${CCACHE_PATH}")
@@ -8,6 +10,8 @@ if(CCACHE_PATH)
 endif()
 
 project(rpcs3 LANGUAGES C CXX)
+
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Release>:Release>")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
