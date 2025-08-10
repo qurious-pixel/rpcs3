@@ -19,7 +19,7 @@ env:
 
 jobs:
   Win32_Build:
-    name: Windows LLVM ${{ env.LLVMVER }} Build
+    name: Windows LLVM Build
     runs-on: windows-2025
     #env:
     #  LLVMVER: '20.1.8'
