@@ -90,7 +90,7 @@ Write-Host "Changed directory to: $(Get-Location)"
 Write-Host "Running CMake configuration"
 & cmake .. `
     -G Ninja `
-    -DCMAKE_BUILD_TYPE=Release `
+    -DCMAKE_BUILD_TYPE=Debug `
     -DCMAKE_C_COMPILER="$clangPath/clang-cl.exe" `
     -DCMAKE_CXX_COMPILER="$clangPath/clang-cl.exe" `
     -DCMAKE_LINKER="$clangPath/lld-link.exe" `
