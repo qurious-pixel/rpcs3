@@ -34,7 +34,7 @@ jobs:
       - name: Build LLVM
         run: |
           cd llvm_build
-          cmake --build . --config Release -- /maxcpucount
+          cmake --build . --config Release --parallel
 
       - name: Package LLVM Libraries
         run: |
