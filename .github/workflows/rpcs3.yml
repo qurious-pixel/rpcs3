@@ -15,16 +15,16 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  LLVMVER: 20.1.8
+  LLVMVER: '20.1.8'
 
 jobs:
   Win32_Build:
-    name: Windows LLVM $env:LLVMVER Build
+    name: Windows LLVM ${{ env:LLVMVER }} Build
     runs-on: windows-2025
     steps:
       - name: Configure LLVM
         run: |
-          git clone -b llvmorg-$env:LLVMVER --depth 1 https://github.com/llvm/llvm-project.git
+          git clone -b llvmorg-${{ env:LLVMVER }} --depth 1 https://github.com/llvm/llvm-project.git
           mkdir llvm_build
           cd llvm_build
           cmake -G "Visual Studio 17 2025" ../llvm-project/llvm -Thost=x64 -DLLVM_TARGETS_TO_BUILD="X86" -DLLVM_DEFAULT_TARGET_TRIPLE:STRING=x86_64-pc-windows-msvc -DLLVM_HOST_TRIPLE:STRING=x86_64-pc-windows-msvc -DCMAKE_BUILD_TYPE=Release -DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_BENCHMARKS=OFF -DLLVM_INCLUDE_UTILS=OFF -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_ENABLE_Z3_SOLVER=OFF -DCMAKE_SYSTEM_VERSION=6.1 -DCMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION=10.0 -DLLVM_USE_CRT_DEBUG=MTd -DLLVM_USE_CRT_RELEASE=MT -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded
@@ -70,11 +70,11 @@ jobs:
 
       - name: Upload LLVM
         run: |
-          ls -al artifacts/
+          ls -al ./
           wget -c https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
           tar xfv ghr_v0.13.0_linux_amd64.tar.gz
-          ghr_v0.13.0_linux_amd64/ghr -u qurious-pixel -r rpcs3 -recreate -n 'LLVM build' -b "$(printf "LLVM Build $env:LLVMVER)" custom-build-win-$env:LLVMVER ./
-          #ghr_v0.13.0_linux_amd64/ghr -u rpcs3 -r llvm-mirror -recreate -n 'LLVM build' -b "$(printf "LLVM Build $env:LLVMVER)" custom-build-win-$env:LLVMVER ./
+          ghr_v0.13.0_linux_amd64/ghr -u qurious-pixel -r rpcs3 -recreate -n 'LLVM build' -b "$(printf "LLVM Build ${{ env:LLVMVER }})" custom-build-win-${{ env:LLVMVER }} ./
+          #ghr_v0.13.0_linux_amd64/ghr -u rpcs3 -r llvm-mirror -recreate -n 'LLVM build' -b "$(printf "LLVM Build ${{ env:LLVMVER }})" custom-build-win-${{ env:LLVMVER }} ./
         env:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
