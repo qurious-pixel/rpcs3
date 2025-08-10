@@ -5,8 +5,8 @@ defaults:
     shell: bash
 on:
   push:
-    branches:
-      - master # Only trigger push event on 'master' branch
+    #branches:
+    #  - master # Only trigger push event on 'master' branch
   pull_request:
   workflow_dispatch:
 
@@ -15,430 +15,66 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  BUILD_REPOSITORY_NAME: ${{ github.repository }}
-  BUILD_SOURCEBRANCHNAME: ${{ github.ref_name }}
-  BUILD_PR_NUMBER: ${{ github.event.pull_request.number }}
-  BUILD_SOURCEVERSION: ${{ github.sha }}
-  BUILD_ARTIFACTSTAGINGDIRECTORY: ${{ github.workspace }}/artifacts/
+  LLVMVER: 20.1.8
 
 jobs:
-  Linux_Build:
-    # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-24.04
-            docker_img: "rpcs3/rpcs3-ci-jammy:1.6"
-            build_sh: "/rpcs3/.ci/build-linux.sh"
-            compiler: clang
-            UPLOAD_COMMIT_HASH: d812f1254a1157c80fd402f94446310560f54e5f
-            UPLOAD_REPO_FULL_NAME: "rpcs3/rpcs3-binaries-linux"
-          - os: ubuntu-24.04
-            docker_img: "rpcs3/rpcs3-ci-jammy:1.6"
-            build_sh: "/rpcs3/.ci/build-linux.sh"
-            compiler: gcc
-          - os: ubuntu-24.04-arm
-            docker_img: "rpcs3/rpcs3-ci-jammy-aarch64:1.6"
-            build_sh: "/rpcs3/.ci/build-linux-aarch64.sh"
-            compiler: clang
-            UPLOAD_COMMIT_HASH: a1d35836e8d45bfc6f63c26f0a3e5d46ef622fe1
-            UPLOAD_REPO_FULL_NAME: "rpcs3/rpcs3-binaries-linux-arm64"
-          - os: ubuntu-24.04-arm
-            docker_img: "rpcs3/rpcs3-ci-jammy-aarch64:1.6"
-            build_sh: "/rpcs3/.ci/build-linux-aarch64.sh"
-            compiler: gcc
-    name: RPCS3 Linux ${{ matrix.os }} ${{ matrix.compiler }}
-    runs-on: ${{ matrix.os }}
-    env:
-      CCACHE_DIR: ${{ github.workspace }}/ccache
-      DEPLOY_APPIMAGE: true
-      APPDIR: "/rpcs3/build/appdir"
-      ARTDIR: "/root/artifacts"
-      RELEASE_MESSAGE: "/rpcs3/GitHubReleaseMessage.txt"
-      COMPILER: ${{ matrix.compiler }}
-      UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
-      UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
-      RUN_UNIT_TESTS: github.event_name == 'pull_request' && 'ON' || 'OFF'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@main
-        with:
-          fetch-depth: 0
-
-      - name: Restore build Ccache
-        uses: actions/cache/restore@main
-        id: restore-build-ccache
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-${{github.run_id}}
-          restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
-
-      - name: Docker setup and build
-        run: |
-          docker pull --quiet ${{ matrix.docker_img }}
-          docker run \
-            -v $PWD:/rpcs3 \
-            --env-file .ci/docker.env \
-            -v ${{ env.CCACHE_DIR }}:/root/.ccache  \
-            -v ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}:${{ env.ARTDIR }} \
-            ${{ matrix.docker_img }} \
-            ${{ matrix.build_sh }}
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@main
-        with:
-          name: RPCS3 for Linux (${{ runner.arch }}, ${{ matrix.compiler }})
-          path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}/*.AppImage
-          compression-level: 0
-
-      - name: Deploy master build to GitHub Releases
-        if: |
-          github.event_name != 'pull_request' &&
-          github.repository == 'RPCS3/rpcs3' &&
-          github.ref == 'refs/heads/master' &&
-          matrix.compiler == 'clang'
-        env:
-          RPCS3_TOKEN: ${{ secrets.RPCS3_TOKEN }}
-        run: |
-          COMM_TAG=$(awk '/version{.*}/ { printf("%d.%d.%d", $5, $6, $7) }' ./rpcs3/rpcs3_version.cpp)
-          COMM_COUNT=$(git rev-list --count HEAD)
-          COMM_HASH=$(git rev-parse --short=8 HEAD)
-          export AVVER="${COMM_TAG}-${COMM_COUNT}"
-          .ci/github-upload.sh
-
-      - name: Save build Ccache
-        if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
-
-  Mac_Build:
-    # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: Intel
-            build_sh: "arch -X86_64 .ci/build-mac.sh"
-            UPLOAD_COMMIT_HASH: 51ae32f468089a8169aaf1567de355ff4a3e0842
-            UPLOAD_REPO_FULL_NAME: rpcs3/rpcs3-binaries-mac
-          - name: Apple Silicon
-            build_sh: .ci/build-mac-arm64.sh
-            UPLOAD_COMMIT_HASH: 8e21bdbc40711a3fccd18fbf17b742348b0f4281
-            UPLOAD_REPO_FULL_NAME: rpcs3/rpcs3-binaries-mac-arm64
-    name: RPCS3 Mac ${{ matrix.name }} 
-    runs-on: macos-14
-    env:
-      CCACHE_DIR: /tmp/ccache_dir
-      QT_VER: '6.7.3'
-      QT_VER_MAIN: '6'
-      LLVM_COMPILER_VER: '19'
-      RELEASE_MESSAGE: ../GitHubReleaseMessage.txt
-      UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
-      UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
-      RUN_UNIT_TESTS: github.event_name == 'pull_request' && 'ON' || 'OFF'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@main
-        with:
-          fetch-depth: 0
-
-      - name: Restore Build Ccache
-        uses: actions/cache/restore@main
-        id: restore-build-ccache
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-ccache-${{ matrix.name }}-${{github.run_id}}
-          restore-keys: ${{ runner.os }}-ccache-${{ matrix.name }}-
-
-      - name: Restore Qt Cache
-        uses: actions/cache/restore@main
-        id: restore-qt-cache
-        with:
-          path: /tmp/Qt
-          key: ${{ runner.os }}-qt-${{ matrix.name }}-${{ env.QT_VER }}
-          restore-keys: ${{ runner.os }}-qt-${{ matrix.name }}-${{ env.QT_VER }}
-
-      - name: Build
-        run: ${{ matrix.build_sh }}
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@main
-        with:
-          name: RPCS3 for Mac (${{ matrix.name }})
-          path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
-          compression-level: 0
-
-      - name: Export Variables
-        run: |
-          while IFS='=' read -r key val; do
-            # Skip lines that are empty or start with '#'
-            [[ -z "$key" || "$key" =~ ^# ]] && continue
-            echo "$key=$val" >> "${{ github.env }}"
-          done < .ci/ci-vars.env
-
-      - name: Deploy master build to GitHub Releases
-        if: |
-          github.event_name != 'pull_request' &&
-          github.repository == 'RPCS3/rpcs3' &&
-          github.ref == 'refs/heads/master'
-        env:
-          RPCS3_TOKEN: ${{ secrets.RPCS3_TOKEN }}
-        run: .ci/github-upload.sh
-
-      - name: Save Build Ccache
-        if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
-
-      - name: Save Qt Cache
-        if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: /tmp/Qt
-          key: ${{ steps.restore-qt-cache.outputs.cache-primary-key }}
-
-  Windows_Build:
-    # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
-    name: RPCS3 Windows
+  Win32_Build:
+    name: Windows LLVM ${{ env.LLVMVER }} Build
     runs-on: windows-2025
-    env:
-      COMPILER: msvc
-      QT_VER_MAIN: '6'
-      QT_VER: '6.9.1'
-      QT_VER_MSVC: 'msvc2022'
-      QT_DATE: '202505291653'
-      LLVM_VER: '19.1.7'
-      VULKAN_VER: '1.3.268.0'
-      VULKAN_SDK_SHA: '8459ef49bd06b697115ddd3d97c9aec729e849cd775f5be70897718a9b3b9db5'
-      CCACHE_SHA: '1f39f3ad5aae3fe915e99ad1302633bc8f6718e58fa7c0de2b0ba7e080f0f08c'
-      CCACHE_BIN_DIR: 'C:\ccache_bin'
-      CCACHE_DIR: 'C:\ccache'
-      CCACHE_INODECACHE: 'true'
-      CCACHE_SLOPPINESS: 'time_macros'
-      DEPS_CACHE_DIR: ./dependency_cache
-      UPLOAD_COMMIT_HASH: 7d09e3be30805911226241afbb14f8cdc2eb054e
-      UPLOAD_REPO_FULL_NAME: "RPCS3/rpcs3-binaries-win"
     steps:
-
-      - name: Checkout repository
-        uses: actions/checkout@main
-        with:
-          fetch-depth: 0
-
-      - name: Setup NuGet
-        uses: nuget/setup-nuget@v2
-
-      - name: Restore NuGet packages
-        run: nuget restore rpcs3.sln
-
-      - name: Setup env
-        shell: pwsh
+      - name: Configure LLVM
         run: |
-          echo "QTDIR=C:\Qt\${{ env.QT_VER }}\${{ env.QT_VER_MSVC }}_64" >> ${{ github.env }}
-          echo "VULKAN_SDK=C:\VulkanSDK\${{ env.VULKAN_VER }}" >> ${{ github.env }}
-
-      - name: Get Cache Keys
-        run: .ci/get_keys-windows.sh
-
-      - name: Restore Build Ccache
-        uses: actions/cache/restore@main
-        id: restore-build-ccache
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: "${{ runner.os }}-ccache-${{ env.COMPILER }}-${{github.run_id}}"
-          restore-keys: ${{ runner.os }}-ccache-${{ env.COMPILER }}-
-
-      - name: Restore Dependencies Cache
-        uses: actions/cache/restore@main
-        id: restore-dependencies-cache
-        with:
-          path: ${{ env.DEPS_CACHE_DIR }}
-          key: "${{ runner.os }}-${{ env.COMPILER }}-${{ env.QT_VER }}-${{ env.VULKAN_SDK_SHA }}-${{ env.CCACHE_SHA }}-${{ hashFiles('llvm.lock') }}"
-          restore-keys: ${{ runner.os }}-${{ env.COMPILER }}-
-
-      - name: Download and unpack dependencies
+          git clone -b llvmorg-${{ env.LLVMVER }} --depth 1 https://github.com/llvm/llvm-project.git
+          mkdir llvm_build
+          cd llvm_build
+          cmake -G "Visual Studio 17 2025" ../llvm-project/llvm -Thost=x64 -DLLVM_TARGETS_TO_BUILD="X86" -DLLVM_DEFAULT_TARGET_TRIPLE:STRING=x86_64-pc-windows-msvc -DLLVM_HOST_TRIPLE:STRING=x86_64-pc-windows-msvc -DCMAKE_BUILD_TYPE=Release -DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_BENCHMARKS=OFF -DLLVM_INCLUDE_UTILS=OFF -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_ENABLE_Z3_SOLVER=OFF -DCMAKE_SYSTEM_VERSION=6.1 -DCMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION=10.0 -DLLVM_USE_CRT_DEBUG=MTd -DLLVM_USE_CRT_RELEASE=MT -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded
+      
+      - name: Build LLVM
         run: |
-          .ci/setup-windows.sh
-          .ci/setup-windows-ci-vars.sh win64 msvc
-
-      - name: Export Variables
+          cd llvm_build
+          cmake --build . --config Release -- /maxcpucount
+      		
+      - name: Package LLVM Libraries
         run: |
-          while IFS='=' read -r key val; do
-            # Skip lines that are empty or start with '#'
-            [[ -z "$key" || "$key" =~ ^# ]] && continue
-            echo "$key=$val" >> "${{ github.env }}"
-          done < .ci/ci-vars.env
-
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@main
-
-      - name: Compile RPCS3
-        shell: pwsh
-        run: msbuild rpcs3.sln /p:Configuration=Release /v:minimal /p:Platform=x64 /p:PreferredToolArchitecture=x64 /p:CLToolPath=${{ env.CCACHE_BIN_DIR }} /p:UseMultiToolTask=true /p:CustomAfterMicrosoftCommonTargets="${{ github.workspace }}\buildfiles\msvc\ci_only.targets"
-
-      - name: Run Unit Tests
-        if: github.event_name == 'pull_request'
-        shell: pwsh
-        run: build\lib\Release-x64\rpcs3_test.exe
-
-      - name: Pack up build artifacts
+          mkdir llvm_out
+          cd llvm_out
+          mkdir build
+          cd build
+          mkdir llvm
+          cd llvm
+          mkdir cmake
+          mkdir include
+          mkdir tools
+          xcopy "..\..\..\llvm-project\llvm\cmake" ".\cmake" /E
+          xcopy "..\..\..\llvm-project\llvm\include" ".\include" /E
+          cd ..\
+          mkdir llvm_build
+          cd llvm_build
+          mkdir Release
+          mkdir include
+          mkdir lib
+          cd lib
+          mkdir cmake
+          cd ..\
+          xcopy "..\..\..\llvm_build\Release" ".\Release" /E
+          xcopy  "..\..\..\llvm_build\include" ".\include" /E
+          xcopy  "..\..\..\llvm_build\lib\cmake" ".\lib\cmake" /E
+          cd ..\
+          7z a -t7z -m0=lzma2 -mx=9 -aoa -r "llvmlibs_mt.7z" *
+      
+      - name: Generate sha256
+        shell: bash
         run: |
-          mkdir -p "${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}"
-          .ci/deploy-windows.sh
-
-      - name: Upload artifacts (7z)
-        uses: actions/upload-artifact@main
-        with:
-          name: RPCS3 for Windows (MSVC)
-          path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
-          compression-level: 0
-          if-no-files-found: error
-
-      - name: Deploy master build to GitHub Releases
-        if: |
-          github.event_name != 'pull_request' &&
-          github.repository == 'RPCS3/rpcs3' &&
-          github.ref == 'refs/heads/master'
+          cd llvm_out/build
+          sha256sum llvmlibs_mt.7z | awk '{ print $1 }' > llvmlibs_mt.7z.sha256
+      
+      - name: Upload LLVM
+        run: |
+          ls -al artifacts/
+          wget -c https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
+          tar xfv ghr_v0.13.0_linux_amd64.tar.gz
+          ghr_v0.13.0_linux_amd64/ghr -u qurious-pixel -r rpcs3 -recreate -n 'LLVM build' -b "$(printf "LLVM Build ${{ env.LLVMVER }})" custom-build-win-${{ env.LLVMVER }} ./
+          #ghr_v0.13.0_linux_amd64/ghr -u rpcs3 -r llvm-mirror -recreate -n 'LLVM build' -b "$(printf "LLVM Build ${{ env.LLVMVER }})" custom-build-win-${{ env.LLVMVER }} ./
         env:
-          RPCS3_TOKEN: ${{ secrets.RPCS3_TOKEN }}
-        run: .ci/github-upload.sh
-
-      - name: Save Build Ccache
-        if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
-
-      - name: Save Dependencies Cache
-        if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: ${{ env.DEPS_CACHE_DIR }}
-          key: ${{ steps.restore-dependencies-cache.outputs.cache-primary-key }}
-
-  Windows_Build_Clang:
-    # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
-    name: RPCS3 Windows Clang
-    runs-on: windows-2025
-    strategy:
-      matrix:
-        include:
-          - msys2: clang64
-            compiler: clang
-            arch: win64
-    env:
-      CCACHE_DIR: 'C:\ccache'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@main
-        with:
-          fetch-depth: 0
-
-      - name: Setup msys2
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: ${{ matrix.msys2 }}
-          update: true
-          cache: true
-          install: |
-            mingw-w64-clang-x86_64-clang
-            mingw-w64-clang-x86_64-ccache
-            mingw-w64-clang-x86_64-cmake
-            mingw-w64-clang-x86_64-lld
-            mingw-w64-clang-x86_64-ninja
-            mingw-w64-clang-x86_64-llvm
-            mingw-w64-clang-x86_64-ffmpeg
-            mingw-w64-clang-x86_64-opencv
-            mingw-w64-clang-x86_64-glew
-            mingw-w64-clang-x86_64-vulkan
-            mingw-w64-clang-x86_64-vulkan-headers
-            mingw-w64-clang-x86_64-vulkan-loader
-            mingw-w64-clang-x86_64-gtest
-            mingw-w64-clang-x86_64-qt6-base
-            mingw-w64-clang-x86_64-qt6-declarative
-            mingw-w64-clang-x86_64-qt6-multimedia
-            mingw-w64-clang-x86_64-qt6-svg
-            base-devel
-            curl
-            git
-            p7zip
-
-      - name: Restore build Ccache
-        uses: actions/cache/restore@main
-        id: restore-build-ccache
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
-
-      - name: Build RPCS3
-        shell: msys2 {0}
-        run: |
-          export CCACHE_DIR=$(cygpath -u "$CCACHE_DIR")
-          echo "CCACHE_DIR=$CCACHE_DIR"
-          .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
-          .ci/build-windows-clang.sh
-
-      - name: Save build Ccache
-        if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@main
-        with:
-          name: RPCS3 for Windows (${{ runner.arch }}, ${{ matrix.compiler }})
-          path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
-          compression-level: 0
-          if-no-files-found: error
-
-  FreeBSD_Build:
-      # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
-    name: RPCS3 FreeBSD 
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    env:
-      CCACHE_DIR: ${{ github.workspace }}/ccache
-      QT_VER_MAIN: '6'
-      LLVM_COMPILER_VER: '19'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@main
-        with:
-          fetch-depth: 0
-
-      - name: Restore Build Ccache
-        uses: actions/cache/restore@main
-        id: restore-build-ccache
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: FreeBSD-ccache-${{github.run_id}}
-          restore-keys: FreeBSD-ccache-
-
-      - name: FreeBSD build
-        id: root
-        uses: vmactions/freebsd-vm@v1
-        with:
-          envs: 'QT_VER_MAIN LLVM_COMPILER_VER CCACHE_DIR'
-          usesh: true
-          run: .ci/install-freebsd.sh && .ci/build-freebsd.sh
-
-      - name: Save Build Ccache
-        if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
+          DEFAULT_BRANCH: master
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
