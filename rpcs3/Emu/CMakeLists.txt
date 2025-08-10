@@ -89,10 +89,11 @@ endif()
 
 target_include_directories(rpcs3_emu PUBLIC "${CMAKE_SOURCE_DIR}")
 
-#set_source_files_properties("../../Utilities/JITLLVM.cpp" "../../Utilities/JITASM.cpp" PROPERTIES
-#    COMPILE_FLAGS "$<IF:$<CXX_COMPILER_ID:MSVC>,/GR-; /MT,-fno-rtti>"
-#    SKIP_PRECOMPILE_HEADERS ON
-#)
+set_source_files_properties("../../Utilities/JITLLVM.cpp" "../../Utilities/JITASM.cpp" PROPERTIES
+    COMPILE_FLAGS "$<IF:$<CXX_COMPILER_ID:MSVC>,/GR-; /MT,-fno-rtti>"
+    CMAKE_CXX_VISIBILITY_PRESET hidden
+    SKIP_PRECOMPILE_HEADERS ON
+)
 ##     COMPILE_FLAGS "$<IF:$<CXX_COMPILER_ID:MSVC>,/GR-,-fno-rtti>"   ##
 
 set_source_files_properties("../util/yaml.cpp" PROPERTIES
