@@ -99,7 +99,7 @@ Write-Host "Running CMake configuration"
     -DCMAKE_EXE_LINKER_FLAGS="/LIBPATH:$clangBuiltinsDirShort /defaultlib:$clangBuiltinsLib" `
     -DCMAKE_MT="$mtExePath" `
     -DUSE_MSVC_STATIC_CRT=OFF `
-    -DMSVC_RUNTIME_LIBRARY="MultiThreaded" ` 
+    -DMSVC_RUNTIME_LIBRARY="MultiThreaded" `
     -DWINDEPLOYQT_EXECUTABLE="$VcpkgWindeployqt" `
     -DUSE_NATIVE_INSTRUCTIONS=OFF `
     -DUSE_PRECOMPILED_HEADERS=OFF `
