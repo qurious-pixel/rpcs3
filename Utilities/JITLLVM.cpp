@@ -32,14 +32,14 @@ LOG_CHANNEL(jit_log, "JIT");
 #pragma GCC diagnostic ignored "-Wmissing-noreturn"
 #endif
 #include <llvm/Support/CodeGen.h>
-#include "llvm/Support/TargetSelect.h"
-#include "llvm/TargetParser/Host.h"
-#include "llvm/ExecutionEngine/ExecutionEngine.h"
-#include "llvm/ExecutionEngine/RTDyldMemoryManager.h"
-#include "llvm/ExecutionEngine/ObjectCache.h"
-#include "llvm/ExecutionEngine/JITEventListener.h"
-#include "llvm/Object/ObjectFile.h"
-#include "llvm/Object/SymbolSize.h"
+#include <llvm/Support/TargetSelect.h>
+#include <llvm/TargetParser/Host.h>
+#include <llvm/ExecutionEngine/ExecutionEngine.h>
+#include <llvm/ExecutionEngine/RTDyldMemoryManager.h>
+#include <llvm/ExecutionEngine/ObjectCache.h>
+#include <llvm/ExecutionEngine/JITEventListener.h>
+#include <llvm/Object/ObjectFile.h>
+#include <llvm/Object/SymbolSize.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #else
@@ -148,7 +148,7 @@ struct JITAnnouncer : llvm::JITEventListener
 		if (!debug_obj_.getBinary())
 		{
 #ifdef __linux__
-			jit_log.error("LLVM: Failed to announce JIT events (no debug object)");
+			jit_log.error("llvm: Failed to announce JIT events (no debug object)");
 #endif
 			return;
 		}
@@ -419,7 +419,7 @@ public:
 
 		if (!obj.getBufferSize())
 		{
-			jit_log.error("LLVM: Nothing to write: %s", name);
+			jit_log.error("llvm: Nothing to write: %s", name);
 			return;
 		}
 
@@ -429,7 +429,7 @@ public:
 
 		if (!module_file.open((name)))
 		{
-			jit_log.error("LLVM: Failed to create module file: %s (%s)", name, fs::g_tls_error);
+			jit_log.error("llvm: Failed to create module file: %s (%s)", name, fs::g_tls_error);
 			return;
 		}
 
@@ -438,17 +438,17 @@ public:
 
 		if (!m_compiler->add_sub_disk_space(0 - max_size))
 		{
-			jit_log.error("LLVM: Failed to create module file: %s (not enough disk space left)", name);
+			jit_log.error("llvm: Failed to create module file: %s (not enough disk space left)", name);
 			return;
 		}
 
 		if (!zip(obj.getBufferStart(), obj.getBufferSize(), module_file.file))
 		{
-			jit_log.error("LLVM: Failed to compress module: %s", std::string(_module->getName()));
+			jit_log.error("llvm: Failed to compress module: %s", std::string(_module->getName()));
 			return;
 		}
 
-		jit_log.trace("LLVM: Created module: %s", std::string(_module->getName()));
+		jit_log.trace("llvm: Created module: %s", std::string(_module->getName()));
 
 		// Restore space that was overestimated
 		ensure(m_compiler->add_sub_disk_space(max_size - module_file.file.size()));
@@ -470,7 +470,7 @@ public:
 
 			if (out.empty())
 			{
-				jit_log.error("LLVM: Failed to unzip module: '%s'", path);
+				jit_log.error("llvm: Failed to unzip module: '%s'", path);
 				return nullptr;
 			}
 
@@ -501,7 +501,7 @@ public:
 
 		if (auto buf = load(path))
 		{
-			jit_log.notice("LLVM: Loaded module: %s", _module->getName().data());
+			jit_log.notice("llvm: Loaded module: %s", _module->getName().data());
 			return buf;
 		}
 
@@ -649,7 +649,7 @@ jit_compiler::jit_compiler(const std::unordered_map<std::string, u64>& _link, co
 		llvm::install_fatal_error_handler([](void*, const char* msg, bool)
 		{
 			const std::string_view out = msg ? msg : "";
-			fmt::throw_exception("LLVM Emergency Exit Invoked: '%s'", out);
+			fmt::throw_exception("llvm Emergency Exit Invoked: '%s'", out);
 		}, nullptr);
 
 		return true;
@@ -711,7 +711,7 @@ jit_compiler::jit_compiler(const std::unordered_map<std::string, u64>& _link, co
 
 	if (!m_engine)
 	{
-		fmt::throw_exception("LLVM: Failed to create ExecutionEngine: %s", result);
+		fmt::throw_exception("llvm: Failed to create ExecutionEngine: %s", result);
 	}
 
 	fs::device_stat stats{};
