@@ -12,7 +12,7 @@ on:
 
 concurrency:
   group: ${{ github.ref }}-${{ github.event_name }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   BUILD_REPOSITORY_NAME: ${{ github.repository }}
@@ -61,11 +61,11 @@ jobs:
             tar -xzf ffmpeg-8.0.tar.gz
             cd ffmpeg-8.0
             ./configure CC='ccache gcc'
-            ccache gmake CC='ccache gcc'
-            ccache gmake install
+            gmake CC='ccache gcc'
+            gmake install
             cd ..
             ffmpeg -version
-            .ci/build-freebsd.sh
+            #.ci/build-freebsd.sh
             
       - name: Save Build Ccache
         #if: github.ref == 'refs/heads/master'
