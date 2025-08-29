@@ -59,7 +59,7 @@ jobs:
             git clone --depth=1 https://git.freebsd.org/ports.git /usr/ports
             cd /usr/ports/multimedia/ffmpeg
             curl -L "https://bz-attachments.freebsd.org/attachment.cgi?id=263139&action=diff&format=raw&headers=1" -o patch.diff 
-            patch --verbose --dry-run --ignore-whitespace --fuzz 3 < patch.diff
+            patch --dry-run --ignore-whitespace --fuzz 3 < patch.diff
             make clean
             make
             make install
