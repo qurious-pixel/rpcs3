@@ -55,14 +55,10 @@ jobs:
           run: |
             sed -i '' 's/quarterly/latest/' /etc/pkg/FreeBSD.conf
             export ASSUME_ALWAYS_YES=true
-            pkg install git curl portsnap
-            portsnap fetch extract --not-running-from-cron --not-running-from-cron
-            whereis ffmpeg
-            cd /usr/ports/multimedia/ffmpeg
-            ls files/
-            curl -L "https://bz-attachments.freebsd.org/attachment.cgi?id=263139&action=diff&format=raw&headers=1" -o files/patch.diff 
-            #patch < patch.diff
-            make clean
+            pkg install git curl 
+            git clone https://git.ffmpeg.org/ffmpeg.git -b n8.0 ffmpeg
+            cd ffmpeg
+            ./configure
             make
             make install
             ffmpeg -version
