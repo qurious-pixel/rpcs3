@@ -56,10 +56,10 @@ jobs:
             sed -i '' 's/quarterly/latest/' /etc/pkg/FreeBSD.conf
             export ASSUME_ALWAYS_YES=true
             pkg install git
-            git clone https://git.freebsd.org/ports.git /usr/ports
-            cd /usr/ports
-            ls -al
+            git clone --depth=1 https://git.freebsd.org/ports.git /usr/ports
             cd /usr/ports/multimedia
+            ls -al
+            cd /usr/ports/multimedia/ffmpeg
             ls -al
 
       - name: Save Build Ccache
