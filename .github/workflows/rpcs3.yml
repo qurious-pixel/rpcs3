@@ -56,7 +56,9 @@ jobs:
             sed -i '' 's/quarterly/latest/' /etc/pkg/FreeBSD.conf
             export ASSUME_ALWAYS_YES=true
             pkg install ffmpeg
-            ffmpeg --version
+            ffmpeg -version
+            cd /usr/ports/multimedia/ffmpeg/
+            ls -al
 
       - name: Save Build Ccache
         if: github.ref == 'refs/heads/master'
