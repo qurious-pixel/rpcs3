@@ -111,7 +111,7 @@ void AtracXdecDecoder::alloc_avcodec()
 		fmt::throw_exception("avcodec_find_decoder() failed");
 	}
 
-	ensure(!(codec->capabilities & AV_CODEC_CAP_SUBFRAMES));
+	ensure(!(codec->capabilities & FF_API_SUBFRAMES));
 
 	ctx = avcodec_alloc_context3(codec);
 	if (!ctx)
