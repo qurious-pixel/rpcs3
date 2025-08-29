@@ -56,7 +56,7 @@ jobs:
             sed -i '' 's/quarterly/latest/' /etc/pkg/FreeBSD.conf
             export ASSUME_ALWAYS_YES=true
             pkg install git
-            git clone --shallow -b main https://git.freebsd.org/ports.git /usr/ports
+            git clone https://git.freebsd.org/ports.git /usr/ports
             cd /usr/ports
             ls -al
             cd /usr/ports/multimedia
