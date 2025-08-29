@@ -55,14 +55,17 @@ jobs:
           run: |
             sed -i '' 's/quarterly/latest/' /etc/pkg/FreeBSD.conf
             export ASSUME_ALWAYS_YES=true
-            pkg install git curl
-            git clone --depth=1 https://git.freebsd.org/ports.git /usr/ports
+            pkg install git curl portsnap
+            portsnap fetch update
+            whereis ffmpeg
             cd /usr/ports/multimedia/ffmpeg
-            curl -L "https://bz-attachments.freebsd.org/attachment.cgi?id=263139&action=diff&format=raw&headers=1" -o patch.diff 
-            patch < patch.diff
+            ls files/
+            curl -L "https://bz-attachments.freebsd.org/attachment.cgi?id=263139&action=diff&format=raw&headers=1" -o files/patch.diff 
+            #patch < patch.diff
             make clean
             make
             make install
+            ffmpeg -version
             
 
       - name: Save Build Ccache
