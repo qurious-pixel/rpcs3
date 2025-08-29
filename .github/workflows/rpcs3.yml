@@ -60,7 +60,7 @@ jobs:
             fetch https://ffmpeg.org/releases/ffmpeg-8.0.tar.gz
             tar -xzf ffmpeg-8.0.tar.gz
             cd ffmpeg-8.0
-            ./configure CC='ccache gcc'
+            ./configure
             gmake CC='ccache gcc'
             gmake install
             cd ..
