@@ -55,7 +55,7 @@ jobs:
           run: |
             sed -i '' 's/quarterly/latest/' /etc/pkg/FreeBSD.conf
             export ASSUME_ALWAYS_YES=true
-            pkg install git curl gcc
+            pkg install git curl gcc nasm
             fetch https://ffmpeg.org/releases/ffmpeg-8.0.tar.gz
             tar -xzf ffmpeg-8.0.tar.gz
             cd ffmpeg-8.0
