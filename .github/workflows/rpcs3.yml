@@ -63,6 +63,7 @@ jobs:
             ./configure
             ccache gmake
             ccache gmake install
+            cd ..
             ffmpeg -version
             .ci/build-freebsd.sh
             
