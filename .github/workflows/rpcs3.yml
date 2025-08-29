@@ -65,7 +65,7 @@ jobs:
             gmake install
             cd ..
             ffmpeg -version
-            #.ci/build-freebsd.sh
+            .ci/build-freebsd.sh
             
       - name: Save Build Ccache
         #if: github.ref == 'refs/heads/master'
