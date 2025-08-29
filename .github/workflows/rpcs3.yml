@@ -55,12 +55,13 @@ jobs:
           run: |
             sed -i '' 's/quarterly/latest/' /etc/pkg/FreeBSD.conf
             export ASSUME_ALWAYS_YES=true
-            pkg install git
+            pkg install git curl
             git clone --depth=1 https://git.freebsd.org/ports.git /usr/ports
-            cd /usr/ports/multimedia
-            ls -al
             cd /usr/ports/multimedia/ffmpeg
+            curl -L "https://bz-attachments.freebsd.org/attachment.cgi?id=263139&action=diff&format=raw&headers=1" -o patch.diff 
             ls -al
+            patch < patch.diff
+            
 
       - name: Save Build Ccache
         if: github.ref == 'refs/heads/master'
