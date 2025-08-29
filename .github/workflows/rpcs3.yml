@@ -55,9 +55,7 @@ jobs:
           run: |
             sed -i '' 's/quarterly/latest/' /etc/pkg/FreeBSD.conf
             export ASSUME_ALWAYS_YES=true
-            pkg install ffmpeg
-            ffmpeg -version
-            whereis ffmpeg
+            git clone --shallow https://git.freebsd.org/ports.git /usr/ports
             cd /usr/ports
             ls -al
             cd /usr/ports/multimedia
