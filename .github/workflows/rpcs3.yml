@@ -58,7 +58,9 @@ jobs:
             pkg install ffmpeg
             ffmpeg -version
             whereis ffmpeg
-            cd $(whereis ffmpeg | awk '{print $2}' )
+            cd /usr/ports
+            ls -al
+            cd /usr/ports/multimedia
             ls -al
 
       - name: Save Build Ccache
