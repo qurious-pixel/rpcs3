@@ -55,8 +55,8 @@ jobs:
           run: |
             sed -i '' 's/quarterly/latest/' /etc/pkg/FreeBSD.conf
             export ASSUME_ALWAYS_YES=true
-            pkg install git curl portsnap
-            portsnap --interactive no fetch update
+            pkg install git curl
+            freebsd-update fetch --not-running-from-cron
             whereis ffmpeg
             cd /usr/ports/multimedia/ffmpeg
             ls files/
