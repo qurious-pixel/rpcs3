@@ -55,7 +55,8 @@ jobs:
           run: |
             sed -i '' 's/quarterly/latest/' /etc/pkg/FreeBSD.conf
             export ASSUME_ALWAYS_YES=true
-            pkg install git curl gcc nasm pkgconf gmake ccache
+            pkg install git curl gcc nasm pkgconf gmake ccache "llvm$LLVM_COMPILER_VER" cmake ninja "qt$QT_VER_MAIN-multimedia" "qt$QT_VER_MAIN-svg" glew openal-soft
+            pkg install alsa-lib pulseaudio sdl3 evdev-proto vulkan-headers vulkan-loader opencv
             fetch https://ffmpeg.org/releases/ffmpeg-8.0.tar.gz
             tar -xzf ffmpeg-8.0.tar.gz
             cd ffmpeg-8.0
@@ -63,8 +64,8 @@ jobs:
             ccache gmake
             ccache gmake install
             ffmpeg -version
+            .ci/build-freebsd.sh
             
-
       - name: Save Build Ccache
         #if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
