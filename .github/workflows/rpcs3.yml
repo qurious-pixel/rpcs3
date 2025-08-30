@@ -66,6 +66,7 @@ jobs:
             	CC='ccache gcc' ./configure
             	gmake
             	cd ${{ github.workspace }}
+              rm ${{ env.CCACHE_DIR }}/ffmpeg-$FFMPEG_VER.tar.gz
             fi
             gmake install -C ${{ env.CCACHE_DIR }}/ffmpeg-$FFMPEG_VER
             ffmpeg -version
