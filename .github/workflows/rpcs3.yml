@@ -58,6 +58,7 @@ jobs:
             export ASSUME_ALWAYS_YES=true
             pkg install git curl gcc nasm pkgconf gmake ccache "llvm$LLVM_COMPILER_VER" cmake ninja "qt$QT_VER_MAIN-multimedia" "qt$QT_VER_MAIN-svg" glew openal-soft
             pkg install alsa-lib pulseaudio sdl3 evdev-proto vulkan-headers vulkan-loader opencv
+            pkg remove ffmpeg
             if [ ! -e ${{ env.CCACHE_DIR }}/ffmpeg-$FFMPEG_VER ]; then
             	cd ${{ env.CCACHE_DIR }}
             	fetch https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.gz
@@ -70,7 +71,7 @@ jobs:
             fi
             gmake install -C ${{ env.CCACHE_DIR }}/ffmpeg-$FFMPEG_VER
             ffmpeg -version
-            #.ci/build-freebsd.sh
+            .ci/build-freebsd.sh
             
       - name: Save Build Ccache
         #if: github.ref == 'refs/heads/master'
