@@ -57,7 +57,7 @@ jobs:
             sed -i '' 's/quarterly/latest/' /etc/pkg/FreeBSD.conf
             export ASSUME_ALWAYS_YES=true
             pkg install git curl gcc nasm pkgconf gmake ccache cmake ninja "llvm$LLVM_COMPILER_VER"
-            pkg install alsa-lib pulseaudio sdl3 evdev-proto vulkan-headers vulkan-loader opencv glew openal-soft
+            pkg install alsa-lib pulseaudio sdl3 evdev-proto vulkan-headers vulkan-loader opencv glew openal-soft ffmpeg
             if [ ! -e ${{ env.CCACHE_DIR }}/ffmpeg-$FFMPEG_VER ]; then
             	cd ${{ env.CCACHE_DIR }}
             	fetch https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.gz
@@ -70,8 +70,8 @@ jobs:
             fi
             gmake install -C ${{ env.CCACHE_DIR }}/ffmpeg-$FFMPEG_VER
             ffmpeg -version
-            pkg install "qt$QT_VER_MAIN-multimedia" "qt$QT_VER_MAIN-svg" 
             pkg remove ffmpeg
+            pkg install "qt$QT_VER_MAIN-multimedia" "qt$QT_VER_MAIN-svg" 
             .ci/build-freebsd.sh
             
       - name: Save Build Ccache
