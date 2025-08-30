@@ -15,7 +15,7 @@
 #endif
 extern "C" {
 #include "libavcodec/avcodec.h"
-#include "libavcodec/codec.h"
+#include "libavcodec/codec_internal.h"
 #include "libavformat/avformat.h"
 #include "libavutil/dict.h"
 #include "libavutil/opt.h"
