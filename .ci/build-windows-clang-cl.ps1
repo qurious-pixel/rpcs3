@@ -121,7 +121,7 @@ Write-Host "Running CMake configuration"
     -DUSE_DISCORD_RPC=ON `
     -DWITH_LLVM=ON `
     -DBUILD_LLVM=OFF `
-    -DLLVM_DIR="C:\Program Files\LLVM" `
+    -DLLVM_DIR="C:\Program Files\LLVM\cmake\LLVMConfig.cmake" `
     -DBUILD_RPCS3_TESTS=OFF `
     -DRUN_RPCS3_TESTS=OFF
 Write-Host "CMake configuration complete"
