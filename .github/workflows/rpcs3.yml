@@ -103,29 +103,30 @@ jobs:
             vcpkg/buildtrees
           key: ${{ steps.restore-vcpkg-cache.outputs.cache-primary-key }}
 
-      - name: Restore LLVM Cache
-        uses: actions/cache/restore@main
-        id: llvm-cache
-        with:
-          path: ./llvm
-          key: ${{ runner.os }}-llvm-dl-cache-${{github.run_id}}
-          restore-keys: ${{ runner.os }}-llvm-cache-
+      #- name: Restore LLVM Cache
+      #  uses: actions/cache/restore@main
+      #  id: llvm-cache
+      #  with:
+      #    path: ./llvm
+      #    key: ${{ runner.os }}-llvm-dl-cache-${{github.run_id}}
+      #    restore-keys: ${{ runner.os }}-llvm-cache-
           
       - name: Add LLVM
         shell: pwsh
         run: |
-          if (!(Test-Path -Path C:\a\rpcs3\rpcs3\llvm\)) {
-            mkdir llvm
-            curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
-          }
-          Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
+          #if (!(Test-Path -Path C:\a\rpcs3\rpcs3\llvm\)) {
+          #  mkdir llvm
+          #  curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
+          #}
+          #Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
+          choco install llvm
 
-      - name: Save LLVM Cache
-        #if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: ./llvm
-          key: ${{ steps.llvm-cache.outputs.cache-primary-key }}
+      #- name: Save LLVM Cache
+      #  #if: github.ref == 'refs/heads/master'
+      #  uses: actions/cache/save@main
+      #  with:
+      #    path: ./llvm
+      #    key: ${{ steps.llvm-cache.outputs.cache-primary-key }}
       
       - name: Restore build Ccache
         uses: actions/cache/restore@main
