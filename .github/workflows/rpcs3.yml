@@ -114,13 +114,13 @@ jobs:
       - name: Add LLVM
         shell: pwsh
         run: |
-          #if (!(Test-Path -Path C:\a\rpcs3\rpcs3\llvm\)) {
-          #  mkdir llvm
+          if (!(Test-Path -Path C:\a\rpcs3\rpcs3\llvm\)) {
+            mkdir llvm
+            cd llvm
           #  curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
-          #}
-          #Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
-          choco install llvm clang ninja
-          clang --version
+            curl -fsSL https://github.com/c3lang/win-llvm/releases/download/llvm_19_1_5/llvm-19.1.5-windows-amd64-msvc17-libcmt.7z | 7z x
+          }
+          Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
 
       #- name: Save LLVM Cache
       #  #if: github.ref == 'refs/heads/master'
