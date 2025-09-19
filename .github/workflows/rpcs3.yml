@@ -119,7 +119,8 @@ jobs:
           #  curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
           #}
           #Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
-          choco install llvm
+          choco install llvm clang ninja
+          clang --version
 
       #- name: Save LLVM Cache
       #  #if: github.ref == 'refs/heads/master'
