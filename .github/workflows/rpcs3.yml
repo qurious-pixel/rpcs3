@@ -114,7 +114,7 @@ jobs:
       - name: Add LLVM
         shell: pwsh
         run: |
-          if (!(Test-Path -Path C:\a\rpcs3\rpcs3\llvm\)) {
+          if (!(Test-Path -Path D:\a\rpcs3\rpcs3\llvm\)) {
             mkdir llvm
             cd llvm
           #  curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
@@ -123,10 +123,13 @@ jobs:
             7z x llvm-*.7z
             mv llvm* /llvm
             7z x clang-*.7z
-            cp -r -Force clang*/* llvm
+            $sourceDir = "D:\a\rpcs3\rpcs3\clang*"
+            $targetDir = "D:\a\rpcs3\rpcs3\llvm"
+            Get-ChildItem -Path $sourceDir | Copy-Item -Destination $targetDir -Recurse -Container -Force
+            Get-ChildItem -Path $targetDir
             clang --version
           }
-          Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
+          Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm\bin"
 
       #- name: Save LLVM Cache
       #  #if: github.ref == 'refs/heads/master'
