@@ -89,7 +89,7 @@ jobs:
           qttools
           vulkan
           zlib
-          zstd:x64-windows-static-release
+          zstd
           --triplet $env:VCPKG_TRIPLET
           --clean-after-build
           --classic
