@@ -11,7 +11,7 @@ Write-Host "Starting RPCS3 build (PowerShell script)"
 
 # Automatically find clang_rt.builtins-x86_64.lib
 Write-Host "Searching for clang_rt.builtins-x86_64.lib ..."
-$clangBuiltinsLibPath = Get-ChildItem -Path "C:/Program Files/LLVM/lib/clang" -Recurse -Filter "clang_rt.builtins-x86_64.lib" -ErrorAction SilentlyContinue |
+$clangBuiltinsLibPath = Get-ChildItem -Path "D:\a\rpcs3\rpcs3\llvm\lib\clang\20\lib\windows" -Recurse -Filter "clang_rt.builtins-x86_64.lib" -ErrorAction SilentlyContinue |
     Where-Object { $_.FullName -match "windows\\clang_rt\.builtins-x86_64\.lib$" } |
     Select-Object -First 1
 
@@ -28,7 +28,7 @@ function Get-ShortPath([string]$path) {
 $clangBuiltinsDir = Split-Path -Parent $clangBuiltinsLibPath.FullName
 $clangBuiltinsDirShort = Get-ShortPath $clangBuiltinsDir
 $clangBuiltinsLib = Split-Path -Leaf $clangBuiltinsLibPath.FullName
-$clangPath = "C:/Program Files/LLVM/bin"
+$clangPath = "D:\a\rpcs3\rpcs3\llvm\bin"
 
 Write-Host "Found Clang builtins library: $clangBuiltinsLib in $clangBuiltinsDir or short $clangBuiltinsDirShort"
 
@@ -119,7 +119,7 @@ Write-Host "Running CMake configuration"
     -DUSE_DISCORD_RPC=ON `
     -DOpenGL_GL_PREFERENCE=LEGACY `
     -DWITH_LLVM=ON `
-    -DSTATIC_LINK_LLVM=ON `
+    -DSTATIC_LINK_LLVM=OFF `
     -DBUILD_RPCS3_TESTS=OFF `
     -DRUN_RPCS3_TESTS=OFF
 Write-Host "CMake configuration complete"
