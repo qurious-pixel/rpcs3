@@ -115,8 +115,8 @@ jobs:
         shell: pwsh
         run: |
           if (!(Test-Path -Path D:\a\rpcs3\rpcs3\llvm\)) {
-            mkdir llvm
-            cd llvm
+          # mkdir llvm
+          # cd llvm
             curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/clang+llvm-20.1.8-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm --strip-components=1
           #  curl -fsSLO https://github.com/c3lang/win-llvm/releases/download/llvm_19_1_5/llvm-19.1.5-windows-amd64-msvc17-msvcrt.7z
           #  curl -fsSLO https://github.com/vovkos/llvm-package-windows/releases/download/clang-20.1.8/clang-20.1.8-windows-amd64-msvc17-msvcrt.7z
