@@ -135,12 +135,12 @@ jobs:
         if: ${{ matrix.compiler == 'clang-cl' }}
         shell: pwsh
         run: |
-          if (!(Test-Path -Path C:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\)) {
+          if (!(Test-Path -Path D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\)) {
             rm -r llvm-*
             mkdir llvm-${{ matrix.llvmver }}
             curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-${{ matrix.llvmver }}/clang+llvm-${{ matrix.llvmver }}-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm-${{ matrix.llvmver }} --strip-components=1
           }
-          Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin"
+          Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin"
 
       - name: Save LLVM Cache
         if: ${{ matrix.compiler == 'clang-cl' && steps.llvm-cache.outputs.cache-hit != 'true' }}
