@@ -123,7 +123,7 @@ jobs:
             7z x llvm-*.7z
             mv llvm* /llvm
             7z x clang-*.7z
-            cp -r -f clang*/* llvm
+            cp -r -Force clang*/* llvm
             clang --version
           }
           Add-Content -Path $env:GITHUB_PATH -Value "C:\a\rpcs3\rpcs3\llvm\bin"
