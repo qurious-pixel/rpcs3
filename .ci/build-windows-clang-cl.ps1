@@ -11,7 +11,7 @@ Write-Host "Starting RPCS3 build (PowerShell script)"
 
 # Automatically find clang_rt.builtins-x86_64.lib
 Write-Host "Searching for clang_rt.builtins-x86_64.lib ..."
-$clangBuiltinsLibPath = Get-ChildItem -Path "D:\a\rpcs3\rpcs3\llvm-*\lib\clang\20\lib\windows" -Recurse -Filter "clang_rt.builtins-x86_64.lib" -ErrorAction SilentlyContinue |
+$clangBuiltinsLibPath = Get-ChildItem -Path "D:\a\rpcs3\rpcs3\llvm-$llvmver\lib\clang\20\lib\windows" -Recurse -Filter "clang_rt.builtins-x86_64.lib" -ErrorAction SilentlyContinue |
     Where-Object { $_.FullName -match "windows\\clang_rt\.builtins-x86_64\.lib$" } |
     Select-Object -First 1
 
@@ -28,7 +28,7 @@ function Get-ShortPath([string]$path) {
 $clangBuiltinsDir = Split-Path -Parent $clangBuiltinsLibPath.FullName
 $clangBuiltinsDirShort = Get-ShortPath $clangBuiltinsDir
 $clangBuiltinsLib = Split-Path -Leaf $clangBuiltinsLibPath.FullName
-$clangPath = "D:\a\rpcs3\rpcs3\llvm-*\bin"
+$clangPath = "D:\a\rpcs3\rpcs3\llvm-$llvmver\bin"
 
 Write-Host "Found Clang builtins library: $clangBuiltinsLib in $clangBuiltinsDir or short $clangBuiltinsDirShort"
 
