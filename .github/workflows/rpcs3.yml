@@ -89,7 +89,7 @@ jobs:
           restore-keys: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-
 
       - name: Clone and bootstrap vcpkg
-        if: ${{ matrix.compiler == 'clang-cl' && steps.restore-vcpkg-cache.outputs.cache-hit != 'true' }}
+        if: ${{ matrix.compiler == 'clang-cl' && !steps.restore-vcpkg-cache.outputs.cache-hit }}
         shell: pwsh
         run: |
           git clone https://github.com/microsoft/vcpkg.git
@@ -113,7 +113,7 @@ jobs:
           --clean-after-build
 
       - name: Save vcpkg cache
-        if: ${{ matrix.compiler == 'clang-cl' && steps.restore-vcpkg-cache.outputs.cache-hit != 'true' }}
+        if: ${{ !steps.restore-vcpkg-cache.outputs.cache-hit && matrix.compiler == 'clang-cl' }}
         #if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
