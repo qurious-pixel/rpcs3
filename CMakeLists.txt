@@ -46,6 +46,7 @@ option(USE_SYSTEM_PUGIXML "Prefer system pugixml instead of the builtin one" OFF
 option(USE_SYSTEM_SDL "Prefer system SDL instead of the builtin one" ON)
 option(USE_SYSTEM_WOLFSSL "Prefer system MoltenVK instead of the builtin one" OFF)
 option(USE_SYSTEM_ZLIB "Prefer system ZLIB instead of the builtin one" ON)
+option(USE_SYSTEM_ZSTD "Prefer system zstd instead of the prebuild one" OFF)
 option(HAS_MEMORY_BREAKPOINTS "Add support for memory breakpoints to the interpreter" OFF)
 option(USE_LTO "Use LTO for building" ON)
 option(BUILD_RPCS3_TESTS "Build RPCS3 unit tests." OFF)
