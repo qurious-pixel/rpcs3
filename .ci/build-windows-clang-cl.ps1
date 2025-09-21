@@ -28,7 +28,7 @@ function Get-ShortPath([string]$path) {
 $clangBuiltinsDir = Split-Path -Parent $clangBuiltinsLibPath.FullName
 $clangBuiltinsDirShort = Get-ShortPath $clangBuiltinsDir
 $clangBuiltinsLib = Split-Path -Leaf $clangBuiltinsLibPath.FullName
-$clangPath = "D:\a\rpcs3\rpcs3\llvm\bin"
+$clangPath = "D:\a\rpcs3\rpcs3\llvm-*\bin"
 
 Write-Host "Found Clang builtins library: $clangBuiltinsLib in $clangBuiltinsDir or short $clangBuiltinsDirShort"
 
