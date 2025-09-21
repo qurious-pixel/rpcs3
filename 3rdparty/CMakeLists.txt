@@ -20,14 +20,7 @@ add_library(3rdparty_dummy_lib INTERFACE)
 add_subdirectory(zlib EXCLUDE_FROM_ALL)
 
 # ZSTD
-if(USE_SYSTEM_ZSTD)
-	message(STATUS "RPCS3: using shared zstd")
-	find_package(zstd CONFIG REQUIRED)
-
-	target_link_libraries(3rdparty_zstd PRIVATE zstd::libzstd)
-else()
-	add_subdirectory(zstd EXCLUDE_FROM_ALL)
-endif()
+add_subdirectory(zstd EXCLUDE_FROM_ALL)
 
 # 7zip sdk
 add_subdirectory(7zip EXCLUDE_FROM_ALL)
