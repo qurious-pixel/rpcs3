@@ -127,7 +127,7 @@ jobs:
         uses: actions/cache/restore@main
         id: llvm-cache
         with:
-          path: ./llvm
+          path: ./llvm-${{ matrix.llvmver }}
           key: ${{ runner.os }}-llvm-dl-cache-${{ hashFiles('**/llvm-${{ matrix.llvmver }}') }}
           restore-keys: ${{ runner.os }}-llvm-cache-
           
@@ -147,7 +147,7 @@ jobs:
         #if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
-          path: ./llvm
+          path: ./llvm-${{ matrix.llvmver }}
           key: ${{ steps.llvm-cache.outputs.cache-primary-key }}
         
       - name: Restore build Ccache
