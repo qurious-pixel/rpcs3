@@ -77,6 +77,13 @@ jobs:
             git
             p7zip
 
+      - name: Clone and bootstrap vcpkg
+        if: ${{ matrix.compiler == 'clang-cl' }}
+        shell: pwsh
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          .\vcpkg\bootstrap-vcpkg.bat
+          
       - name: Restore vcpkg cache
         if: ${{ matrix.compiler == 'clang-cl' }}
         uses: actions/cache/restore@main
@@ -88,13 +95,6 @@ jobs:
             vcpkg/buildtrees
           key: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-${{ hashFiles('**/vcpkg') }}
           restore-keys: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-
-
-      - name: Clone and bootstrap vcpkg
-        if: ${{ matrix.compiler == 'clang-cl' && !steps.restore-vcpkg-cache.outputs.cache-hit }}
-        shell: pwsh
-        run: |
-          git clone https://github.com/microsoft/vcpkg.git
-          .\vcpkg\bootstrap-vcpkg.bat
 
       - name: Install dependencies with vcpkg
         if: ${{ matrix.compiler == 'clang-cl' }}
