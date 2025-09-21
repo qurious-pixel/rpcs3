@@ -28,19 +28,24 @@ function Get-ShortPath([string]$path) {
 $clangBuiltinsDir = Split-Path -Parent $clangBuiltinsLibPath.FullName
 $clangBuiltinsDirShort = Get-ShortPath $clangBuiltinsDir
 $clangBuiltinsLib = Split-Path -Leaf $clangBuiltinsLibPath.FullName
-$clangPath = Get-ChildItem -Path "D:\a\rpcs3\rpcs3\llvm-*"
+$clangPath = Get-ChildItem -Path "D:\a\rpcs3\rpcs3\llvm-*\bin"
 
 Write-Host "Found Clang builtins library: $clangBuiltinsLib in $clangBuiltinsDir or short $clangBuiltinsDirShort"
 Write-Host "Found Clang Path: $clangPath"
 
 # Get Windows Kits root from registry
-$kitsRoot = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots" -Name "KitsRoot10"
-$kitsRootPath = $kitsRoot.KitsRoot10
+#$kitsRoot = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots" -Name "KitsRoot10"
+#$kitsRootPath = $kitsRoot.KitsRoot10
 
 # Search for mt.exe in x64 SDK bin directories
+#Write-Host "Searching for mt.exe ..."
+#$mtPath = Get-ChildItem -Path "$kitsRootPath\bin" -Recurse -Filter "mt.exe" -ErrorAction SilentlyContinue |
+#    Where-Object { $_.FullName -match "\\x64\\mt\.exe$" } |
+#    Sort-Object FullName -Descending |
+#    Select-Object -First 1
 Write-Host "Searching for mt.exe ..."
-$mtPath = Get-ChildItem -Path "$kitsRootPath\bin" -Recurse -Filter "mt.exe" -ErrorAction SilentlyContinue |
-    Where-Object { $_.FullName -match "\\x64\\mt\.exe$" } |
+$mtPath = Get-ChildItem -Path "$clangPath" -Recurse -Filter "llvm-mt.exe" -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -match "\\llvm-mt\.exe$" } |
     Sort-Object FullName -Descending |
     Select-Object -First 1
 
