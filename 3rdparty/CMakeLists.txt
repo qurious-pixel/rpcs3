@@ -22,10 +22,9 @@ add_subdirectory(zlib EXCLUDE_FROM_ALL)
 # ZSTD
 if(USE_SYSTEM_ZSTD)
 	message(STATUS "RPCS3: using shared zstd")
-	find_package(ZSTD REQUIRED)
+	find_package(zstd CONFIG REQUIRED)
 
-	target_include_directories(3rdparty_zstd INTERFACE libzstd)
-	target_link_libraries(3rdparty_zstd INTERFACE libzstd)
+	target_link_libraries(3rdparty_zstd PRIVATE zstd::libzstd)
 else()
 	add_subdirectory(zstd EXCLUDE_FROM_ALL)
 endif()
