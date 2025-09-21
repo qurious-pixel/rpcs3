@@ -123,6 +123,7 @@ Write-Host "Running CMake configuration"
     -DUSE_SYSTEM_OPENAL=OFF `
     -DUSE_SYSTEM_LIBPNG=ON `
     -DUSE_DISCORD_RPC=ON `
+    -DUSE_SYSTEM_ZSTD=ON `
     -DOpenGL_GL_PREFERENCE=LEGACY `
     -DWITH_LLVM=ON `
     -DSTATIC_LINK_LLVM=OFF `
