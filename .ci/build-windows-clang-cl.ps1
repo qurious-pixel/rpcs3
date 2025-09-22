@@ -102,7 +102,7 @@ Write-Host "Running CMake configuration"
     -DCMAKE_LINKER="$clangPath/lld-link.exe" `
     -DCMAKE_INSTALL_PREFIX=/usr `
     -DCMAKE_TOOLCHAIN_FILE="$VcpkgRoot/scripts/buildsystems/vcpkg.cmake" `
-    -DCMAKE_EXE_LINKER_FLAGS="/LIBPATH:$clangBuiltinsDirShort /defaultlib:$clangBuiltinsLib /defaultlib:zstd_static.lib" `
+    -DCMAKE_EXE_LINKER_FLAGS="/LIBPATH:$clangBuiltinsDirShort /defaultlib:$clangBuiltinsLib /defaultlib:zstd.lib" `
     -DCMAKE_MT="$mtExePath" `
     -DWINDEPLOYQT_EXECUTABLE="$VcpkgWindeployqt" `
     -DUSE_NATIVE_INSTRUCTIONS=OFF `
