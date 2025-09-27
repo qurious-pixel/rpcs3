@@ -75,6 +75,7 @@ endif()
 
 if(MSVC)
     option(USE_MSVC_STATIC_CRT "Use static MSVC C runtime" ON)
+    message(STATUS "MSVC Runtime Library: ${CMAKE_MSVC_RUNTIME_LIBRARY}")
 
     # TODO(cjj19970505@live.cn)
     # DiscordRPC binary in 3rdparty is compiled /MT
