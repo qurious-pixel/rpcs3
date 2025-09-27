@@ -651,7 +651,7 @@ target_link_libraries(rpcs3_emu
         3rdparty::rtmidi
         3rdparty::yaml-cpp
         3rdparty::zlib
-        PkgConfig::libzstd
+        zstd::libzstd
 )
 
 ## 3rdparty::zstd
