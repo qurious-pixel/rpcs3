@@ -96,7 +96,7 @@ if(MSVC)
         # to select a MSVC runtime library.
         # But yaml-cpp set /MT(d) if CMAKE_MSVC_RUNTIME_LIBRARY is undefined
         # So we have to define it explicitly
-        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded"")
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
     endif()
 
     # TODO(cjj19970505@live.cn)
