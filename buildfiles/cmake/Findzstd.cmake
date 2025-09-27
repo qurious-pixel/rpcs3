@@ -21,6 +21,7 @@ else()
 		pkg_search_module(libzstd IMPORTED_TARGET GLOBAL libzstd)
 		if (libzstd_FOUND)
 			add_library(zstd::zstd ALIAS PkgConfig::libzstd)
+			add_library(PkgConfig::libzstd ALIAS 3rdparty::zstd)
 		endif()
 	endif()
 
