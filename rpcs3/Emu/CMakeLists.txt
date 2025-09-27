@@ -1,4 +1,4 @@
-add_library(rpcs3_emu SHARED
+add_library(rpcs3_emu STATIC
     cache_utils.cpp
     games_config.cpp
     IdManager.cpp
@@ -70,7 +70,6 @@ target_sources(rpcs3_emu PRIVATE
     ../../Utilities/date_time.cpp
     ../../Utilities/File.cpp
     ../../Utilities/JITASM.cpp
-    ../../Utilities/JITLLVM.cpp
     ../../Utilities/LUrlParser.cpp
     ../../Utilities/mutex.cpp
     ../../Utilities/rXml.cpp
@@ -81,6 +80,7 @@ target_sources(rpcs3_emu PRIVATE
     ../../Utilities/Thread.cpp
     ../../Utilities/version.cpp
 )
+##     ../../Utilities/JITLLVM.cpp
 if(APPLE)
     target_sources(rpcs3_emu PRIVATE
         ../../darwin/util/sysinfo_darwin.mm
