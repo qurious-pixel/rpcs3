@@ -74,7 +74,7 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug" AND NOT MSVC)
 endif()
 
 if(MSVC)
-    option(USE_MSVC_STATIC_CRT "Use static MSVC C runtime" ON)
+    option(USE_MSVC_STATIC_CRT "Use static MSVC C runtime" OFF)
     message(STATUS "MSVC Runtime Library: ${CMAKE_MSVC_RUNTIME_LIBRARY}")
 
     # TODO(cjj19970505@live.cn)
@@ -90,14 +90,14 @@ if(MSVC)
     endif()
 
     if(USE_MSVC_STATIC_CRT)
-        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     else()
         # though doc ( https://cmake.org/cmake/help/latest/variable/CMAKE_MSVC_RUNTIME_LIBRARY.html )
         # says if that property is not set then CMake uses the default value MultiThreaded$<$<CONFIG:Debug>:Debug>DLL
         # to select a MSVC runtime library.
         # But yaml-cpp set /MT(d) if CMAKE_MSVC_RUNTIME_LIBRARY is undefined
         # So we have to define it explicitly
-        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
     endif()
 
     # TODO(cjj19970505@live.cn)
