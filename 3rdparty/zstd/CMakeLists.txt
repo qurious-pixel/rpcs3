@@ -1,6 +1,6 @@
 # zstd
 # Select the version of zstd to use, default is builtin
-if(USE_SYSTEM_ZSTD)
+if(NOT USE_SYSTEM_ZSTD)
   option(ZSTD_BUILD_PROGRAMS "BUILD PROGRAMS" OFF)
   option(ZSTD_BUILD_SHARED "BUILD SHARED LIBRARIES" OFF)
   option(ZSTD_BUILD_STATIC "BUILD STATIC LIBRARIES" ON)
