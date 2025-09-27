@@ -651,10 +651,8 @@ target_link_libraries(rpcs3_emu
         3rdparty::rtmidi
         3rdparty::yaml-cpp
         3rdparty::zlib
-        zstd::libzstd
+        3rdparty::zstd
 )
-
-## 3rdparty::zstd
 
 if(APPLE)
     check_function_exists(clock_gettime HAVE_CLOCK_GETTIME)
