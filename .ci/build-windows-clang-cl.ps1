@@ -103,6 +103,7 @@ Write-Host "Running CMake configuration"
     -DCMAKE_INSTALL_PREFIX=/usr `
     -DCMAKE_TOOLCHAIN_FILE="$VcpkgRoot/scripts/buildsystems/vcpkg.cmake" `
     -DCMAKE_EXE_LINKER_FLAGS="/LIBPATH:$clangBuiltinsDirShort /defaultlib:$clangBuiltinsLib" `
+    -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded" `
     -DCMAKE_MT="$mtExePath" `
     -DWINDEPLOYQT_EXECUTABLE="$VcpkgWindeployqt" `
     -DUSE_NATIVE_INSTRUCTIONS=OFF `
