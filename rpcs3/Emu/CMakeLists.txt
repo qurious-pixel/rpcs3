@@ -1,4 +1,4 @@
-add_library(rpcs3_emu STATIC
+add_library(rpcs3_emu SHARED
     cache_utils.cpp
     games_config.cpp
     IdManager.cpp
