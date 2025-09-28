@@ -139,7 +139,7 @@ jobs:
         run: |
           #if (!(Test-Path -Path D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\)) {
             rm -r llvm-*
-            mkdir llvm-${{ matrix.llvmver }}
+            #mkdir llvm-${{ matrix.llvmver }}
             curl -fsSLO https://github.com/vovkos/llvm-package-windows/releases/download/llvm-20.1.8/llvm-20.1.8-windows-amd64-msvc17-msvcrt.7z
             curl -fsSLO https://github.com/vovkos/llvm-package-windows/releases/download/clang-20.1.8/clang-20.1.8-windows-amd64-msvc17-msvcrt.7z
             7z x llvm-*.7z
