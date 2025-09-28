@@ -126,7 +126,7 @@ Write-Host "Running CMake configuration"
     -DUSE_SYSTEM_ZSTD=ON `
     -DOpenGL_GL_PREFERENCE=LEGACY `
     -DWITH_LLVM=ON `
-    -DSTATIC_LINK_LLVM=ON `
+    -DSTATIC_LINK_LLVM=OFF `
     -DBUILD_RPCS3_TESTS=OFF `
     -DRUN_RPCS3_TESTS=OFF
 Write-Host "CMake configuration complete"
