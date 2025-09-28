@@ -106,7 +106,7 @@ if(WITH_LLVM)
 		llvm_map_components_to_libnames(LLVM_LIBS
 			${LLVM_TARGETS_TO_BUILD}
 			${LLVM_ADDITIONAL_LIBS}
-			Core
+			LLVM-C
 			ExecutionEngine
 			MCJIT
 			Passes
