@@ -130,14 +130,14 @@ jobs:
         id: llvm-cache
         with:
           path: ./llvm-${{ matrix.llvmver }}
-          key: ${{ runner.os }}-clang-dl-cache-${{ hashFiles('**/llvm-${{ matrix.llvmver }}') }}
+          key: ${{ runner.os }}-llvm-dl-cache-${{ hashFiles('**/llvm-${{ matrix.llvmver }}') }}
           restore-keys: ${{ runner.os }}-clang-dl-cache-
           
       - name: Add LLVM
         if: ${{ matrix.compiler == 'clang-cl' }}
         shell: pwsh
         run: |
-          #if (!(Test-Path -Path D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\)) {
+          if (!(Test-Path -Path D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\)) {
             rm -r llvm-*
             #mkdir llvm-${{ matrix.llvmver }}
             curl -fsSLO https://github.com/vovkos/llvm-package-windows/releases/download/llvm-20.1.8/llvm-20.1.8-windows-amd64-msvc17-msvcrt.7z
@@ -146,13 +146,11 @@ jobs:
             mv llvm* llvm-${{ matrix.llvmver }}
             rm llvm-*.7z
             7z x clang-*.7z
-            Copy-Item -Path "D:\a\rpcs3\rpcs3\clang*\*" -Destination "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}" -Recurse -Force -Verbose
+            Copy-Item -Path "D:\a\rpcs3\rpcs3\clang*\*" -Destination "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}" -Recurse -Force
             rm -r clang*
-          #  curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-${{ matrix.llvmver }}/clang+llvm-${{ matrix.llvmver }}-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm-${{ matrix.llvmver }} --strip-components=1
-          #}
-          Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\llvm\bin"
-          Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\clang\bin"
-          Get-ChildItem -Path D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\llvm\bin
+          }
+          Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin"
+          Get-ChildItem -Path D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin
 
       - name: Save LLVM Cache
         if: ${{ matrix.compiler == 'clang-cl' && steps.llvm-cache.outputs.cache-hit != 'true' }}
