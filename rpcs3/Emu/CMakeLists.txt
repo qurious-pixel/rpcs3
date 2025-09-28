@@ -21,8 +21,6 @@ add_library(rpcs3_emu STATIC
     IPC_socket.cpp
 )
 
-add_compile_definitions(LLVM_AVAILABLE=1)
-
 if(USE_LTO)
     set_target_properties(rpcs3_emu PROPERTIES INTERPROCEDURAL_OPTIMIZATION ON)
 endif()
@@ -72,6 +70,7 @@ target_sources(rpcs3_emu PRIVATE
     ../../Utilities/date_time.cpp
     ../../Utilities/File.cpp
     ../../Utilities/JITASM.cpp
+    ../../Utilities/JITLLVM.cpp
     ../../Utilities/LUrlParser.cpp
     ../../Utilities/mutex.cpp
     ../../Utilities/rXml.cpp
@@ -82,7 +81,7 @@ target_sources(rpcs3_emu PRIVATE
     ../../Utilities/Thread.cpp
     ../../Utilities/version.cpp
 )
-##     ../../Utilities/JITLLVM.cpp
+
 if(APPLE)
     target_sources(rpcs3_emu PRIVATE
         ../../darwin/util/sysinfo_darwin.mm
@@ -91,13 +90,11 @@ endif()
 
 target_include_directories(rpcs3_emu PUBLIC "${CMAKE_SOURCE_DIR}")
 
-## TEST ##
-#set_source_files_properties("../../Utilities/JITLLVM.cpp" "../../Utilities/JITASM.cpp" PROPERTIES
-#    COMPILE_FLAGS "$<IF:$<CXX_COMPILER_ID:MSVC>,$<NOT:$<CXX_COMPILER_ID:Clang>>/GR-,-fno-rtti>"
-#    SKIP_PRECOMPILE_HEADERS ON
-#)
+set_source_files_properties("../../Utilities/JITLLVM.cpp" "../../Utilities/JITASM.cpp" PROPERTIES
+    COMPILE_FLAGS "$<IF:$<CXX_COMPILER_ID:MSVC>,$<NOT:$<CXX_COMPILER_ID:Clang>>/GR-,-fno-rtti>"
+    SKIP_PRECOMPILE_HEADERS ON
+)
 
-## TEST2 ##
 set_source_files_properties("../util/yaml.cpp" PROPERTIES
     COMPILE_FLAGS "$<IF:$<CXX_COMPILER_ID:MSVC>,$<NOT:$<CXX_COMPILER_ID:Clang>>/EHsc,-fexceptions>"
     SKIP_PRECOMPILE_HEADERS ON
