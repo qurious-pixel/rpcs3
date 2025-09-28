@@ -130,8 +130,8 @@ jobs:
         id: llvm-cache
         with:
           path: ./llvm-${{ matrix.llvmver }}
-          key: ${{ runner.os }}-llvm-dl-cache-${{ hashFiles('**/llvm-${{ matrix.llvmver }}') }}
-          restore-keys: ${{ runner.os }}-llvm-dl-cache-
+          key: ${{ runner.os }}-clang-dl-cache-${{ hashFiles('**/llvm-${{ matrix.llvmver }}') }}
+          restore-keys: ${{ runner.os }}-clang-dl-cache-
           
       - name: Add LLVM
         if: ${{ matrix.compiler == 'clang-cl' }}
