@@ -140,14 +140,13 @@ jobs:
           #if (!(Test-Path -Path D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\)) {
             rm -r llvm-*
             mkdir llvm-${{ matrix.llvmver }}
-            cd llvm-${{ matrix.llvmver }}
             curl -fsSLO https://github.com/vovkos/llvm-package-windows/releases/download/llvm-20.1.8/llvm-20.1.8-windows-amd64-msvc17-msvcrt.7z
             curl -fsSLO https://github.com/vovkos/llvm-package-windows/releases/download/clang-20.1.8/clang-20.1.8-windows-amd64-msvc17-msvcrt.7z
             7z x llvm-*.7z
-            mv llvm* llvm
+            mv llvm* llvm-${{ matrix.llvmver }}
             rm llvm-*.7z
             7z x clang-*.7z
-            cp -av --link clang* llvm/
+            Copy-Item -Path "D:\a\rpcs3\rpcs3\clang*\*" -Destination "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}" -Recurse -Force -Verbose
             rm -r clang*
           #  curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-${{ matrix.llvmver }}/clang+llvm-${{ matrix.llvmver }}-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm-${{ matrix.llvmver }} --strip-components=1
           #}
