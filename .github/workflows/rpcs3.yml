@@ -124,20 +124,20 @@ jobs:
             vcpkg/buildtrees
           key: ${{ steps.restore-vcpkg-cache.outputs.cache-primary-key }}
 
-      #- name: Restore LLVM Cache
-      #  if: ${{ matrix.compiler == 'clang-cl' }} 
-      #  uses: actions/cache/restore@main
-      #  id: llvm-cache
-      #  with:
-      #    path: ./llvm-${{ matrix.llvmver }}
-      #    key: ${{ runner.os }}-llvm-dl-cache-${{ hashFiles('**/llvm-${{ matrix.llvmver }}') }}
-      #    restore-keys: ${{ runner.os }}-llvm-cache-
+      - name: Restore LLVM Cache
+        if: ${{ matrix.compiler == 'clang-cl' }} 
+        uses: actions/cache/restore@main
+        id: llvm-cache
+        with:
+          path: ./llvm-${{ matrix.llvmver }}
+          key: ${{ runner.os }}-llvm-dl-cache-${{ hashFiles('**/llvm-${{ matrix.llvmver }}') }}
+          restore-keys: ${{ runner.os }}-llvm-cache-
           
       - name: Add LLVM
         if: ${{ matrix.compiler == 'clang-cl' }}
         shell: pwsh
         run: |
-          #if (!(Test-Path -Path D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\)) {
+          if (!(Test-Path -Path D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\)) {
             rm -r llvm-*
             mkdir llvm-${{ matrix.llvmver }}
             cd llvm-${{ matrix.llvmver }}
@@ -145,12 +145,15 @@ jobs:
             curl -fsSLO https://github.com/vovkos/llvm-package-windows/releases/download/clang-20.1.8/clang-20.1.8-windows-amd64-msvc17-msvcrt.7z
             7z x llvm-*.7z
             mv llvm* llvm
+            rm llvm-*.7z
             7z x clang-*.7z
             mv clang* clang
+            rm clang-*.7z
           #  curl -fsSL https://github.com/llvm/llvm-project/releases/download/llvmorg-${{ matrix.llvmver }}/clang+llvm-${{ matrix.llvmver }}-x86_64-pc-windows-msvc.tar.xz | tar -xz -C llvm-${{ matrix.llvmver }} --strip-components=1
-          #}
+          }
           Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\llvm\bin"
           Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\clang\bin"
+          Get-ChildItem -Path D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}
 
       - name: Save LLVM Cache
         if: ${{ matrix.compiler == 'clang-cl' && steps.llvm-cache.outputs.cache-hit != 'true' }}
