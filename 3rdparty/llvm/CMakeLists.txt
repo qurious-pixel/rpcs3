@@ -102,7 +102,7 @@ if(WITH_LLVM)
 			Passes
 		)
 	else()
-		set(LLVM_LIBS LLVMCore)
+		set(LLVM_LIBS LLVM)
 	endif()
 
 	add_library(3rdparty_llvm INTERFACE)
