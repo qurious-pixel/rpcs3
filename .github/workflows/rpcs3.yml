@@ -150,7 +150,6 @@ jobs:
             rm -r clang*
           }
           Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin"
-          Get-ChildItem -Path D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin
 
       - name: Save LLVM Cache
         if: ${{ matrix.compiler == 'clang-cl' && steps.llvm-cache.outputs.cache-hit != 'true' }}
