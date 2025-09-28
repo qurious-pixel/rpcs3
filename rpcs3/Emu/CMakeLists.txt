@@ -21,7 +21,7 @@ add_library(rpcs3_emu STATIC
     IPC_socket.cpp
 )
 
-add_compile_definitions(LLVM_AVAILABLE=true)
+add_compile_definitions(LLVM_AVAILABLE=1)
 
 if(USE_LTO)
     set_target_properties(rpcs3_emu PROPERTIES INTERPROCEDURAL_OPTIMIZATION ON)
