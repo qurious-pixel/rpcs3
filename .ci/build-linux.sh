@@ -14,7 +14,7 @@ git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/libsdl
 wget https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
 sudo ./llvm.sh 21
-clang --version
+clang-21 --version
 
 mkdir build && cd build || exit 1
 
