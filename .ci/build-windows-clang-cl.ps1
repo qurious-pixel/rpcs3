@@ -29,6 +29,7 @@ $clangBuiltinsDir = Split-Path -Parent $clangBuiltinsLibPath.FullName
 $clangBuiltinsDirShort = Get-ShortPath $clangBuiltinsDir
 $clangBuiltinsLib = Split-Path -Leaf $clangBuiltinsLibPath.FullName
 $clangPath = Get-ChildItem -Path "D:\a\rpcs3\rpcs3\llvm-*\bin"
+$llvmPath = Get-ChildItem -Path "D:\a\rpcs3\rpcs3\llvm-*\lib\cmake\llvm"
 
 Write-Host "Found Clang builtins library: $clangBuiltinsLib in $clangBuiltinsDir or short $clangBuiltinsDirShort"
 Write-Host "Found Clang Path: $clangPath"
@@ -126,7 +127,8 @@ Write-Host "Running CMake configuration"
     -DUSE_SYSTEM_ZSTD=ON `
     -DOpenGL_GL_PREFERENCE=LEGACY `
     -DWITH_LLVM=ON `
-    -DSTATIC_LINK_LLVM=OFF `
+    -DSTATIC_LINK_LLVM=ON `
+    -DLLVM_DIR=$llvmPath `
     -DBUILD_RPCS3_TESTS=OFF `
     -DRUN_RPCS3_TESTS=OFF
 Write-Host "CMake configuration complete"
