@@ -104,10 +104,8 @@ if(WITH_LLVM)
 	else()
 		#set(LLVM_LIBS LLVM-C)
 		llvm_map_components_to_libnames(LLVM_LIBS
-			${LLVM_TARGETS_TO_BUILD}
-			${LLVM_ADDITIONAL_LIBS}
-			LLVM-C
-			ExecutionEngine
+			-C
+			Support
 			MCJIT
 			Passes
 		)
