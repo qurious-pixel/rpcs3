@@ -33,7 +33,7 @@ LOG_CHANNEL(jit_log, "JIT");
 #endif
 #include <llvm/Support/CodeGen.h>
 #include "llvm/Support/TargetSelect.h"
-#include "llvm/Support/TargetTriple.h"
+#include "llvm/TargetParser/Triple.h"
 #include "llvm/TargetParser/Host.h"
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
 #include "llvm/ExecutionEngine/RTDyldMemoryManager.h"
