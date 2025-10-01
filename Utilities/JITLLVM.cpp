@@ -18,6 +18,7 @@ LOG_CHANNEL(jit_log, "JIT");
 
 #include <unordered_map>
 
+/*
 #ifdef _MSC_VER
 #pragma warning(push, 0)
 #else
@@ -31,6 +32,7 @@ LOG_CHANNEL(jit_log, "JIT");
 #pragma GCC diagnostic ignored "-Weffc++"
 #pragma GCC diagnostic ignored "-Wmissing-noreturn"
 #endif
+*/
 #include <llvm/Support/CodeGen.h>
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/TargetParser/Triple.h"
@@ -41,11 +43,13 @@ LOG_CHANNEL(jit_log, "JIT");
 #include "llvm/ExecutionEngine/JITEventListener.h"
 #include "llvm/Object/ObjectFile.h"
 #include "llvm/Object/SymbolSize.h"
+/*
 #ifdef _MSC_VER
 #pragma warning(pop)
 #else
 #pragma GCC diagnostic pop
 #endif
+*/
 
 #ifdef ARCH_ARM64
 #include "Emu/CPU/Backends/AArch64/AArch64Common.h"
