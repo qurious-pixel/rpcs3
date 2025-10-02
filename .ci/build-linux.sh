@@ -11,24 +11,6 @@ git config --global --add safe.directory '*'
 # shellcheck disable=SC2046
 git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/libsdl-org/ && !/curl/ && !/zlib/ { print $3 }' .gitmodules)
 
-wget https://apt.llvm.org/llvm.sh
-chmod +x llvm.sh
-sudo ./llvm.sh 21
-clang-21 --version
-
-git clone --branch 11.2.0 --single-branch https://github.com/fmtlib/fmt.git
-mkdir -p fmt/build &&
-cd    fmt/build &&
-
-cmake -D CMAKE_INSTALL_PREFIX=/usr     \
-      -D CMAKE_INSTALL_LIBDIR=/usr/lib \
-      -D BUILD_SHARED_LIBS=ON          \
-      -D FMT_TEST=OFF                  \
-      -G Ninja ..                      &&
-ninja
-ninja install
-cd -
-
 mkdir build && cd build || exit 1
 
 if [ "$COMPILER" = "gcc" ]; then
