@@ -16,6 +16,19 @@ chmod +x llvm.sh
 sudo ./llvm.sh 21
 clang-21 --version
 
+git clone --branch 11.2.0 --single-branch https://github.com/fmtlib/fmt.git
+mkdir build &&
+cd    build &&
+
+cmake -D CMAKE_INSTALL_PREFIX=/usr     \
+      -D CMAKE_INSTALL_LIBDIR=/usr/lib \
+      -D BUILD_SHARED_LIBS=ON          \
+      -D FMT_TEST=OFF                  \
+      -G Ninja ..                      &&
+ninja
+ninja install
+cd -
+
 mkdir build && cd build || exit 1
 
 if [ "$COMPILER" = "gcc" ]; then
