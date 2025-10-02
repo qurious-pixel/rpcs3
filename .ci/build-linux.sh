@@ -23,11 +23,11 @@ if [ "$COMPILER" = "gcc" ]; then
     export RANLIB=/usr/bin/gcc-ranlib-"$GCCVER"
     export CFLAGS="-fuse-linker-plugin"
 else
-    export CC="clang-21"
-    export CXX="clang++-21"
+    export CC="${CLANG_BINARY}"
+    export CXX="${CLANGXX_BINARY}"
     export LINKER=lld
-    export AR=/usr/bin/llvm-ar-21
-    export RANLIB=/usr/bin/llvm-ranlib-21
+    export AR=/usr/bin/llvm-ar-"$LLVMVER"
+    export RANLIB=/usr/bin/llvm-ranlib-"$LLVMVER"
 fi
 
 export LINKER_FLAG="-fuse-ld=${LINKER}"
