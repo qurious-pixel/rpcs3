@@ -17,8 +17,8 @@ sudo ./llvm.sh 21
 clang-21 --version
 
 git clone --branch 11.2.0 --single-branch https://github.com/fmtlib/fmt.git
-mkdir build &&
-cd    build &&
+mkdir -p fmt/build &&
+cd    fmt/build &&
 
 cmake -D CMAKE_INSTALL_PREFIX=/usr     \
       -D CMAKE_INSTALL_LIBDIR=/usr/lib \
