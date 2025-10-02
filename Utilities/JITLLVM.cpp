@@ -659,8 +659,7 @@ jit_compiler::jit_compiler(const std::unordered_map<std::string, u64>& _link, co
 	std::string result;
 
 	auto null_mod = std::make_unique<llvm::Module>("null_", *m_context);
-	//null_mod->setTargetTriple(jit_compiler::triple1());
-	null_mod->setTargetTriple(llvm::Triple(jit_compiler::triple1()));
+	null_mod->setTargetTriple(jit_compiler::triple1());
 
 	std::unique_ptr<llvm::RTDyldMemoryManager> mem;
 
