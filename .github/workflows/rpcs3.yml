@@ -22,61 +22,110 @@ env:
   BUILD_ARTIFACTSTAGINGDIRECTORY: ${{ github.workspace }}/artifacts/
 
 jobs:
-  FreeBSD_Build:
-      # Only run push event on master branch of main repo, but run all PRs
-    #if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
-    name: RPCS3 FreeBSD 
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
+#  FreeBSD_Build:
+#      # Only run push event on master branch of main repo, but run all PRs
+#    #if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+#    name: RPCS3 FreeBSD 
+#    runs-on: ubuntu-latest
+#    timeout-minutes: 60
+#    env:
+#      CCACHE_DIR: ${{ github.workspace }}/ccache
+#      QT_VER_MAIN: '6'
+#      LLVM_COMPILER_VER: '19'
+#      FFMPEG_VER: '8.0'
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@main
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Restore Build Ccache
+#        uses: actions/cache/restore@main
+#        id: restore-build-ccache
+#        with:
+#          path: ${{ env.CCACHE_DIR }}
+#          key: FreeBSD-ccache-${{github.run_id}}
+#          restore-keys: FreeBSD-ccache-
+#
+#      - name: FreeBSD build
+#        id: root
+#        uses: vmactions/freebsd-vm@v1
+#        with:
+#          envs: 'QT_VER_MAIN LLVM_COMPILER_VER CCACHE_DIR FFMPEG_VER'
+#          usesh: true
+#          run: |
+#            sed -i '' 's/quarterly/latest/' /etc/pkg/FreeBSD.conf
+#            export ASSUME_ALWAYS_YES=true
+#            pkg install git curl gcc nasm pkgconf gmake ccache cmake ninja "llvm$LLVM_COMPILER_VER"
+#            pkg install alsa-lib pulseaudio sdl3 evdev-proto vulkan-headers vulkan-loader opencv glew openal-soft ffmpeg
+#            if [ ! -e ${{ env.CCACHE_DIR }}/ffmpeg-$FFMPEG_VER ]; then
+#            	cd ${{ env.CCACHE_DIR }}
+#            	fetch https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.gz
+#            	tar -xzf ffmpeg-$FFMPEG_VER.tar.gz
+#            	cd ffmpeg-$FFMPEG_VER
+#            	CC='ccache gcc' ./configure
+#            	gmake
+#            	cd ${{ github.workspace }}
+#              rm ${{ env.CCACHE_DIR }}/ffmpeg-$FFMPEG_VER.tar.gz
+#            fi
+#            gmake install -C ${{ env.CCACHE_DIR }}/ffmpeg-$FFMPEG_VER
+#            ffmpeg -version
+#            pkg remove ffmpeg
+#            pkg install "qt$QT_VER_MAIN-multimedia" "qt$QT_VER_MAIN-svg" 
+#            .ci/build-freebsd.sh
+#            
+#      - name: Save Build Ccache
+#        #if: github.ref == 'refs/heads/master'
+#        uses: actions/cache/save@main
+#        with:
+#          path: ${{ env.CCACHE_DIR }}
+#          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
+
+  Linux_Build:
+    strategy:
+      fail-fast: false
+      matrix:
+        FFMPEG_VER: [6.1, 8.0]
+        include:
+          - os: ubuntu-24.04
+            docker_img: "rpcs3/rpcs3-ci-jammy:1.6"
+            build_sh: "/rpcs3/.ci/build-linux.sh"
+            compiler: clang
+            UPLOAD_COMMIT_HASH: d812f1254a1157c80fd402f94446310560f54e5f
+            UPLOAD_REPO_FULL_NAME: "rpcs3/rpcs3-binaries-linux"
+
+    name: RPCS3 Linux ${{ matrix.os }} ${{ matrix.compiler }}
+    runs-on: ${{ matrix.os }}
     env:
       CCACHE_DIR: ${{ github.workspace }}/ccache
-      QT_VER_MAIN: '6'
-      LLVM_COMPILER_VER: '19'
-      FFMPEG_VER: '8.0'
+      DEPLOY_APPIMAGE: true
+      APPDIR: "/rpcs3/build/appdir"
+      ARTDIR: "/root/artifacts"
+      RELEASE_MESSAGE: "/rpcs3/GitHubReleaseMessage.txt"
+      COMPILER: ${{ matrix.compiler }}
+      UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
+      UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
         with:
           fetch-depth: 0
 
-      - name: Restore Build Ccache
+      - name: Restore build Ccache
         uses: actions/cache/restore@main
         id: restore-build-ccache
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: FreeBSD-ccache-${{github.run_id}}
-          restore-keys: FreeBSD-ccache-
+          key: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-${{github.run_id}}
+          restore-keys: ${{ runner.os }}-ccache-${{ matrix.compiler }}-${{ runner.arch }}-
 
-      - name: FreeBSD build
-        id: root
-        uses: vmactions/freebsd-vm@v1
-        with:
-          envs: 'QT_VER_MAIN LLVM_COMPILER_VER CCACHE_DIR FFMPEG_VER'
-          usesh: true
-          run: |
-            sed -i '' 's/quarterly/latest/' /etc/pkg/FreeBSD.conf
-            export ASSUME_ALWAYS_YES=true
-            pkg install git curl gcc nasm pkgconf gmake ccache cmake ninja "llvm$LLVM_COMPILER_VER"
-            pkg install alsa-lib pulseaudio sdl3 evdev-proto vulkan-headers vulkan-loader opencv glew openal-soft ffmpeg
-            if [ ! -e ${{ env.CCACHE_DIR }}/ffmpeg-$FFMPEG_VER ]; then
-            	cd ${{ env.CCACHE_DIR }}
-            	fetch https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.gz
-            	tar -xzf ffmpeg-$FFMPEG_VER.tar.gz
-            	cd ffmpeg-$FFMPEG_VER
-            	CC='ccache gcc' ./configure
-            	gmake
-            	cd ${{ github.workspace }}
-              rm ${{ env.CCACHE_DIR }}/ffmpeg-$FFMPEG_VER.tar.gz
-            fi
-            gmake install -C ${{ env.CCACHE_DIR }}/ffmpeg-$FFMPEG_VER
-            ffmpeg -version
-            pkg remove ffmpeg
-            pkg install "qt$QT_VER_MAIN-multimedia" "qt$QT_VER_MAIN-svg" 
-            .ci/build-freebsd.sh
-            
-      - name: Save Build Ccache
-        #if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
+      - name: Docker setup and build
+        run: |
+          docker pull --quiet ${{ matrix.docker_img }}
+          docker run \
+            -v $PWD:/rpcs3 \
+            --env-file .ci/docker.env \
+            -v ${{ env.CCACHE_DIR }}:/root/.ccache  \
+            -v ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}:${{ env.ARTDIR }} \
+            ${{ matrix.docker_img }} \
+            ${{ matrix.build_sh }}
