@@ -79,7 +79,7 @@ namespace rsx
 
 		private:
 			// Members
-			block_list *block;
+			block_list* block = nullptr;
 			list_iterator list_it = {};
 			size_type idx = u32{umax};
 			size_type array_idx = 0;
