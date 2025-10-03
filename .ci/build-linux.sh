@@ -9,7 +9,7 @@ git config --global --add safe.directory '*'
 curl -LO https://ffmpeg.org/releases/ffmpeg-"$FFMPEG_VER".tar.gz
         tar -xzf ffmpeg-"$FFMPEG_VER".tar.gz
         cd ffmpeg-"$FFMPEG_VER"
-        ./configure --prefix=/usr --enable-pic --disable-doc --enable-runtime-cpudetect --disable-autodetect --disable-everything --disable-x86asm \
+        ./configure --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --enable-pic --disable-doc --enable-runtime-cpudetect --disable-autodetect --disable-everything --disable-x86asm \
 --enable-decoder=aac --enable-decoder=aac_latm --enable-decoder=atrac3 --enable-decoder=atrac3p --enable-decoder=atrac9 --enable-decoder=mp3 --enable-decoder=pcm_s16le --enable-decoder=pcm_s8 \
 --enable-decoder=mov --enable-decoder=h264 --enable-decoder=mpeg4 --enable-decoder=mpeg2video --enable-decoder=mjpeg --enable-decoder=mjpegb \
 --enable-encoder=pcm_s16le --enable-encoder=mp3 --enable-encoder=ac3 --enable-encoder=aac \
