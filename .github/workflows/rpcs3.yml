@@ -85,7 +85,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        FFMPEG_VER: [6.1, 8.0]
+        FFMPEG_VER: ['6.1', '8.0']
         include:
           - os: ubuntu-24.04
             docker_img: "rpcs3/rpcs3-ci-jammy:1.6"
