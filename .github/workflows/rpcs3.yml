@@ -94,7 +94,7 @@ jobs:
             UPLOAD_COMMIT_HASH: d812f1254a1157c80fd402f94446310560f54e5f
             UPLOAD_REPO_FULL_NAME: "rpcs3/rpcs3-binaries-linux"
 
-    name: RPCS3 Linux ${{ matrix.os }} ${{ matrix.FFMPEG_VER }}
+    name: RPCS3 Linux FFMPEG-${{ matrix.FFMPEG_VER }}
     runs-on: ${{ matrix.os }}
     env:
       CCACHE_DIR: ${{ github.workspace }}/ccache
