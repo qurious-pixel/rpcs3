@@ -105,6 +105,7 @@ jobs:
       COMPILER: ${{ matrix.compiler }}
       UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
       UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
+      FFMPEG_VER: ${{ matrix.FFMPEG_VER }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
