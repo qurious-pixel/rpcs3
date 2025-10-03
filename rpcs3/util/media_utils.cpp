@@ -347,22 +347,9 @@ namespace utils
 	{
 		if (!codec) return false;
 
-		const void* sample_formats = nullptr;
-		int num = 0;
-
-		if (const int err = avcodec_get_supported_config(nullptr, codec, AVCodecConfig::AV_CODEC_CONFIG_SAMPLE_FORMAT, 0, &sample_formats, &num))
+		for (const AVSampleFormat* p = codec->sample_fmts; p && *p != AV_SAMPLE_FMT_NONE; p++)
 		{
-			media_log.error("check_sample_fmt: avcodec_get_supported_config error: %d='%s'", err, av_error_to_string(err));
-			return false;
-		}
-
-		if (!sample_formats)
-			return true; // All supported
-
-		int i = 0;
-		for (const AVSampleFormat* fmt = static_cast<const AVSampleFormat*>(sample_formats); fmt && *fmt != AV_SAMPLE_FMT_NONE && i < num; fmt++, i++)
-		{
-			if (*fmt == sample_fmt)
+			if (*p == sample_fmt)
 			{
 				return true;
 			}
@@ -373,33 +360,18 @@ namespace utils
 	// just pick the highest supported samplerate
 	static int select_sample_rate(const AVCodec* codec)
 	{
-		constexpr int default_sample_rate = 48000;
+		if (!codec || !codec->supported_samplerates)
+			return 48000;
 
-		if (!codec)
-			return default_sample_rate;
-
-		const void* sample_rates = nullptr;
-		int num = 0;
-
-		if (const int err = avcodec_get_supported_config(nullptr, codec, AVCodecConfig::AV_CODEC_CONFIG_SAMPLE_RATE, 0, &sample_rates, &num))
+		int best_samplerate = 0;
+		for (const int* samplerate = codec->supported_samplerates; samplerate && *samplerate != 0; samplerate++)
 		{
-			media_log.error("select_sample_rate: avcodec_get_supported_config error: %d='%s'", err, av_error_to_string(err));
-			return default_sample_rate;
-		}
-
-		if (!sample_rates)
-			return default_sample_rate;
-
-		int i = 0;
-		int best_sample_rate = 0;
-		for (const int* sample_rate = static_cast<const int*>(sample_rates); sample_rate && *sample_rate != 0 && i < num; sample_rate++, i++)
-		{
-			if (!best_sample_rate || abs(default_sample_rate - *sample_rate) < abs(default_sample_rate - best_sample_rate))
+			if (!best_samplerate || abs(48000 - *samplerate) < abs(48000 - best_samplerate))
 			{
-				best_sample_rate = *sample_rate;
+				best_samplerate = *samplerate;
 			}
 		}
-		return best_sample_rate;
+		return best_samplerate;
 	}
 
 	AVChannelLayout get_preferred_channel_layout(int channels)
@@ -425,25 +397,12 @@ namespace utils
 	{
 		if (!codec) return nullptr;
 
-		const void* ch_layouts = nullptr;
-		int num = 0;
-
-		if (const int err = avcodec_get_supported_config(nullptr, codec, AVCodecConfig::AV_CODEC_CONFIG_CHANNEL_LAYOUT, 0, &ch_layouts, &num))
-		{
-			media_log.error("select_channel_layout: avcodec_get_supported_config error: %d='%s'", err, av_error_to_string(err));
-			return nullptr;
-		}
-
-		if (!ch_layouts)
-			return nullptr;
-
 		const AVChannelLayout preferred_ch_layout = get_preferred_channel_layout(channels);
 		const AVChannelLayout* found_ch_layout = nullptr;
 
-		int i = 0;
-		for (const AVChannelLayout* ch_layout = static_cast<const AVChannelLayout*>(ch_layouts);
-			 i < num && ch_layout && memcmp(ch_layout, &empty_ch_layout, sizeof(AVChannelLayout)) != 0;
-			 ch_layout++, i++)
+		for (const AVChannelLayout* ch_layout = codec->ch_layouts;
+			 ch_layout && memcmp(ch_layout, &empty_ch_layout, sizeof(AVChannelLayout)) != 0;
+			 ch_layout++)
 		{
 			media_log.notice("select_channel_layout: listing channel layout '%s' with %d channels", channel_layout_name(*ch_layout), ch_layout->nb_channels);
 
