@@ -11,12 +11,13 @@ git config --global --add safe.directory '*'
 # shellcheck disable=SC2046
 git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/libsdl-org/ && !/curl/ && !/zlib/ { print $3 }' .gitmodules)
 
-curl -LO https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.gz
-        tar -xzf ffmpeg-$FFMPEG_VER.tar.gz
-        cd ffmpeg-$FFMPEG_VER
+curl -LO https://ffmpeg.org/releases/ffmpeg-"$FFMPEG_VER".tar.gz
+        tar -xzf ffmpeg-"$FFMPEG_VER".tar.gz
+        cd ffmpeg-"$FFMPEG_VER"
         ./configure
         make
         make install
+        ffmpeg -version
         cd -
 
 mkdir build && cd build || exit 1
