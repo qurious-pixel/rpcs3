@@ -11,6 +11,14 @@ git config --global --add safe.directory '*'
 # shellcheck disable=SC2046
 git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/libsdl-org/ && !/curl/ && !/zlib/ { print $3 }' .gitmodules)
 
+curl -LO https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VER.tar.gz
+        tar -xzf ffmpeg-$FFMPEG_VER.tar.gz
+        cd ffmpeg-$FFMPEG_VER
+        ./configure
+        make
+        make install
+        cd -
+
 mkdir build && cd build || exit 1
 
 if [ "$COMPILER" = "gcc" ]; then
@@ -46,14 +54,12 @@ cmake ..                                               \
     -DUSE_SYSTEM_CURL=ON                               \
     -DUSE_SDL=ON                                       \
     -DUSE_SYSTEM_SDL=ON                                \
-    -DUSE_SYSTEM_FFMPEG=OFF                            \
+    -DUSE_SYSTEM_FFMPEG=ON                             \
     -DUSE_SYSTEM_OPENCV=ON                             \
     -DUSE_DISCORD_RPC=ON                               \
     -DOpenGL_GL_PREFERENCE=LEGACY                      \
     -DLLVM_DIR=/opt/llvm/lib/cmake/llvm                \
     -DSTATIC_LINK_LLVM=ON                              \
-    -DBUILD_RPCS3_TESTS="${RUN_UNIT_TESTS}"            \
-    -DRUN_RPCS3_TESTS="${RUN_UNIT_TESTS}"              \
     -G Ninja
 
 ninja; build_status=$?;
