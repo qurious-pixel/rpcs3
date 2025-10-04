@@ -3,6 +3,7 @@
 
 #include "Utilities/StrUtil.h"
 
+#define AL_LIBTYPE_STATIC
 #include "al.h"
 #include "alc.h"
 
