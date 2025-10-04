@@ -3,6 +3,7 @@
 #include "Utilities/Thread.h"
 #include "Utilities/mutex.h"
 
+#define AL_LIBTYPE_STATIC
 #include "alc.h"
 
 // Error Codes
