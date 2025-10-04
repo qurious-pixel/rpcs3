@@ -31,6 +31,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
   </PropertyGroup>
@@ -66,6 +67,7 @@
     </CmakeCleanCLI>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     <OutDir>$(SolutionDir)build\lib\$(Configuration)-$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)build\tmp\$(ProjectName)-$(Configuration)-$(Platform)\</IntDir>
     <NMakeBuildCommandLine>
