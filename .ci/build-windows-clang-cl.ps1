@@ -128,7 +128,7 @@ Write-Host "Running CMake configuration"
     -DOpenGL_GL_PREFERENCE=LEGACY `
     -DWITH_LLVM=ON `
     -DSTATIC_LINK_LLVM=ON `
-    -DLLVM_DIR=$llvmPath `
+    -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON `
     -DBUILD_RPCS3_TESTS=OFF `
     -DRUN_RPCS3_TESTS=OFF
 Write-Host "CMake configuration complete"
