@@ -107,7 +107,10 @@ if(WITH_LLVM)
 			Passes
 		)
 	else()
-		set(LLVM_LIBS LLVM)
+		#set(LLVM_LIBS LLVM)
+		llvm_map_components_to_libnames(LLVM_LIBS
+			-C
+		)
 	endif()
 
 	add_library(3rdparty_llvm INTERFACE)
