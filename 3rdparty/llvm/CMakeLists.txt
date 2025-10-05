@@ -110,6 +110,8 @@ if(WITH_LLVM)
 		#set(LLVM_LIBS LLVM)
 		llvm_map_components_to_libnames(LLVM_LIBS
 			-C
+			Analysis
+			Core
 		)
 	endif()
 
