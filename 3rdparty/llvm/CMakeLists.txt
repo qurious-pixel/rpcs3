@@ -111,8 +111,8 @@ if(WITH_LLVM)
 		llvm_map_components_to_libnames(LLVM_LIBS
 			-C
 			Analysis
-			Core
 		)
+		#	Core
 	endif()
 
 	add_library(3rdparty_llvm INTERFACE)
