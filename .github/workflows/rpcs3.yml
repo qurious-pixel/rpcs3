@@ -150,7 +150,7 @@ jobs:
             rm -r clang*
           }
           Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin"
-          C:\Program Files\LLVM\bin\clang-cl.exe --version
+          C:\PROGRA~1\LLVM\bin\clang-cl.exe --version
           Get-ChildItem -Path "C:\Program Files\LLVM\bin"
           Get-ChildItem -Path "C:\Program Files\LLVM\lib"
  
