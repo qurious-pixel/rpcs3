@@ -95,7 +95,7 @@ Write-Host "Changed directory to: $(Get-Location)"
 
 # Run CMake with Ninja generator and required flags
 Write-Host "Running CMake configuration"
-& cmake -v .. `
+& cmake .. `
     -G Ninja `
     -DCMAKE_BUILD_TYPE=Release `
     -DCMAKE_C_COMPILER="$clangPath/clang-cl.exe" `
@@ -129,7 +129,7 @@ Write-Host "Running CMake configuration"
     -DWITH_LLVM=ON `
     -DSTATIC_LINK_LLVM=ON `
     -DBUILD_RPCS3_TESTS=OFF `
-    -DRUN_RPCS3_TESTS=OFF
+    --log-level=VERBOSE
 Write-Host "CMake configuration complete"
 
 # Build with ninja
