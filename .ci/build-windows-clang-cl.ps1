@@ -28,7 +28,7 @@ function Get-ShortPath([string]$path) {
 $clangBuiltinsDir = Split-Path -Parent $clangBuiltinsLibPath.FullName
 $clangBuiltinsDirShort = Get-ShortPath $clangBuiltinsDir
 $clangBuiltinsLib = Split-Path -Leaf $clangBuiltinsLibPath.FullName
-$clangPath = Get-ChildItem -Path "C:\Program Files\LLVM\bin"
+$clangPath = "C:\Program Files\LLVM\bin"
 #$clangPath = Get-ChildItem -Path "D:\a\rpcs3\rpcs3\llvm-*\bin"
 #$llvmPath = Get-ChildItem -Path "D:\a\rpcs3\rpcs3\llvm-*\lib\cmake\llvm"
 
@@ -56,7 +56,7 @@ if (-not $mtPath) {
     exit 1
 }
 
-$mtExePath = $mtPath.FullName
+$mtExePath = "$mtPath.FullName"
 
 Write-Host "Found mt.exe at: $mtExePath"
 
