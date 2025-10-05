@@ -152,7 +152,10 @@ jobs:
           Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin"
           Get-ChildItem -Path "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin"
           D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin\clang-cl.exe --version
-
+          Get-ChildItem -Path "C:\Program Files\LLVM\lib\clang\20\lib\windows"
+          Get-ChildItem -Path "C:\Program Files\LLVM\bin"
+          Get-ChildItem -Path "C:\Program Files\LLVM\lib\cmake\llvm"
+ 
       - name: Save LLVM Cache
         if: ${{ matrix.compiler == 'clang-cl' && steps.llvm-cache.outputs.cache-hit != 'true' }}
         #if: github.ref == 'refs/heads/master'
