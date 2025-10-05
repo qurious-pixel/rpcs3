@@ -119,6 +119,7 @@ Write-Host "Running CMake configuration"
     -DUSE_SYSTEM_OPENAL=OFF `
     -DUSE_SYSTEM_LIBPNG=ON `
     -DUSE_DISCORD_RPC=ON `
+    -DUSE_SYSTEM_ZSTD=ON `
     -DWITH_LLVM=ON `
     -DBUILD_LLVM=OFF `
     -DLLVM_DIR="D:/a/rpcs3/rpcs3/llvm/lib/cmake/llvm" `
