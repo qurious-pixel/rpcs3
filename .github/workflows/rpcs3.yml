@@ -114,7 +114,7 @@ jobs:
       - name: Add LLVM
         shell: pwsh
         run: |
-            rm -r llvm || true
+            #rm -r llvm || true
             #mkdir llvm-${{ matrix.llvmver }}
             curl -fsSLO https://github.com/vovkos/llvm-package-windows/releases/download/llvm-20.1.8/llvm-20.1.8-windows-amd64-msvc17-msvcrt.7z
             curl -fsSLO https://github.com/vovkos/llvm-package-windows/releases/download/clang-20.1.8/clang-20.1.8-windows-amd64-msvc17-msvcrt.7z
