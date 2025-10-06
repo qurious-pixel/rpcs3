@@ -125,7 +125,8 @@ jobs:
             Copy-Item -Path "D:\a\rpcs3\rpcs3\clang*\*" -Destination "D:\a\rpcs3\rpcs3\llvm" -Recurse -Force
             rm -r clang*
             Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm\bin"
-            Get-ChildItem -Path "D:\a\rpcs3\rpcs3\llvm\lib\clang\20\lib\windows\"
+            Get-ChildItem -Path "D:\a\rpcs3\rpcs3\llvm"
+            Get-ChildItem -Path "D:\a\rpcs3\rpcs3\llvm\lib"
           #if (!(Test-Path -Path D:\a\rpcs3\rpcs3\llvm\)) {
           #  mkdir llvm
           # cd llvm
