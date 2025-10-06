@@ -40,16 +40,16 @@ $kitsRoot = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Kits\Instal
 $kitsRootPath = $kitsRoot.KitsRoot10
 
 # Search for mt.exe in x64 SDK bin directories
-Write-Host "Searching for mt.exe ..."
-$mtPath = Get-ChildItem -Path "$kitsRootPath\bin" -Recurse -Filter "mt.exe" -ErrorAction SilentlyContinue |
-    Where-Object { $_.FullName -match "\\x64\\mt\.exe$" } |
-    Sort-Object FullName -Descending |
-    Select-Object -First 1
 #Write-Host "Searching for mt.exe ..."
-#$mtPath = Get-ChildItem -Path "$clangPath" -Recurse -Filter "llvm-mt.exe" -ErrorAction SilentlyContinue |
-#    Where-Object { $_.FullName -match "\\llvm-mt\.exe$" } |
+#$mtPath = Get-ChildItem -Path "$kitsRootPath\bin" -Recurse -Filter "mt.exe" -ErrorAction SilentlyContinue |
+#    Where-Object { $_.FullName -match "\\x64\\mt\.exe$" } |
 #    Sort-Object FullName -Descending |
 #    Select-Object -First 1
+Write-Host "Searching for mt.exe ..."
+$mtPath = Get-ChildItem -Path "$clangPath" -Recurse -Filter "llvm-mt.exe" -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -match "\\llvm-mt\.exe$" } |
+    Sort-Object FullName -Descending |
+    Select-Object -First 1
 
 if (-not $mtPath) {
     Write-Error "Could not find mt.exe in Windows Kits directories."
