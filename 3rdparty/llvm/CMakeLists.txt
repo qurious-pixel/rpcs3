@@ -109,10 +109,8 @@ if(WITH_LLVM)
 	else()
 		#set(LLVM_LIBS LLVM)
 		llvm_map_components_to_libnames(LLVM_LIBS
-			-C
 			Analysis
 		)
-		#	Core
 	endif()
 
 	add_library(3rdparty_llvm INTERFACE)
