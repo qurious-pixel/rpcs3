@@ -199,6 +199,13 @@ jobs:
           path: ${{ env.CCACHE_DIR }}
           key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
+      - name: Prepare Artifacts
+        if: ${{ matrix.compiler == 'clang-cl' }}
+        shell: cmd
+        run: |
+          7z a -m0=LZMA2 -mx9 "$BUILD" ./bin/*
+          cp -- "$BUILD" "$BUILD_ARTIFACTSTAGINGDIRECTORY"
+
       - name: Upload artifacts
         uses: actions/upload-artifact@main
         with:
