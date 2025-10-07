@@ -67,8 +67,6 @@ $VcpkgInclude="$VcpkgInstall/include"
 $VcpkgLib="$VcpkgInstall/lib"
 $VcpkgWindeployqt="$VcpkgInstall/tools/qt6/bin/windeployqt6.exe"
 
-Invoke-Expression $VcpkgWindeployqt --version
-
 # Configure git safe directory
 Write-Host "Configuring git safe directory"
 & git config --global --add safe.directory '*'
