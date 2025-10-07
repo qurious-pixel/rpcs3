@@ -67,8 +67,7 @@ $VcpkgInclude="$VcpkgInstall/include"
 $VcpkgLib="$VcpkgInstall/lib"
 $VcpkgWindeployqt="$VcpkgInstall/tools/qt6/bin/windeployqt6.exe"
 
-$env:Path += ";$VcpkgWindeployqt"
-Write-Host "Current PATH is '$env:Path' "
+$VcpkgWindeployqt --version
 
 # Configure git safe directory
 Write-Host "Configuring git safe directory"
