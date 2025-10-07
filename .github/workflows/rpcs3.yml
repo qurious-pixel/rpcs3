@@ -204,7 +204,7 @@ jobs:
         shell: cmd
         run: |
           mkdir D:\a\rpcs3\rpcs3\artifacts
-          7z a -m0=LZMA2 -mx9 rpcs3_win_clang.7z ./bin/*
+          7z a -m0=LZMA2 -mx9 rpcs3_win_clang.7z ./build/bin/*
           cp rpcs3_win_clang.7z D:\a\rpcs3\rpcs3\artifacts\
 
       - name: Upload artifacts
