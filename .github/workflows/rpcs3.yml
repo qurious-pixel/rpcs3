@@ -205,7 +205,7 @@ jobs:
         run: |
           mkdir D:\a\rpcs3\rpcs3\artifacts
           7z a -m0=LZMA2 -mx9 rpcs3_win_clang.7z ./bin/*
-          cp -- rpcs3_win_clang.7z "$BUILD_ARTIFACTSTAGINGDIRECTORY"
+          cp rpcs3_win_clang.7z D:\a\rpcs3\rpcs3\artifacts\
 
       - name: Upload artifacts
         uses: actions/upload-artifact@main
