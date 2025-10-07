@@ -203,8 +203,8 @@ jobs:
         if: ${{ matrix.compiler == 'clang-cl' }}
         shell: cmd
         run: |
-          7z a -m0=LZMA2 -mx9 "$BUILD" ./bin/*
-          cp -- "$BUILD" "$BUILD_ARTIFACTSTAGINGDIRECTORY"
+          7z a -m0=LZMA2 -mx9 rpcs3_win_clang.7z ./bin/*
+          cp -- rpcs3_win_clang.7z "$BUILD_ARTIFACTSTAGINGDIRECTORY"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@main
