@@ -73,7 +73,7 @@ Write-Host "Configuring git safe directory"
 
 # Initialize submodules except certain ones
 Write-Host "Initializing submodules"
-$excludedSubs = @('llvm','opencv','ffmpeg','FAudio','zlib','libpng','feralinteractive','asmjit')
+$excludedSubs = @('llvm','opencv','ffmpeg','FAudio','zlib','libpng','feralinteractive','openal-soft')
 
 # Get submodule paths excluding those in $excludedSubs
 $submodules = Select-String -Path .gitmodules -Pattern 'path = (.+)' | ForEach-Object {
@@ -85,7 +85,7 @@ $submodules = Select-String -Path .gitmodules -Pattern 'path = (.+)' | ForEach-O
 
 Write-Host "Updating submodules: $($submodules -join ', ')"
 & git submodule update --init --quiet $submodules
-& git clone https://github.com/asmjit/asmjit 3rdparty/asmjit/asmjit
+& git clone https://github.com/kcat/openal-soft/ 3rdparty/OpenAL/openal-soft
 
 # Create and enter build directory
 Write-Host "Creating build directory"
