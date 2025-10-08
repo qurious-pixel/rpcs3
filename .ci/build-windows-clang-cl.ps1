@@ -45,6 +45,7 @@ $kitsRootPath = $kitsRoot.KitsRoot10
 #    Where-Object { $_.FullName -match "\\x64\\mt\.exe$" } |
 #    Sort-Object FullName -Descending |
 #    Select-Object -First 1
+#$mtExePath = "$mtPath.FullName"
 Write-Host "Searching for mt.exe ..."
 $mtPath = Get-ChildItem -Path "$clangPath" -Recurse -Filter "llvm-mt.exe" -ErrorAction SilentlyContinue |
     Where-Object { $_.FullName -match "\\llvm-mt\.exe$" } |
@@ -56,7 +57,7 @@ if (-not $mtPath) {
     exit 1
 }
 
-$mtExePath = "$mtPath.FullName"
+$mtExePath = "$mtPath"
 
 Write-Host "Found mt.exe at: $mtExePath"
 
@@ -73,7 +74,7 @@ Write-Host "Configuring git safe directory"
 
 # Initialize submodules except certain ones
 Write-Host "Initializing submodules"
-$excludedSubs = @('llvm','opencv','ffmpeg','FAudio','zlib','libpng','feralinteractive','openal-soft')
+$excludedSubs = @('llvm','opencv','ffmpeg','FAudio','zlib','libpng','feralinteractive')
 
 # Get submodule paths excluding those in $excludedSubs
 $submodules = Select-String -Path .gitmodules -Pattern 'path = (.+)' | ForEach-Object {
@@ -85,7 +86,6 @@ $submodules = Select-String -Path .gitmodules -Pattern 'path = (.+)' | ForEach-O
 
 Write-Host "Updating submodules: $($submodules -join ', ')"
 & git submodule update --init --quiet $submodules
-& git clone https://github.com/kcat/openal-soft/ 3rdparty/OpenAL/openal-soft
 
 # Create and enter build directory
 Write-Host "Creating build directory"
@@ -130,8 +130,8 @@ Write-Host "Running CMake configuration"
     -DOpenGL_GL_PREFERENCE=LEGACY `
     -DWITH_LLVM=ON `
     -DSTATIC_LINK_LLVM=ON `
-    -DBUILD_RPCS3_TESTS=OFF `
-    -DCMAKE_CXX_SCAN_FOR_MODULES=ON
+    -DBUILD_RPCS3_TESTS=OFF
+
 Write-Host "CMake configuration complete"
 
 # Build with ninja
