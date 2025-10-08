@@ -131,7 +131,7 @@ Write-Host "Running CMake configuration"
     -DWITH_LLVM=ON `
     -DSTATIC_LINK_LLVM=ON `
     -DBUILD_RPCS3_TESTS=OFF `
-    --log-level=VERBOSE
+    -DCMAKE_CXX_SCAN_FOR_MODULES=ON
 Write-Host "CMake configuration complete"
 
 # Build with ninja
