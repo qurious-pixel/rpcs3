@@ -160,6 +160,8 @@ if (NOT ANDROID)
             COMMAND Qt6::windeployqt $<TARGET_FILE:rpcs3> --no-compiler-runtime --no-opengl-sw --no-patchqt
                 --no-translations --no-system-d3d-compiler --no-system-dxc-compiler --no-quick-import
                 --plugindir $<TARGET_FILE_DIR:rpcs3>/qt6/plugins
+                --qtpaths $QTPATH_EXE
+                --ignore-library-errors
                 --verbose 2)
     endif()
 
