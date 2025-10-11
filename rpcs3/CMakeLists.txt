@@ -160,7 +160,7 @@ if (NOT ANDROID)
             )
         add_custom_command(TARGET rpcs3 POST_BUILD    
             COMMAND ${CMAKE_COMMAND} -E env PATH=D:/a/rpcs3/rpcs3/vcpkg/installed/x64-windows/bin
-                Qt6::windeployqt --no-compiler-runtime --no-opengl-sw --no-patchqt
+                ${WINDEPLOYQT_EXECUTABLE} --no-compiler-runtime --no-opengl-sw --no-patchqt
                 --no-translations --no-system-d3d-compiler --no-system-dxc-compiler --no-quick-import
                 --plugindir $<TARGET_FILE_DIR:rpcs3>/qt6/plugins
                 --qtpaths $QTPATH_EXE
