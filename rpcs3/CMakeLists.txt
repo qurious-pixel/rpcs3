@@ -161,7 +161,6 @@ if (NOT ANDROID)
                 --no-translations --no-system-d3d-compiler --no-system-dxc-compiler --no-quick-import
                 --plugindir $<TARGET_FILE_DIR:rpcs3>/qt6/plugins
                 --qtpaths $QTPATH_EXE
-                --ignore-library-errors
                 --verbose 2)
     endif()
 
