@@ -68,8 +68,8 @@ $VcpkgInclude="$VcpkgInstall/include"
 $VcpkgLib="$VcpkgInstall/lib"
 $VcpkgWindeployqt="$VcpkgInstall/tools/qt6/bin/windeployqt6.exe"
 
-setx PATH "$env:PATH;$VcpkgInstall/bin"
-Write-Host "Current PATHs: $($env:PATH -split ';')"
+setx PATH "$env:PATH;$VcpkgInstall/bin" /M
+Write-Host "Current PATHs: $($env:PATH -split ';' | Where-Object { $_ -like '*vcpkg*' })"
 
 Write-Host "VCPKG bin folder: $(gci $VcpkgInstall/bin)"
 
