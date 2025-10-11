@@ -71,9 +71,9 @@ $VcpkgWindeployqt="$VcpkgInstall/tools/qt6/bin/windeployqt6.exe"
 
 #$env:Path += ";$VcpkgBin"
 #$env:Path = [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::Machine)
-cmd.exe /c "set PATH=%PATH%;$VcpkgBin"
+cmd.exe /c "set PATH=$VcpkgBin;%PATH%"
 cmd.exe /c "echo %PATH%"
-Write-Host "Current PATHs: $($env:PATH -split ';')"
+Write-Host "Current PATHs: $($env:PATH -split ';' | Where-Object { $_ -like '*vcpkg*' })"
 
 Write-Host "VCPKG bin folder: $(gci $VcpkgBin)"
 
