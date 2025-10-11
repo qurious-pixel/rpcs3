@@ -68,14 +68,7 @@ $VcpkgInclude="$VcpkgInstall/include"
 $VcpkgLib="$VcpkgInstall/lib"
 $VcpkgBin="$VcpkgInstall/bin"
 $VcpkgWindeployqt="$VcpkgInstall/tools/qt6/bin/windeployqt6.exe"
-
-#$env:Path += ";$VcpkgBin"
-#$env:Path = [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::Machine)
-cmd.exe /c "set PATH=$VcpkgBin;%PATH%"
-cmd.exe /c "echo %PATH%"
-Write-Host "Current PATHs: $($env:PATH -split ';' | Where-Object { $_ -like '*vcpkg*' })"
-
-Write-Host "VCPKG bin folder: $(gci $VcpkgBin)"
+$VcpkgQtpath="$VcpkgInstall/tools/qt6/bin/qtpath.exe"
 
 # Configure git safe directory
 Write-Host "Configuring git safe directory"
@@ -117,6 +110,7 @@ Write-Host "Running CMake configuration"
     -DCMAKE_EXE_LINKER_FLAGS="/LIBPATH:$clangBuiltinsDirShort /defaultlib:$clangBuiltinsLib" `
     -DCMAKE_MT="$clangPath/llvm-mt.exe" `
     -DWINDEPLOYQT_EXECUTABLE="$VcpkgWindeployqt" `
+    -DQTPATH_EXE="$VcpkgQtpath" `
     -DUSE_NATIVE_INSTRUCTIONS=OFF `
     -DUSE_PRECOMPILED_HEADERS=OFF `
     -DVCPKG_TARGET_TRIPLET="$VcpkgTriplet" `
