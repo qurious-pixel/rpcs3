@@ -66,12 +66,14 @@ $VcpkgTriplet=$env:VCPKG_TRIPLET
 $VcpkgInstall="$VcpkgRoot/installed/$VcpkgTriplet"
 $VcpkgInclude="$VcpkgInstall/include"
 $VcpkgLib="$VcpkgInstall/lib"
+$VcpkgBin="$VcpkgInstall/bin"
 $VcpkgWindeployqt="$VcpkgInstall/tools/qt6/bin/windeployqt6.exe"
 
-setx PATH "$env:PATH;$VcpkgInstall/bin" /M
+$env:Path += ";$VcpkgBin"
+$env:Path = [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::Machine)
 Write-Host "Current PATHs: $($env:PATH -split ';' | Where-Object { $_ -like '*vcpkg*' })"
 
-Write-Host "VCPKG bin folder: $(gci $VcpkgInstall/bin)"
+Write-Host "VCPKG bin folder: $(gci $VcpkgBin)"
 
 # Configure git safe directory
 Write-Host "Configuring git safe directory"
