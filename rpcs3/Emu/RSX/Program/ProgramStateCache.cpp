@@ -33,7 +33,8 @@
 
 using namespace program_hash_util;
 
-#ifdef ARCH_X64
+//#ifdef ARCH_X64
+#if defined(ARCH_X64) && !defined(__clang__)
 AVX512_ICL_FUNC usz get_vertex_program_ucode_hash_512(const RSXVertexProgram &program)
 {
 	// Load all elements of the instruction_mask bitset
@@ -450,7 +451,8 @@ usz vertex_program_storage_hash::operator()(const RSXVertexProgram &program) con
 	return rpcs3::hash64(ucode_hash, metadata_hash);
 }
 
-#ifdef ARCH_X64
+//#ifdef ARCH_X64
+#if defined(ARCH_X64) && !defined(__clang__)
 AVX512_ICL_FUNC bool vertex_program_compare_512(const RSXVertexProgram &binary1, const RSXVertexProgram &binary2)
 	{
 		// Load all elements of the instruction_mask bitset
