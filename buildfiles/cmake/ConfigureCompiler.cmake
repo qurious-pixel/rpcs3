@@ -3,6 +3,7 @@
 if(MSVC)
 	if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 		check_cxx_compiler_flag("-msse -msse2 -mcx16" COMPILER_X86)
+		check_cxx_compiler_flag("-march=native" COMPILER_SUPPORTS_MARCH_NATIVE)
 		#if (COMPILER_X86)
 			#add_compile_options(-msse -msse2 -mcx16 -mavx512f -mavx512vbmi -mavx512vl -mavx512dq -mavx512vpopcntdq -mavx -mavx2 -maes -mrtm -mpclmul -mmwaitx -mwaitpkg)
 		if(COMPILER_SUPPORTS_MARCH_NATIVE)
