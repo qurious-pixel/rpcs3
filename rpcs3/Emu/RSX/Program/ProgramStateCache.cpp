@@ -426,7 +426,8 @@ vertex_program_utils::vertex_program_metadata vertex_program_utils::analyse_vert
 
 usz vertex_program_storage_hash::operator()(const RSXVertexProgram &program) const
 {
-#ifdef ARCH_X64
+//#ifdef ARCH_X64
+#if defined(ARCH_X64) && !defined(__clang__)	
 	usz ucode_hash;
 
 		if (utils::has_avx512_icl())
@@ -543,7 +544,8 @@ bool vertex_program_compare::operator()(const RSXVertexProgram &binary1, const R
 		return false;
 	}
 
-#ifdef ARCH_X64
+//#ifdef ARCH_X64
+#if defined(ARCH_X64) && !defined(__clang__)	
 	if (utils::has_avx512_icl())
 	{
 		return vertex_program_compare_512(binary1, binary2);
