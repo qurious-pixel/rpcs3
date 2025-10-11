@@ -108,7 +108,7 @@ Write-Host "Running CMake configuration"
     -DCMAKE_EXE_LINKER_FLAGS="/LIBPATH:$clangBuiltinsDirShort /defaultlib:$clangBuiltinsLib" `
     -DCMAKE_MT="$clangPath/llvm-mt.exe" `
     -DWINDEPLOYQT_EXECUTABLE="$VcpkgWindeployqt" `
-    -DUSE_NATIVE_INSTRUCTIONS=ON `
+    -DUSE_NATIVE_INSTRUCTIONS=OFF `
     -DUSE_PRECOMPILED_HEADERS=OFF `
     -DVCPKG_TARGET_TRIPLET="$VcpkgTriplet" `
     -DFFMPEG_INCLUDE_DIR="$VcpkgInclude" `
