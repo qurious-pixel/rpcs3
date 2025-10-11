@@ -158,7 +158,7 @@ if (NOT ANDROID)
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/GuiConfigs $<TARGET_FILE_DIR:rpcs3>/GuiConfigs
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/test $<TARGET_FILE_DIR:rpcs3>/test
             COMMAND ${CMAKE_COMMAND} -E env PATH="D:\a\rpcs3\rpcs3\vcpkg\installed\x64-windows\bin\"
-            COMMAND Qt6::windeployqt $<TARGET_FILE:rpcs3> --no-compiler-runtime --no-opengl-sw --no-patchqt
+                Qt6::windeployqt $<TARGET_FILE:rpcs3> --no-compiler-runtime --no-opengl-sw --no-patchqt
                 --no-translations --no-system-d3d-compiler --no-system-dxc-compiler --no-quick-import
                 --plugindir $<TARGET_FILE_DIR:rpcs3>/qt6/plugins
                 --qtpaths $QTPATH_EXE
