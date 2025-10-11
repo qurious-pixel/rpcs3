@@ -23,7 +23,8 @@
 #pragma GCC diagnostic ignored "-Wredundant-decls"
 #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #pragma GCC diagnostic ignored "-Weffc++"
-#ifdef __clang__
+// #ifdef __clang__
+#if defined(__clang__) || (defined(_MSC_VER) && defined(__clang__))
 #pragma GCC diagnostic ignored "-Wdeprecated-anon-enum-enum-conversion"
 #pragma GCC diagnostic ignored "-Wcast-qual"
 #else
