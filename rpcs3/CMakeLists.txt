@@ -157,6 +157,7 @@ if (NOT ANDROID)
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/Icons $<TARGET_FILE_DIR:rpcs3>/Icons
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/GuiConfigs $<TARGET_FILE_DIR:rpcs3>/GuiConfigs
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/test $<TARGET_FILE_DIR:rpcs3>/test
+            COMMAND Qt6::windeployqt --version
             )
     endif()
             #COMMAND ${WINDEPLOYQT_EXECUTABLE} $<TARGET_FILE:rpcs3> --no-compiler-runtime --no-opengl-sw --no-patchqt
