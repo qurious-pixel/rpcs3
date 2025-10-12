@@ -38,7 +38,7 @@ jobs:
 
     env:
       CCACHE_DIR: 'C:\ccache'
-      VCPKG_TRIPLET: x64-windows-release
+      VCPKG_TRIPLET: x64-windows
       VCPKG_BUILD_TYPE: release
     name: RPCS3 Windows ${{ matrix.compiler }}
     steps:
@@ -151,8 +151,6 @@ jobs:
           }
           Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin"
           C:\PROGRA~1\LLVM\bin\clang-cl.exe --version
-          Get-ChildItem -Path "C:\Program Files\LLVM\bin"
-          Get-ChildItem -Path "C:\Program Files\LLVM\lib"
  
       - name: Save LLVM Cache
         if: ${{ matrix.compiler == 'clang-cl' && steps.llvm-cache.outputs.cache-hit != 'true' }}
