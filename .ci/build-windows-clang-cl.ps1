@@ -70,6 +70,9 @@ $VcpkgBin="$VcpkgInstall/bin"
 $VcpkgWindeployqt="$VcpkgInstall/tools/qt6/bin/windeployqt6.exe"
 $VcpkgQtpath="$VcpkgInstall/tools/qt6/bin/qtpath.exe"
 
+gci "D:\a\rpcs3\rpcs3\vcpkg\installed\x64-windows-release\tools\qt6\bin"
+
+
 # Configure git safe directory
 Write-Host "Configuring git safe directory"
 & git config --global --add safe.directory '*'
