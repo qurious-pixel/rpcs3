@@ -129,11 +129,9 @@ Write-Host "CMake configuration complete"
 # Build with ninja
 Write-Host "Starting build with Ninja..."
 & ninja
-if ($LASTEXITCODE -eq 0) {
-    & ".ci\deploy-windows-clang-cl.sh" "x86_64"
-} else {
-	Write-Host "Build failed with exit code $LASTEXITCODE"
-    exit 1
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Build failed with exit code $LASTEXITCODE"
+	exit 1
 }
 
 Write-Host "Build succeeded"
