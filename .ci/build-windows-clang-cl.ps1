@@ -80,7 +80,7 @@ $submodules = Select-String -Path .gitmodules -Pattern 'path = (.+)' | ForEach-O
 
 Write-Host "Updating submodules: $($submodules -join ', ')"
 & git submodule update --init --quiet $submodules
-& git -C 3rdparty/OpenAL/openal-soft reset --hard HEAD
+& git -C 3rdparty/OpenAL/openal-soft reset --hard master
 
 # Create and enter build directory
 Write-Host "Creating build directory"
