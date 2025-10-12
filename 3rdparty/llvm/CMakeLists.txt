@@ -103,12 +103,6 @@ if(WITH_LLVM)
 		)
 	else()
 		set(LLVM_LIBS LLVM)
-		#llvm_map_components_to_libnames(LLVM_LIBS
-		#	-C
-		#	Support
-		#	MCJIT
-		#	Passes
-		#)
 	endif()
 
 	add_library(3rdparty_llvm INTERFACE)
