@@ -5,10 +5,12 @@ set(ASMJIT_BUILD_ARM FALSE)
 set(ASMJIT_BUILD_TEST FALSE)
 set(ASMJIT_NO_DEPRECATED TRUE)
 set(ASMJIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/asmjit" CACHE PATH "Location of 'asmjit'")
+set(ASMJIT_CFLAGS "-DASMJIT_STATIC;-DASMJIT_NO_DEPRECATED;-Wno-deprecated-anon-enum-enum-conversion")
     
 include("${ASMJIT_DIR}/CMakeLists.txt")
 
 add_library(asmjit ${ASMJIT_SRC})
+target_compile_options(asmjit PRIVATE ${ASMJIT_CFLAGS})
 target_include_directories(asmjit PUBLIC ${ASMJIT_DIR}/src)
 target_link_libraries(asmjit PRIVATE ${ASMJIT_DEPS})
 
