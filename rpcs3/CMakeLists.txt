@@ -158,11 +158,13 @@ if (NOT ANDROID)
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/GuiConfigs $<TARGET_FILE_DIR:rpcs3>/GuiConfigs
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/test $<TARGET_FILE_DIR:rpcs3>/test
             )
-        add_custom_command(TARGET rpcs3 POST_BUILD    
-            COMMAND Qt6::windeployqt --no-compiler-runtime --no-opengl-sw --no-patchqt
+        get_target_property(WINDEPLOYQT_EXE Qt6::windeployqt IMPORTED_LOCATION) 
+        add_custom_command(TARGET rpcs3 POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E echo ${WINDEPLOYQT_EXE}
+            COMMAND ${WINDEPLOYQT_EXE} --no-compiler-runtime --no-opengl-sw --no-patchqt
                 --no-translations --no-system-d3d-compiler --no-system-dxc-compiler --no-quick-import
                 --plugindir $<TARGET_FILE_DIR:rpcs3>/qt6/plugins
-                --qtpaths ${QTPATH_EXE}
+                --ignore-library-errors
                 --verbose 2
                 $<TARGET_FILE:rpcs3>
             )
