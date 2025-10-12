@@ -24,7 +24,7 @@ env:
 jobs:
   Linux_Build:
     # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+    #if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
     strategy:
       fail-fast: false
       matrix:
@@ -117,7 +117,7 @@ jobs:
 
   Mac_Build:
     # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+    #if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
     strategy:
       fail-fast: false
       matrix:
@@ -191,14 +191,14 @@ jobs:
         run: .ci/github-upload.sh
 
       - name: Save Build Ccache
-        if: github.ref == 'refs/heads/master'
+        #if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
       - name: Save Qt Cache
-        if: github.ref == 'refs/heads/master'
+        #if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
           path: /tmp/Qt
@@ -206,7 +206,7 @@ jobs:
 
   Windows_Build:
     # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+    #if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
     name: RPCS3 Windows
     runs-on: windows-2025
     env:
@@ -312,14 +312,14 @@ jobs:
         run: .ci/github-upload.sh
 
       - name: Save Build Ccache
-        if: github.ref == 'refs/heads/master'
+        #if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
       - name: Save Dependencies Cache
-        if: github.ref == 'refs/heads/master'
+        #if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
           path: ${{ env.DEPS_CACHE_DIR }}
@@ -516,7 +516,7 @@ jobs:
 
   FreeBSD_Build:
       # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+    #if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
     name: RPCS3 FreeBSD 
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -547,7 +547,7 @@ jobs:
           run: .ci/install-freebsd.sh && .ci/build-freebsd.sh
 
       - name: Save Build Ccache
-        if: github.ref == 'refs/heads/master'
+        #if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
           path: ${{ env.CCACHE_DIR }}
