@@ -40,12 +40,6 @@ $kitsRoot = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Kits\Instal
 $kitsRootPath = $kitsRoot.KitsRoot10
 
 # Search for mt.exe in x64 SDK bin directories
-#Write-Host "Searching for mt.exe ..."
-#$mtPath = Get-ChildItem -Path "$kitsRootPath\bin" -Recurse -Filter "mt.exe" -ErrorAction SilentlyContinue |
-#    Where-Object { $_.FullName -match "\\x64\\mt\.exe$" } |
-#    Sort-Object FullName -Descending |
-#    Select-Object -First 1
-#$mtExePath = "$mtPath.FullName"
 Write-Host "Searching for mt.exe ..."
 $mtPath = Get-ChildItem -Path "$clangPath" -Recurse -Filter "llvm-mt.exe" -ErrorAction SilentlyContinue |
     Where-Object { $_.FullName -match "\\llvm-mt\.exe$" } |
@@ -67,10 +61,6 @@ $VcpkgInstall="$VcpkgRoot/installed/$VcpkgTriplet"
 $VcpkgInclude="$VcpkgInstall/include"
 $VcpkgLib="$VcpkgInstall/lib"
 $VcpkgBin="$VcpkgInstall/bin"
-$VcpkgWindeployqt="$VcpkgInstall/tools/qt6/bin/windeployqt6.exe"
-$VcpkgQtpath="$VcpkgInstall/tools/qt6/bin/qtpath.exe"
-
-gci "D:/a/rpcs3/rpcs3/vcpkg/installed/x64-windows/tools/Qt6/bin/"
 
 # Configure git safe directory
 Write-Host "Configuring git safe directory"
@@ -111,8 +101,6 @@ Write-Host "Running CMake configuration"
     -DCMAKE_TOOLCHAIN_FILE="$VcpkgRoot/scripts/buildsystems/vcpkg.cmake" `
     -DCMAKE_EXE_LINKER_FLAGS="/LIBPATH:$clangBuiltinsDirShort /defaultlib:$clangBuiltinsLib" `
     -DCMAKE_MT="$clangPath/llvm-mt.exe" `
-    -DWINDEPLOYQT_EXECUTABLE="$VcpkgWindeployqt" `
-    -DQTPATH_EXE="$VcpkgQtpath" `
     -DUSE_NATIVE_INSTRUCTIONS=OFF `
     -DUSE_PRECOMPILED_HEADERS=OFF `
     -DVCPKG_TARGET_TRIPLET="$VcpkgTriplet" `
