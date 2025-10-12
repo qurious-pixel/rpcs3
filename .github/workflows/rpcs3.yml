@@ -48,6 +48,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: test
+        #if: ${{ matrix.compiler == 'clang-cl' }}
+        shell: bash
+        run: |
+          .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
+          
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         if: ${{ matrix.compiler == 'clang' }}
@@ -200,7 +206,7 @@ jobs:
 
       - name: Prepare Artifacts
         #if: ${{ matrix.compiler == 'clang-cl' }}
-        shell: cmd
+        shell: bash
         run: |
           .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
           .ci/deploy-windows-${{ matrix.compiler }}.sh
