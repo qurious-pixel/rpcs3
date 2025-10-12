@@ -129,8 +129,10 @@ Write-Host "CMake configuration complete"
 # Build with ninja
 Write-Host "Starting build with Ninja..."
 & ninja
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "Build failed with exit code $LASTEXITCODE"
+if ($LASTEXITCODE -eq 0) {
+    & ".ci\deploy-windows-clang-cl.sh" "x86_64"
+} else {
+	Write-Host "Build failed with exit code $LASTEXITCODE"
     exit 1
 }
 
@@ -139,3 +141,4 @@ Write-Host "Build succeeded"
 # Go back to root directory
 Set-Location ..
 Write-Host "Returned to root directory: $(Get-Location)"
+
