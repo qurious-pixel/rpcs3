@@ -5,11 +5,6 @@ set(ASMJIT_BUILD_ARM FALSE)
 set(ASMJIT_BUILD_TEST FALSE)
 set(ASMJIT_NO_DEPRECATED TRUE)
 set(ASMJIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/asmjit" CACHE PATH "Location of 'asmjit'")
-
-check_cxx_compiler_flag("-Wno-deprecated-anon-enum-enum-conversion" ENUM)
-	if (ENUM)
-		list(APPEND ASMJIT_CFLAGS -Wno-deprecated-anon-enum-enum-conversion)
-	endif()
     
 include("${ASMJIT_DIR}/CMakeLists.txt")
 
