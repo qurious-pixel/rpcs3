@@ -35,6 +35,7 @@ jobs:
           #  arch: win64
           - compiler: clang-cl
             llvmver: 20.1.8
+            arch: win64
 
     env:
       CCACHE_DIR: 'C:\ccache'
@@ -187,6 +188,7 @@ jobs:
         if: ${{ matrix.compiler == 'clang-cl' }}
         shell: cmd
         run: |
+          .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
           powershell -ExecutionPolicy Bypass -File .ci/build-windows-clang-cl.ps1
 
@@ -197,15 +199,15 @@ jobs:
           path: ${{ env.CCACHE_DIR }}
           key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
-      - name: Prepare Artifacts
-        if: ${{ matrix.compiler == 'clang-cl' }}
-        shell: cmd
-        run: |
-          "$(cygpath -u "$CCACHE_BIN_DIR")"/ccache.exe --show-stats -v
-          mkdir D:\a\rpcs3\rpcs3\artifacts
-          rm -f -- ./build/bin/vulkan-1.dll
-          7z a -m0=LZMA2 -mx9 rpcs3_win_clang.7z ./build/bin/*
-          cp rpcs3_win_clang.7z D:\a\rpcs3\rpcs3\artifacts\
+      #- name: Prepare Artifacts
+      #  if: ${{ matrix.compiler == 'clang-cl' }}
+      #  shell: cmd
+      #  run: |
+      #    "$(cygpath -u "$CCACHE_BIN_DIR")"/ccache.exe --show-stats -v
+      #    mkdir D:\a\rpcs3\rpcs3\artifacts
+      #    rm -f -- ./build/bin/vulkan-1.dll
+      #    7z a -m0=LZMA2 -mx9 rpcs3_win_clang.7z ./build/bin/*
+      #    cp rpcs3_win_clang.7z D:\a\rpcs3\rpcs3\artifacts\
 
       - name: Upload artifacts
         uses: actions/upload-artifact@main
