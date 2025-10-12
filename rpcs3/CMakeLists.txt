@@ -160,7 +160,7 @@ if (NOT ANDROID)
             )
         get_target_property(WINDEPLOYQT_EXECUTABLE Qt6::windeployqt IMPORTED_LOCATION) 
         add_custom_command(TARGET rpcs3 POST_BUILD
-            COMMAND ${WINDEPLOYQT_EXECUTABLE} --no-compiler-runtime --no-opengl-sw --no-patchqt
+            COMMAND ${WINDEPLOYQT_EXECUTABLE} --no-compiler-runtime --no-opengl-sw --no-patchqt --no-vulkan
                 --no-translations --no-system-d3d-compiler --no-system-dxc-compiler --no-quick-import
                 --plugindir $<TARGET_FILE_DIR:rpcs3>/qt6/plugins
                 --verbose 0
