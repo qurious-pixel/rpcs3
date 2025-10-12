@@ -47,13 +47,7 @@ jobs:
         uses: actions/checkout@main
         with:
           fetch-depth: 0
-
-      - name: test
-        #if: ${{ matrix.compiler == 'clang-cl' }}
-        shell: bash
-        run: |
-          .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
-          
+        
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         if: ${{ matrix.compiler == 'clang' }}
@@ -181,7 +175,6 @@ jobs:
         run: |
           export CCACHE_DIR=$(cygpath -u "$CCACHE_DIR")
           echo "CCACHE_DIR=$CCACHE_DIR"
-          .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
           .ci/build-windows-clang.sh
           
       - name: install DIA SDK
