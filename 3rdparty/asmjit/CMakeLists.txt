@@ -5,7 +5,7 @@ set(ASMJIT_BUILD_ARM FALSE)
 set(ASMJIT_BUILD_TEST FALSE)
 set(ASMJIT_NO_DEPRECATED TRUE)
 set(ASMJIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/asmjit" CACHE PATH "Location of 'asmjit'")
-    
+
 include("${ASMJIT_DIR}/CMakeLists.txt")
 
 add_library(asmjit ${ASMJIT_SRC})
