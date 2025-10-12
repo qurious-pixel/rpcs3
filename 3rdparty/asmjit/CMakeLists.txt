@@ -6,10 +6,10 @@ set(ASMJIT_BUILD_TEST FALSE)
 set(ASMJIT_NO_DEPRECATED TRUE)
 set(ASMJIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/asmjit" CACHE PATH "Location of 'asmjit'")
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+if(MSVC AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     target_compile_options(asmjit PRIVATE
         -Wno-deprecated-anon-enum-enum-conversion
-)
+endif()
     
 include("${ASMJIT_DIR}/CMakeLists.txt")
 
