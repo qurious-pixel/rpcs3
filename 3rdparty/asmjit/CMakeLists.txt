@@ -9,6 +9,7 @@ set(ASMJIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/asmjit" CACHE PATH "Location of 'asm
 if(MSVC AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     target_compile_options(asmjit PRIVATE
         -Wno-deprecated-anon-enum-enum-conversion
+    )
 endif()
     
 include("${ASMJIT_DIR}/CMakeLists.txt")
