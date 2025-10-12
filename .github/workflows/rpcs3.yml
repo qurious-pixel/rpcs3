@@ -201,6 +201,7 @@ jobs:
         if: ${{ matrix.compiler == 'clang-cl' }}
         shell: cmd
         run: |
+          "$(cygpath -u "$CCACHE_BIN_DIR")"/ccache.exe --show-stats -v
           mkdir D:\a\rpcs3\rpcs3\artifacts
           rm -f -- ./build/bin/vulkan-1.dll
           7z a -m0=LZMA2 -mx9 rpcs3_win_clang.7z ./build/bin/*
