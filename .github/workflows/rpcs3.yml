@@ -125,41 +125,41 @@ jobs:
             vcpkg/buildtrees
           key: ${{ steps.restore-vcpkg-cache.outputs.cache-primary-key }}
 
-      - name: Restore LLVM Cache
-        if: ${{ matrix.compiler == 'clang-cl' }} 
-        uses: actions/cache/restore@main
-        id: llvm-cache
-        with:
-          path: ./llvm-${{ matrix.llvmver }}
-          key: ${{ runner.os }}-llvm-dl-cache-${{ hashFiles('**/llvm-${{ matrix.llvmver }}') }}
-          restore-keys: ${{ runner.os }}-clang-dl-cache-
+      #- name: Restore LLVM Cache
+      #  if: ${{ matrix.compiler == 'clang-cl' }} 
+      #  uses: actions/cache/restore@main
+      #  id: llvm-cache
+      #  with:
+      #    path: ./llvm-${{ matrix.llvmver }}
+      #    key: ${{ runner.os }}-llvm-dl-cache-${{ hashFiles('**/llvm-${{ matrix.llvmver }}') }}
+      #    restore-keys: ${{ runner.os }}-clang-dl-cache-
           
-      - name: Add LLVM
-        if: ${{ matrix.compiler == 'clang-cl' }}
-        shell: pwsh
-        run: |
-          if (!(Test-Path -Path D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\)) {
-            rm -r llvm-*
-            #mkdir llvm-${{ matrix.llvmver }}
-            curl -fsSLO https://github.com/vovkos/llvm-package-windows/releases/download/llvm-20.1.8/llvm-20.1.8-windows-amd64-msvc17-msvcrt.7z
-            curl -fsSLO https://github.com/vovkos/llvm-package-windows/releases/download/clang-20.1.8/clang-20.1.8-windows-amd64-msvc17-msvcrt.7z
-            7z x llvm-*.7z
-            mv llvm* llvm-${{ matrix.llvmver }}
-            rm llvm-*.7z
-            7z x clang-*.7z
-            Copy-Item -Path "D:\a\rpcs3\rpcs3\clang*\*" -Destination "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}" -Recurse -Force
-            rm -r clang*
-          }
-          Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin"
-          C:\PROGRA~1\LLVM\bin\clang-cl.exe --version
+      #- name: Add LLVM
+      #  if: ${{ matrix.compiler == 'clang-cl' }}
+      #  shell: pwsh
+      #  run: |
+      #    if (!(Test-Path -Path D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\)) {
+      #      rm -r llvm-*
+      #      #mkdir llvm-${{ matrix.llvmver }}
+      #      curl -fsSLO https://github.com/vovkos/llvm-package-windows/releases/download/llvm-20.1.8/llvm-20.1.8-windows-amd64-msvc17-msvcrt.7z
+      #      curl -fsSLO https://github.com/vovkos/llvm-package-windows/releases/download/clang-20.1.8/clang-20.1.8-windows-amd64-msvc17-msvcrt.7z
+      #      7z x llvm-*.7z
+      #      mv llvm* llvm-${{ matrix.llvmver }}
+      #      rm llvm-*.7z
+      #      7z x clang-*.7z
+      #      Copy-Item -Path "D:\a\rpcs3\rpcs3\clang*\*" -Destination "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}" -Recurse -Force
+      #      rm -r clang*
+      #    }
+      #    Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin"
+      #    C:\PROGRA~1\LLVM\bin\clang-cl.exe --version
  
-      - name: Save LLVM Cache
-        if: ${{ matrix.compiler == 'clang-cl' && steps.llvm-cache.outputs.cache-hit != 'true' }}
-        #if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: ./llvm-${{ matrix.llvmver }}
-          key: ${{ steps.llvm-cache.outputs.cache-primary-key }}
+      #- name: Save LLVM Cache
+      #  if: ${{ matrix.compiler == 'clang-cl' && steps.llvm-cache.outputs.cache-hit != 'true' }}
+      #  #if: github.ref == 'refs/heads/master'
+      #  uses: actions/cache/save@main
+      #  with:
+      #    path: ./llvm-${{ matrix.llvmver }}
+      #    key: ${{ steps.llvm-cache.outputs.cache-primary-key }}
         
       - name: Restore build Ccache
         uses: actions/cache/restore@main
@@ -203,6 +203,7 @@ jobs:
         shell: cmd
         run: |
           mkdir D:\a\rpcs3\rpcs3\artifacts
+          rm -f -- ./build/bin/vulkan-1.dll
           7z a -m0=LZMA2 -mx9 rpcs3_win_clang.7z ./build/bin/*
           cp rpcs3_win_clang.7z D:\a\rpcs3\rpcs3\artifacts\
 
