@@ -22,5 +22,5 @@ jobs:
       - name: WSL test
         run: |
           cd "C:\Program Files"
-          ls -d "C:\Program Files"
+          ls -a "C:\Program Files\*"
         shell: bash
