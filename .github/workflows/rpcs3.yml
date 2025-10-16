@@ -21,6 +21,12 @@ jobs:
     steps:
       - name: WSL test
         run: |
-          wsl -c "$(wslpath '%1')"
-          echo "Done ..."
+          # Define the path you want to convert
+          WIN_PATH='C:\Program Files\Your Application'
+
+          # Use wsl and cmd to get the short path
+          SHORT_PATH=$(wsl cmd.exe /c "for %I in ('$WIN_PATH') do @echo %~sI")
+          
+          echo "Short path: $SHORT_PATH"
+
         shell: bash
