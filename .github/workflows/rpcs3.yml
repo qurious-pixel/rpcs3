@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: WSL test
         run: |
-          cd "C:\Program Files\LLVM"
-          ls -a 
-          'C:\Program Files\LLVM\bin\clang' --version
+          find "C:\Program Files\LLVM" -name "clang"
+          clangPath=$(find "C:\Program Files\LLVM" -name "clang") 
+          "$clangPath" --version
         shell: bash
