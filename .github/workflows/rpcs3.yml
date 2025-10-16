@@ -94,8 +94,8 @@ jobs:
             vcpkg/vcpkg.exe
             vcpkg/installed
             vcpkg/buildtrees
-          key: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-${{ hashFiles('**/vcpkg') }}
-          restore-keys: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-
+          key: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-POC-${{ hashFiles('**/vcpkg') }}
+          restore-keys: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-POC-
 
       - name: Install dependencies with vcpkg
         if: ${{ matrix.compiler == 'clang-cl' }}
