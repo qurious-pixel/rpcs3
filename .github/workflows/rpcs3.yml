@@ -21,6 +21,7 @@ jobs:
     steps:
       - name: WSL test
         run: |
-          cd "C:\Program Files"
+          cd "C:\Program Files\LLVM"
           ls -a 
+          clang --version
         shell: bash
