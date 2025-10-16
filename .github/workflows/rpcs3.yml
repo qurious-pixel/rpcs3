@@ -21,6 +21,6 @@ jobs:
     steps:
       - name: WSL test
         run: |
-          wsl.exe wslpath -w "$(wslpath -u 'C:\Program Files')"
+          wsl -c "$(wslpath '%1')"
           echo "Done ..."
         shell: bash
