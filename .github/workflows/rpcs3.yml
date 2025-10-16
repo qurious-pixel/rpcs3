@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: WSL test
         run: |
-          WIN_PATH='C:\Program Files\Your Application'
-          SHORT_PATH=$(wsl cmd.exe /c "for %I in ('$WIN_PATH') do @echo %~sI" | tr -d '\0')
-          echo "Short path: $SHORT_PATH"
+          cd "C:\Program Files"
+          FOR /F "tokens=1,2" %A IN ('dir /x ^| findstr /C:"<DIR>" /C:"File"') DO SET shortName=%B
+          echo %shortName%
         shell: bash
