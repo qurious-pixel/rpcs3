@@ -181,13 +181,13 @@ jobs:
         run: |
           mkdir -p "C:/Program Files (x86)/Microsoft Visual Studio/2019/Professional" || true
           cp -r "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/DIA SDK" "C:/Program Files (x86)/Microsoft Visual Studio/2019/Professional/DIA SDK"
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
 
       - name: Build RPCS3
         if: ${{ matrix.compiler == 'clang-cl' }}
-        shell: cmd
+        shell: bash
         run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
-          powershell -ExecutionPolicy Bypass -File .ci/build-windows-clang-cl.ps1
+          chmod +x .ci/build-windows-clang-cl.sh && .ci/build-windows-clang-cl.sh
 
       - name: Save build Ccache
         #if: github.ref == 'refs/heads/master'
