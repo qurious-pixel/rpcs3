@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/sh -e
 
 echo "Starting RPCS3 build (Bash script)"
 
@@ -13,7 +13,7 @@ fi
 
 clangBuiltinsDir=$(dirname "$clangBuiltinsLibPath")
 clangBuiltinsLib=$(basename "$clangBuiltinsLibPath")
-clangPath="C:/Program Files/LLVM/bin"
+clangPath="C:\PROGRA~1\LLVM\bin\"
 
 echo "Found Clang builtins library: $clangBuiltinsLib in $clangBuiltinsDir"
 echo "Found Clang Path: $clangPath"
