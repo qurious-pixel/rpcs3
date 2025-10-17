@@ -4,7 +4,7 @@ echo "Starting RPCS3 build (Bash script)"
 
 # Automatically find clang_rt.builtins-x86_64.lib
 echo "Searching for clang_rt.builtins-x86_64.lib ..."
-clangBuiltinsLibPath=$(find "C:\PROGRA~1\LLVM\lib\clang" -name "clang_rt.builtins-x86_64.lib")
+clangBuiltinsLibPath=$(find "C:\Program Files\LLVM\lib\clang" -name "clang_rt.builtins-x86_64.lib" | sed 's|Program Files|PROGRA~1|g')
 
 if [[ -z "$clangBuiltinsLibPath" ]]; then
     echo "ERROR: Could not find clang_rt.builtins-x86_64.lib in LLVM installation."
@@ -13,7 +13,7 @@ fi
 
 clangBuiltinsDir=$(dirname "$clangBuiltinsLibPath")
 clangBuiltinsLib=$(basename "$clangBuiltinsLibPath")
-clangPath="C:\PROGRA~1\LLVM\bin"
+clangPath="C:\Program Files\LLVM\bin" | sed 's|Program Files|PROGRA~1|g')
 
 echo "Found Clang builtins library: $clangBuiltinsLib in $clangBuiltinsDir"
 echo "Found Clang Path: $clangPath"
@@ -61,9 +61,9 @@ echo "Running CMake configuration"
 cmake .. \
     -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_COMPILER="C:\PROGRA~1\LLVM\bin\clang-cl.exe" \
-    -DCMAKE_CXX_COMPILER="C:\PROGRA~1\LLVM\bin\clang-cl.exe" \
-    -DCMAKE_LINKER="C:\PROGRA~1\LLVM\bin\lld-link.exe" \
+    -DCMAKE_C_COMPILER="${clangPath}/clang-cl.exe" \
+    -DCMAKE_CXX_COMPILER="${clangPath}/clang-cl.exe" \
+    -DCMAKE_LINKER="${clangPath}/lld-link.exe" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_TOOLCHAIN_FILE="$VcpkgRoot/scripts/buildsystems/vcpkg.cmake" \
     -DCMAKE_EXE_LINKER_FLAGS="/LIBPATH:${clangBuiltinsDir} /defaultlib:${clangBuiltinsLib}" \
