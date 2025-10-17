@@ -30,9 +30,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - msys2: clang64
-            compiler: clang
-            arch: win64
+          #- msys2: clang64
+          #  compiler: clang
+          #  arch: win64
           - compiler: clang-cl
             llvmver: 20.1.8
             arch: win64
