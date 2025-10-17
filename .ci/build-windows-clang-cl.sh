@@ -13,7 +13,7 @@ fi
 
 clangBuiltinsDir=$(dirname "$clangBuiltinsLibPath")
 clangBuiltinsLib=$(basename "$clangBuiltinsLibPath")
-clangPath="C:\Program Files\LLVM\bin" | sed 's|Program Files|PROGRA~1|g')
+clangPath=$(echo "C:\Program Files\LLVM\bin" | sed 's|Program Files|PROGRA~1|g')
 
 echo "Found Clang builtins library: $clangBuiltinsLib in $clangBuiltinsDir"
 echo "Found Clang Path: $clangPath"
