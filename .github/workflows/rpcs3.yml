@@ -21,11 +21,6 @@ jobs:
     steps:
       - name: WSL test
         run: |
-          find "C:\Program Files\LLVM" -name "clang.exe"
-          clangPath=$(find "C:\Program Files\LLVM" -name "bin" | sed 's|Program Files|PROGRA~1|g') 
-          echo "$clangPath/clang.exe"
-          "$clangPath/clang.exe" --version
-          mtPath=$(find "$clangPath" -name "llvm-mt.exe")
-          echo "$mtPath"
-          "$clangPath/lld-link.exe" --version
+          clangPath=$(printf 'C:\Program Files\LLVM\bin' | sed 's|Program Files|PROGRA~1|g')
+          echo "$clangPath"
         shell: bash
