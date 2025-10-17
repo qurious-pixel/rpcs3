@@ -61,9 +61,9 @@ echo "Running CMake configuration"
 cmake .. \
     -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_COMPILER="$clangPath/clang-cl" \
-    -DCMAKE_CXX_COMPILER="$clangPath/clang-cl" \
-    -DCMAKE_LINKER="$clangPath/lld-link" \
+    -DCMAKE_C_COMPILER="$clangPath/clang-cl.exe" \
+    -DCMAKE_CXX_COMPILER="$clangPath/clang-cl.exe" \
+    -DCMAKE_LINKER="$clangPath/lld-link.exe" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_TOOLCHAIN_FILE="$VcpkgRoot/scripts/buildsystems/vcpkg.cmake" \
     -DCMAKE_EXE_LINKER_FLAGS="/LIBPATH:$clangBuiltinsDir /defaultlib:$clangBuiltinsLib" \
