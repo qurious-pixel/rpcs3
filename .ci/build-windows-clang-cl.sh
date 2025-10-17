@@ -4,7 +4,7 @@ echo "Starting RPCS3 build (Bash script)"
 
 # Automatically find clang_rt.builtins-x86_64.lib
 echo "Searching for clang_rt.builtins-x86_64.lib ..."
-clangBuiltinsLibPath=$(find "C:\Program Files\LLVM\lib\clang" -name "clang_rt.builtins-x86_64.lib")
+clangBuiltinsLibPath=$(find "/c/Program Files/LLVM/lib/clang" -name "clang_rt.builtins-x86_64.lib")
 
 if [[ -z "$clangBuiltinsLibPath" ]]; then
     echo "ERROR: Could not find clang_rt.builtins-x86_64.lib in LLVM installation."
@@ -13,7 +13,7 @@ fi
 
 clangBuiltinsDir=$(dirname "$clangBuiltinsLibPath")
 clangBuiltinsLib=$(basename "$clangBuiltinsLibPath")
-clangPath="C:\Program Files\LLVM\bin\"
+clangPath="/c/Program Files/LLVM/bin/"
 
 echo "Found Clang builtins library: $clangBuiltinsLib in $clangBuiltinsDir"
 echo "Found Clang Path: $clangPath"
