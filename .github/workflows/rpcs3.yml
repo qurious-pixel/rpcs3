@@ -22,7 +22,7 @@ jobs:
       - name: WSL test
         run: |
           find "C:\Program Files\LLVM" -name "clang.exe"
-          clangPath=$(find "C:\Program Files\LLVM" -name "bin") 
+          clangPath=$(find "C:\Program Files\LLVM" -name "bin" | sed 's|Program Files|PROGRA~1|g') 
           echo "$clangPath/clang.exe"
           "$clangPath/clang.exe" --version
           mtPath=$(find "$clangPath" -name "llvm-mt.exe")
