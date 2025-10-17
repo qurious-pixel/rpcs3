@@ -66,7 +66,7 @@ cmake .. \
     -DCMAKE_LINKER="${clangPath}/lld-link.exe" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_TOOLCHAIN_FILE="$VcpkgRoot/scripts/buildsystems/vcpkg.cmake" \
-    -DCMAKE_EXE_LINKER_FLAGS="/LIBPATH:$clangBuiltinsDir /defaultlib:$clangBuiltinsLib" \
+    -DCMAKE_EXE_LINKER_FLAGS="/LIBPATH:${clangBuiltinsDir} /defaultlib:${clangBuiltinsLib}" \
     -DCMAKE_MT="${mtPath}" \
     -DUSE_NATIVE_INSTRUCTIONS=OFF \
     -DUSE_PRECOMPILED_HEADERS=OFF \
