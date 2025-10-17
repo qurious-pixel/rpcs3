@@ -13,7 +13,7 @@ fi
 
 clangBuiltinsDir=$(dirname "$clangBuiltinsLibPath")
 clangBuiltinsLib=$(basename "$clangBuiltinsLibPath")
-clangPath=$(printf "C:\Program Files\LLVM\bin" | sed 's|Program Files|PROGRA~1|g')
+clangPath=$(printf "C:\\Program Files\\LLVM\\bin" | sed 's|Program Files|PROGRA~1|g')
 
 echo "Found Clang builtins library: $clangBuiltinsLib in $clangBuiltinsDir"
 echo "Found Clang Path: $clangPath"
@@ -41,6 +41,7 @@ git config --global --add safe.directory '*'
 
 # Initialize submodules except certain ones
 echo "Initializing submodules"
+# shellcheck disable=SC2046
 git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/FAudio/ && !/libpng/ && !/zlib/ && !/feralinteractive/ { print $3 }' .gitmodules)
 
 # Create and enter build directory
