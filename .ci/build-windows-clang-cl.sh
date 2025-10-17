@@ -4,7 +4,7 @@ echo "Starting RPCS3 build (Bash script)"
 
 # Automatically find clang_rt.builtins-x86_64.lib
 echo "Searching for clang_rt.builtins-x86_64.lib ..."
-clangBuiltinsLibPath=$(find "C:\\Program Files\\LLVM\\lib\\clang" -name "clang_rt.builtins-x86_64.lib" 2>/dev/null | grep "windows/clang_rt.builtins-x86_64.lib" | head -n 1)
+clangBuiltinsLibPath=$(find "C:\Program Files\LLVM\lib\clang" -name "clang_rt.builtins-x86_64.lib")
 
 if [[ -z "$clangBuiltinsLibPath" ]]; then
     echo "ERROR: Could not find clang_rt.builtins-x86_64.lib in LLVM installation."
@@ -13,14 +13,14 @@ fi
 
 clangBuiltinsDir=$(dirname "$clangBuiltinsLibPath")
 clangBuiltinsLib=$(basename "$clangBuiltinsLibPath")
-clangPath="C:\\PROGRA~1\\LLVM\\bin\\"
+clangPath="C:\Program Files\LLVM\bin\"
 
 echo "Found Clang builtins library: $clangBuiltinsLib in $clangBuiltinsDir"
 echo "Found Clang Path: $clangPath"
 
 # Search for mt.exe in SDK bin directories
 echo "Searching for llvm-mt.exe ..."
-mtPath=$(find "$clangPath" -name "llvm-mt.exe" 2>/dev/null | grep "llvm-mt.exe" | sort -r | head -n 1)
+mtPath=$(find "$clangPath" -name "llvm-mt.exe")
 
 if [[ -z "$mtPath" ]]; then
     echo "ERROR: Could not find llvm-mt.exe in SDK directories."
@@ -61,13 +61,13 @@ echo "Running CMake configuration"
 cmake .. \
     -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_COMPILER="$clangPath\\clang-cl.exe" \
-    -DCMAKE_CXX_COMPILER="$clangPath\\clang-cl.exe" \
-    -DCMAKE_LINKER="$clangPath\\lld-link.exe" \
+    -DCMAKE_C_COMPILER="${clangPath}/clang-cl.exe" \
+    -DCMAKE_CXX_COMPILER="${clangPath}/clang-cl.exe" \
+    -DCMAKE_LINKER="${clangPath}/lld-link.exe" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_TOOLCHAIN_FILE="$VcpkgRoot/scripts/buildsystems/vcpkg.cmake" \
     -DCMAKE_EXE_LINKER_FLAGS="/LIBPATH:$clangBuiltinsDir /defaultlib:$clangBuiltinsLib" \
-    -DCMAKE_MT="$mtPath" \
+    -DCMAKE_MT="${mtPath}" \
     -DUSE_NATIVE_INSTRUCTIONS=OFF \
     -DUSE_PRECOMPILED_HEADERS=OFF \
     -DVCPKG_TARGET_TRIPLET="$VcpkgTriplet" \
