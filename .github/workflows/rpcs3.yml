@@ -25,4 +25,5 @@ jobs:
           clangPath=$(find "C:\Program Files\LLVM" -name "bin") 
           echo "$clangPath/clang.exe"
           "$clangPath/clang.exe" --version
+          ls "$clangPath"
         shell: bash
