@@ -27,4 +27,5 @@ jobs:
           "$clangPath/clang.exe" --version
           mtPath=$(find "$clangPath" -name "llvm-mt.exe")
           echo "$mtPath"
+          "$clangPath/lld-link.exe" --version
         shell: bash
