@@ -6,14 +6,14 @@ echo "Starting RPCS3 build (Bash script)"
 echo "Searching for clang_rt.builtins-x86_64.lib ..."
 clangBuiltinsLibPath=$(find "C:\Program Files\LLVM\lib\clang" -name "clang_rt.builtins-x86_64.lib" | sed 's|Program Files|PROGRA~1|g')
 
-if [[ -z "$clangBuiltinsLibPath" ]]; then
+if [ -z "$clangBuiltinsLibPath" ]; then
     echo "ERROR: Could not find clang_rt.builtins-x86_64.lib in LLVM installation."
     exit 1
 fi
 
 clangBuiltinsDir=$(dirname "$clangBuiltinsLibPath")
 clangBuiltinsLib=$(basename "$clangBuiltinsLibPath")
-clangPath=$(echo "C:\Program Files\LLVM\bin" | sed 's|Program Files|PROGRA~1|g')
+clangPath=$(printf "C:\Program Files\LLVM\bin" | sed 's|Program Files|PROGRA~1|g')
 
 echo "Found Clang builtins library: $clangBuiltinsLib in $clangBuiltinsDir"
 echo "Found Clang Path: $clangPath"
@@ -22,7 +22,7 @@ echo "Found Clang Path: $clangPath"
 echo "Searching for llvm-mt.exe ..."
 mtPath=$(find "$clangPath" -name "llvm-mt.exe")
 
-if [[ -z "$mtPath" ]]; then
+if [ -z "$mtPath" ]; then
     echo "ERROR: Could not find llvm-mt.exe in SDK directories."
     exit 1
 fi
@@ -34,7 +34,6 @@ VcpkgTriplet="$VCPKG_TRIPLET"
 VcpkgInstall="$VcpkgRoot/installed/$VcpkgTriplet"
 VcpkgInclude="$VcpkgInstall/include"
 VcpkgLib="$VcpkgInstall/lib"
-VcpkgBin="$VcpkgInstall/bin"
 
 # Configure git safe directory
 echo "Configuring git safe directory"
@@ -42,13 +41,7 @@ git config --global --add safe.directory '*'
 
 # Initialize submodules except certain ones
 echo "Initializing submodules"
-excludedSubs=("llvm" "opencv" "ffmpeg" "FAudio" "zlib" "libpng" "feralinteractive")
-
-# Get submodule paths excluding those in excludedSubs
-readarray -t submodules < <(grep 'path = ' .gitmodules | sed 's/path = //' | grep -v -E "$(IFS=\|; echo "${excludedSubs[*]}")")
-
-echo "Updating submodules: ${submodules[*]}"
-git submodule update --init --quiet ${submodules[@]}
+git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/FAudio/ && !/libpng/ && !/zlib/ && !/feralinteractive/ { print $3 }' .gitmodules)
 
 # Create and enter build directory
 echo "Creating build directory"
@@ -96,11 +89,6 @@ echo "CMake configuration complete"
 # Build with ninja
 echo "Starting build with Ninja..."
 ninja
-
-if [[ $? -ne 0 ]]; then
-    echo "Build failed with exit code $?"
-    exit 1
-fi
 
 echo "Build succeeded"
 
