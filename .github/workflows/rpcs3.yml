@@ -25,5 +25,6 @@ jobs:
           clangPath=$(find "C:\Program Files\LLVM" -name "bin") 
           echo "$clangPath/clang.exe"
           "$clangPath/clang.exe" --version
-          ls "$clangPath"
+          mtPath=$(find "$clangPath" -name "llvm-mt.exe")
+          echo "$mtPath"
         shell: bash
