@@ -91,7 +91,6 @@ jobs:
         id: restore-vcpkg-cache
         with:
           path: |
-            vcpkg/vcpkg.exe
             vcpkg/installed
             vcpkg/buildtrees
           key: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-POC-${{ hashFiles('**/vcpkg') }}
