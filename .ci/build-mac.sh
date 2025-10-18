@@ -16,7 +16,7 @@ brew install -f --overwrite --quiet ccache pipenv
 #brew link -f --overwrite --quiet "llvm@$LLVM_COMPILER_VER"
 echo "uninstalling python"
 rm /usr/local/bin/{idle3.13,pip3.13,pydoc3.13,python3.13}
-ls -al /usr/local/bin/*3.13
+ls -al /usr/local/bin/*3.13 || true
 echo "installing local homebrew"
 arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 #arch -x86_64 /usr/local/bin/brew uninstall --ignore-dependencies python@3.13
