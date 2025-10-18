@@ -14,9 +14,8 @@ export HOMEBREW_NO_INSTALL_CLEANUP=1
 
 brew install -f --overwrite --quiet ccache pipenv
 #brew link -f --overwrite --quiet "llvm@$LLVM_COMPILER_VER"
-ls -al /usr/local/bin/*3.13
 echo "uninstalling python"
-brew uninstall --ignore-dependencies python@3.13
+rm /usr/local/bin/{idle3.13,pip3.13,pydoc3.13,python3.13}
 ls -al /usr/local/bin/*3.13
 echo "installing local homebrew"
 arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
