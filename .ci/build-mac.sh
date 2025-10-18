@@ -27,7 +27,7 @@ arch -x86_64 /usr/local/bin/brew link -f --overwrite --quiet "llvm@$LLVM_COMPILE
 
 # moltenvk based on commit for 1.3.0 release
 export HOMEBREW_DEVELOPER=1 # Prevents blocking of local formulae
-wget https://raw.githubusercontent.com/Homebrew/homebrew-core/7255441cbcafabaa8950f67c7ec55ff499dbb2d3/Formula/m/molten-vk.rb
+wget https://raw.githubusercontent.com/Homebrew/homebrew-core/bdf18fef399d4c3b583245cab8611e41b4bb520b/Formula/m/molten-vk.rb
 arch -x86_64 /usr/local/bin/brew install -f --overwrite --formula --quiet ./molten-vk.rb
 export HOMEBREW_DEVELOPER=0
 export CXX=clang++
