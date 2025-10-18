@@ -14,10 +14,16 @@ export HOMEBREW_NO_INSTALL_CLEANUP=1
 
 brew install -f --overwrite --quiet ccache pipenv
 #brew link -f --overwrite --quiet "llvm@$LLVM_COMPILER_VER"
-#brew uninstall python@3.13
+ls -al /usr/local/bin/*3.13
+echo "uninstalling python"
+brew uninstall python@3.13
+ls -al /usr/local/bin/*3.13
+echo "installing local homebrew"
 arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-arch -x86_64 /usr/local/bin/brew uninstall python@3.13
+#arch -x86_64 /usr/local/bin/brew uninstall python@3.13
+echo "installing deps"
 arch -x86_64 /usr/local/bin/brew install -f --overwrite --quiet ffmpeg@5 "llvm@$LLVM_COMPILER_VER" glew sdl3 vulkan-headers
+echo "linking deps"
 arch -x86_64 /usr/local/bin/brew link -f --overwrite --quiet "llvm@$LLVM_COMPILER_VER" ffmpeg@5
 
 # moltenvk based on commit for 1.3.0 release
