@@ -79,7 +79,8 @@ LLVM_DIR="$BREW_X64_PATH/opt/llvm@$LLVM_COMPILER_VER"
 #export CC="$LLVM_DIR/bin/clang"
 # exclude ffmpeg, LLVM, opencv, and sdl from submodule update
 # shellcheck disable=SC2046
-git submodule -q update --init --depth=1 --jobs=8 $(awk '/path/ && !/ffmpeg/ && !/llvm/ && !/opencv/ && !/SDL/ && !/feralinteractive/ { print $3 }' .gitmodules)
+git submodule -q update --init --depth=1 --jobs=8 $(awk '/path/ && !/ffmpeg/ && !/llvm/ && !/opencv/ && !/SDL/ && !/feralinteractive/  && !/openal-soft/ { print $3 }' .gitmodules)
+git clone https://github.com/kcat/openal-soft/ 3rdparty/OpenAL/openal-soft
 
 # 3rdparty fixes
 sed -i '' "s/extern const double NSAppKitVersionNumber;/const double NSAppKitVersionNumber = 1343;/g" 3rdparty/hidapi/hidapi/mac/hid.c
