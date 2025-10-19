@@ -75,8 +75,8 @@ export VK_ICD_FILENAMES="$VULKAN_SDK/share/vulkan/icd.d/MoltenVK_icd.json"
 
 export LLVM_DIR
 LLVM_DIR="$BREW_X64_PATH/opt/llvm@$LLVM_COMPILER_VER"
-#export CXX="$LLVM_DIR/bin/clang++"
-#export CC="$LLVM_DIR/bin/clang"
+export CXX="$LLVM_DIR/bin/clang++"
+export CC="$LLVM_DIR/bin/clang"
 # exclude ffmpeg, LLVM, opencv, and sdl from submodule update
 # shellcheck disable=SC2046
 git submodule -q update --init --depth=1 --jobs=8 $(awk '/path/ && !/ffmpeg/ && !/llvm/ && !/opencv/ && !/SDL/ && !/feralinteractive/  && !/openal-soft/ { print $3 }' .gitmodules)
