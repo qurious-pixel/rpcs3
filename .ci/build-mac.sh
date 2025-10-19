@@ -25,8 +25,8 @@ export HOMEBREW_DEVELOPER=1 # Prevents blocking of local formulae
 wget https://raw.githubusercontent.com/Homebrew/homebrew-core/7255441cbcafabaa8950f67c7ec55ff499dbb2d3/Formula/m/molten-vk.rb
 arch -x86_64 /usr/local/bin/brew install -f --overwrite --formula --quiet ./molten-vk.rb
 export HOMEBREW_DEVELOPER=0
-export CXX="$BREW_X64_PATH/opt/llvm@$LLVM_COMPILER_VER/bin/clang++"
-export CC="$BREW_X64_PATH/opt/llvm@$LLVM_COMPILER_VER/bin/clang"
+export CXX=clang++
+export CC=clang
 
 export BREW_X64_PATH;
 BREW_X64_PATH="$("/usr/local/bin/brew" --prefix)"
@@ -75,6 +75,8 @@ export VK_ICD_FILENAMES="$VULKAN_SDK/share/vulkan/icd.d/MoltenVK_icd.json"
 
 export LLVM_DIR
 LLVM_DIR="$BREW_X64_PATH/opt/llvm@$LLVM_COMPILER_VER"
+export CXX="$LLVM_DIR/bin/clang++"
+export CC="$LLVM_DIR/bin/clang"
 # exclude ffmpeg, LLVM, opencv, and sdl from submodule update
 # shellcheck disable=SC2046
 git submodule -q update --init --depth=1 --jobs=8 $(awk '/path/ && !/ffmpeg/ && !/llvm/ && !/opencv/ && !/SDL/ && !/feralinteractive/ { print $3 }' .gitmodules)
