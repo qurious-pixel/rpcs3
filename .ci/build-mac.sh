@@ -13,21 +13,16 @@ export HOMEBREW_NO_INSTALL_CLEANUP=1
 #arch -x86_64 /usr/local/bin/brew link -f --overwrite --quiet "llvm@$LLVM_COMPILER_VER" ffmpeg@5
 
 brew install -f --overwrite --quiet ccache pipenv
-#brew link -f --overwrite --quiet "llvm@$LLVM_COMPILER_VER"
-echo "uninstalling python"
 rm /usr/local/bin/{idle3.13,pip3.13,pydoc3.13,python3.13,python3.13-config}
 ls -al /usr/local/bin/*3.13* || true
-echo "installing local homebrew"
 arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-#arch -x86_64 /usr/local/bin/brew uninstall --ignore-dependencies python@3.13
-echo "installing deps"
 arch -x86_64 /usr/local/bin/brew install -f --overwrite --quiet ffmpeg@5 "llvm@$LLVM_COMPILER_VER" glew sdl3 vulkan-headers
-echo "linking deps"
 arch -x86_64 /usr/local/bin/brew link -f --overwrite --quiet "llvm@$LLVM_COMPILER_VER" ffmpeg@5
 
 # moltenvk based on commit for 1.3.0 release
 export HOMEBREW_DEVELOPER=1 # Prevents blocking of local formulae
-wget https://raw.githubusercontent.com/Homebrew/homebrew-core/bdf18fef399d4c3b583245cab8611e41b4bb520b/Formula/m/molten-vk.rb
+#wget https://raw.githubusercontent.com/Homebrew/homebrew-core/bdf18fef399d4c3b583245cab8611e41b4bb520b/Formula/m/molten-vk.rb
+wget https://raw.githubusercontent.com/Homebrew/homebrew-core/7255441cbcafabaa8950f67c7ec55ff499dbb2d3/Formula/m/molten-vk.rb
 arch -x86_64 /usr/local/bin/brew install -f --overwrite --formula --quiet ./molten-vk.rb
 export HOMEBREW_DEVELOPER=0
 export CXX=clang++
