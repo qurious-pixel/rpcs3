@@ -12,11 +12,11 @@ export HOMEBREW_NO_INSTALL_CLEANUP=1
 #arch -x86_64 /usr/local/bin/brew install -f --overwrite --quiet ffmpeg@5 "llvm@$LLVM_COMPILER_VER" glew sdl3 vulkan-headers
 #arch -x86_64 /usr/local/bin/brew link -f --overwrite --quiet "llvm@$LLVM_COMPILER_VER" ffmpeg@5
 
-brew install -f --overwrite --quiet ccache pipenv
+#brew install -f --overwrite --quiet ccache pipenv
 rm /usr/local/bin/{idle3,pip3,pydoc3,python3,python3-config}
 ls -al /usr/local/bin/*3* || true
 arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-arch -x86_64 /usr/local/bin/brew install -f --overwrite --quiet ffmpeg@5 "llvm@$LLVM_COMPILER_VER" glew sdl3 vulkan-headers
+arch -x86_64 /usr/local/bin/brew install -f --overwrite --quiet ccache pipenv ffmpeg@5 "llvm@$LLVM_COMPILER_VER" glew sdl3 vulkan-headers
 arch -x86_64 /usr/local/bin/brew link -f --overwrite --quiet "llvm@$LLVM_COMPILER_VER" ffmpeg@5
 
 # moltenvk based on commit for 1.3.0 release
@@ -75,10 +75,10 @@ export VK_ICD_FILENAMES="$VULKAN_SDK/share/vulkan/icd.d/MoltenVK_icd.json"
 
 export LLVM_DIR
 LLVM_DIR="$BREW_X64_PATH/opt/llvm@$LLVM_COMPILER_VER"
-#export CXX="$LLVM_DIR/bin/clang++"
-#export CC="$LLVM_DIR/bin/clang"
-export CXX=clang++
-export CC=clang
+export CXX="$LLVM_DIR/bin/clang++"
+export CC="$LLVM_DIR/bin/clang"
+#export CXX=clang++
+#export CC=clang
 clang++ --version
 # exclude ffmpeg, LLVM, opencv, and sdl from submodule update
 # shellcheck disable=SC2046
