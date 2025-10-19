@@ -25,14 +25,14 @@ export HOMEBREW_DEVELOPER=1 # Prevents blocking of local formulae
 wget https://raw.githubusercontent.com/Homebrew/homebrew-core/7255441cbcafabaa8950f67c7ec55ff499dbb2d3/Formula/m/molten-vk.rb
 arch -x86_64 /usr/local/bin/brew install -f --overwrite --formula --quiet ./molten-vk.rb
 export HOMEBREW_DEVELOPER=0
-export CXX=clang++
-export CC=clang
+export CXX="$BREW_X64_PATH/opt/llvm@$LLVM_COMPILER_VER/bin/clang++"
+export CC="$BREW_X64_PATH/opt/llvm@$LLVM_COMPILER_VER/bin/clang"
 
 export BREW_X64_PATH;
 BREW_X64_PATH="$("/usr/local/bin/brew" --prefix)"
 export BREW_BIN="/usr/local/bin"
 export BREW_SBIN="/usr/local/sbin"
-export CMAKE_EXTRA_OPTS="-DLLVM_TARGETS_TO_BUILD=X86 -DCMAKE_PREFIX_PATH=/usr/local/opt/llvm@$LLVM_COMPILER_VER"
+export CMAKE_EXTRA_OPTS='-DLLVM_TARGETS_TO_BUILD=X86'
 
 export WORKDIR;
 WORKDIR="$(pwd)"
