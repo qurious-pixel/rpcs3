@@ -32,7 +32,7 @@ export BREW_X64_PATH;
 BREW_X64_PATH="$("/usr/local/bin/brew" --prefix)"
 export BREW_BIN="/usr/local/bin"
 export BREW_SBIN="/usr/local/sbin"
-export CMAKE_EXTRA_OPTS='-DLLVM_TARGETS_TO_BUILD=X86'
+export CMAKE_EXTRA_OPTS='-DLLVM_TARGETS_TO_BUILD=X86 -DCMAKE_PREFIX_PATH="/usr/local/opt/llvm@$LLVM_COMPILER_VER"'
 
 export WORKDIR;
 WORKDIR="$(pwd)"
