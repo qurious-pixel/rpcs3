@@ -32,7 +32,7 @@ export BREW_X64_PATH;
 BREW_X64_PATH="$("/usr/local/bin/brew" --prefix)"
 export BREW_BIN="/usr/local/bin"
 export BREW_SBIN="/usr/local/sbin"
-export CMAKE_EXTRA_OPTS='-DLLVM_TARGETS_TO_BUILD=X86'
+export CMAKE_EXTRA_OPTS='-DLLVM_TARGETS_TO_BUILD=X86 -stdlib=libc++'
 
 export WORKDIR;
 WORKDIR="$(pwd)"
@@ -124,7 +124,7 @@ export MACOSX_DEPLOYMENT_TARGET=14.0
     -DCMAKE_TOOLCHAIN_FILE=buildfiles/cmake/TCDarwinX86_64.cmake \
     -DCMAKE_IGNORE_PATH="$BREW_X64_PATH/lib" \
     -DCMAKE_IGNORE_PREFIX_PATH=/usr/local/opt \
-    -DCMAKE_CXX_FLAGS="-D__MAC_OS_X_VERSION_MIN_REQUIRED=140000" \
+    -DCMAKE_CXX_FLAGS="-D__MAC_OS_X_VERSION_MIN_REQUIRED=140000 -stdlib=libc++" \
     -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -DCMAKE_OSX_SYSROOT="$(xcrun --sdk macosx --show-sdk-path)" \
     -G Ninja
