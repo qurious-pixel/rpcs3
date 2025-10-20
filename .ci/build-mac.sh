@@ -18,7 +18,8 @@ rm /usr/local/bin/{idle3,pip3,pydoc3,python3,python3-config}
 ls -al /usr/local/bin/*3* || true
 arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 arch -x86_64 /usr/local/bin/brew install -f --overwrite --quiet ccache pipenv ffmpeg@5 "llvm@$LLVM_COMPILER_VER" glew sdl3 vulkan-headers
-arch -x86_64 /usr/local/bin/brew link -f --overwrite --quiet fmt "llvm@$LLVM_COMPILER_VER" ffmpeg@5
+arch -x86_64 /usr/local/bin/brew link -f --overwrite --quiet "llvm@$LLVM_COMPILER_VER" ffmpeg@5
+brew unlink fmt && brew link fmt
 
 # moltenvk based on commit for 1.3.0 release
 export HOMEBREW_DEVELOPER=1 # Prevents blocking of local formulae
