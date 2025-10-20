@@ -13,7 +13,7 @@ export HOMEBREW_NO_INSTALL_CLEANUP=1
 #arch -x86_64 /usr/local/bin/brew link -f --overwrite --quiet "llvm@$LLVM_COMPILER_VER" ffmpeg@5
 
 brew install -f --overwrite --quiet fmt "llvm@$LLVM_COMPILER_VER"
-brew link -f --overwrite --quiet fmt "llvm@$LLVM_COMPILER_VER"
+brew link -f --overwrite --quiet "llvm@$LLVM_COMPILER_VER"
 rm /usr/local/bin/{idle3,pip3,pydoc3,python3,python3-config}
 ls -al /usr/local/bin/*3* || true
 arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -34,7 +34,7 @@ export BREW_X64_PATH;
 BREW_X64_PATH="$("/usr/local/bin/brew" --prefix)"
 export BREW_BIN="/usr/local/bin"
 export BREW_SBIN="/usr/local/sbin"
-export CMAKE_EXTRA_OPTS='-DLLVM_TARGETS_TO_BUILD=X86 -stdlib=libc++'
+export CMAKE_EXTRA_OPTS='-DLLVM_TARGETS_TO_BUILD=X86'
 
 export WORKDIR;
 WORKDIR="$(pwd)"
@@ -64,7 +64,7 @@ export Qt6_DIR="$WORKDIR/qt-downloader/$QT_VER/clang_64/lib/cmake/Qt$QT_VER_MAIN
 export SDL3_DIR="$BREW_X64_PATH/opt/sdl3/lib/cmake/SDL3"
 
 export PATH="/opt/homebrew/opt/llvm@$LLVM_COMPILER_VER/bin:$WORKDIR/qt-downloader/$QT_VER/clang_64/bin:$BREW_BIN:$BREW_SBIN:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/Apple/usr/bin:$PATH" >> /Users/runner/.bash_profile
-export LDFLAGS="-L$BREW_X64_PATH/lib -Wl,-rpath,$BREW_X64_PATH/lib"
+export LDFLAGS="-L$BREW_X64_PATH/lib -Wl,-rpath,$BREW_X64_PATH/lib,-L$(brew --prefix llvm)/lib/c++"
 export CPPFLAGS="-I$BREW_X64_PATH/include -msse -msse2 -mcx16 -no-pie -D__MAC_OS_X_VERSION_MIN_REQUIRED=140000"
 export CFLAGS="-D__MAC_OS_X_VERSION_MIN_REQUIRED=140000"
 export LIBRARY_PATH="$BREW_X64_PATH/opt/llvm@$LLVM_COMPILER_VER/lib:$BREW_X64_PATH/lib"
@@ -126,7 +126,7 @@ export MACOSX_DEPLOYMENT_TARGET=14.0
     -DCMAKE_TOOLCHAIN_FILE=buildfiles/cmake/TCDarwinX86_64.cmake \
     -DCMAKE_IGNORE_PATH="$BREW_X64_PATH/lib" \
     -DCMAKE_IGNORE_PREFIX_PATH=/usr/local/opt \
-    -DCMAKE_CXX_FLAGS="-D__MAC_OS_X_VERSION_MIN_REQUIRED=140000 -stdlib=libc++" \
+    -DCMAKE_CXX_FLAGS="-D__MAC_OS_X_VERSION_MIN_REQUIRED=140000" \
     -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -DCMAKE_OSX_SYSROOT="$(xcrun --sdk macosx --show-sdk-path)" \
     -G Ninja
