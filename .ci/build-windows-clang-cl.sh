@@ -65,7 +65,7 @@ cmake .. \
     -DCMAKE_TOOLCHAIN_FILE="$VcpkgRoot/scripts/buildsystems/vcpkg.cmake" \
     -DCMAKE_EXE_LINKER_FLAGS="/LIBPATH:${clangBuiltinsDir} /defaultlib:${clangBuiltinsLib}" \
     -DCMAKE_MT="${mtPath}" \
-    -DUSE_NATIVE_INSTRUCTIONS=OFF \
+    -DUSE_NATIVE_INSTRUCTIONS=ON \
     -DUSE_PRECOMPILED_HEADERS=OFF \
     -DVCPKG_TARGET_TRIPLET="$VcpkgTriplet" \
     -DFFMPEG_INCLUDE_DIR="$VcpkgInclude" \
