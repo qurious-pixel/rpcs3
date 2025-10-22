@@ -41,11 +41,9 @@ echo "Configuring git safe directory"
 git config --global --add safe.directory '*'
 
 # Initialize submodules except certain ones
-ExcludedSubmodules=$(awk '/path/ && !/llvm/ && !/opencv/ && !/FAudio/ && !/libpng/ && !/zlib/ && !/feralinteractive/ { print $3 }' .gitmodules)
 echo "Initializing submodules"
-echo "$ExcludedSubmodules"
 # shellcheck disable=SC2046
-git submodule -q update --init "$ExcludedSubmodules"
+git submodule update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/FAudio/ && !/libpng/ && !/zlib/ && !/feralinteractive/ { print $3 }' .gitmodules)
 
 # Create and enter build directory
 echo "Creating build directory"
