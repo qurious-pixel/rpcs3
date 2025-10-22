@@ -23,12 +23,12 @@
 #endif
 #endif
 
-//#ifdef _MSC_VER
+#ifdef _MSC_VER
 //#if defined(_MSC_VER) && !defined(__clang__)
-//#define AVX512_ICL_FUNC
-//#else
+#define AVX512_ICL_FUNC
+#else
 #define AVX512_ICL_FUNC __attribute__((__target__("avx512f,avx512bw,avx512dq,avx512cd,avx512vl,avx512bitalg,avx512ifma,avx512vbmi,avx512vbmi2,avx512vnni,avx512vpopcntdq")))
-//#endif
+#endif
 
 
 using namespace program_hash_util;
