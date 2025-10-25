@@ -2065,7 +2065,8 @@ void lv2_obj::set_yield_frequency(u64 freq, u64 max_allowed_tsc)
 	g_lv2_preempts_taken.release(0);
 }
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(__clang__)
+//#if defined(_MSC_VER)
 #define mwaitx_func
 #define waitpkg_func
 #else
