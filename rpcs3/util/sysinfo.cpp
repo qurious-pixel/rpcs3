@@ -36,7 +36,8 @@ extern "C" u64 _xgetbv(u32);
 static inline std::array<u32, 4> get_cpuid(u32 func, u32 subfunc)
 {
 	int regs[4];
-#ifdef _MSC_VER
+//#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 	__cpuidex(regs, func, subfunc);
 #else
 	__asm__ volatile("cpuid" : "=a" (regs[0]), "=b" (regs[1]), "=c" (regs[2]), "=d" (regs[3]) : "a" (func), "c" (subfunc));
