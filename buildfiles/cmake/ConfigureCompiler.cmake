@@ -10,7 +10,7 @@ if(MSVC)
 		if (COMPILER_X86)
 			add_compile_options(-msse -msse2 -mcx16)
 			#add_compile_options(-msse -msse2 -mcx16 -mavx512f -mavx512vbmi -mavx512vl -mavx512dq -mavx512vpopcntdq -mavx -mavx2 -maes -mrtm -mpclmul -mmwaitx -mwaitpkg)
-			#add_compile_options(-maes -mrtm -mpclmul -mmwaitx -mwaitpkg)
+			add_compile_options(-maes -mrtm -mpclmul -mmwaitx -mwaitpkg)
 			#add_compile_options(/arch:AVX512)
 		endif()
 		
