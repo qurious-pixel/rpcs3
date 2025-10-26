@@ -86,8 +86,8 @@ export CC=clang
 
 # exclude ffmpeg, LLVM, opencv, and sdl from submodule update
 # shellcheck disable=SC2046
-git submodule -q update --init --depth=1 --jobs=8 $(awk '/path/ && !/ffmpeg/ && !/llvm/ && !/opencv/ && !/SDL/ && !/feralinteractive/ { print $3 }' .gitmodules)
-#git clone https://github.com/kcat/openal-soft/ 3rdparty/OpenAL/openal-soft
+git submodule -q update --init --depth=1 --jobs=8 $(awk '/path/ && !/ffmpeg/ && !/llvm/ && !/opencv/ && !/SDL/ && !/feralinteractive/ && !/openal-soft/ { print $3 }' .gitmodules)
+git clone https://github.com/kcat/openal-soft/ 3rdparty/OpenAL/openal-soft
 #  && !/openal-soft/
 
 # 3rdparty fixes
