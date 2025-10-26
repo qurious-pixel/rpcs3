@@ -41,6 +41,9 @@
 #ifdef _MSC_VER
 #include <intrin.h>
 #include <immintrin.h>
+#if defined(__clang__)
+#include <x86intrin.h>
+#endif
 #else
 #include <x86intrin.h>
 #endif
