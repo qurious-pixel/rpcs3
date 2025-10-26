@@ -171,4 +171,4 @@ jobs:
             -v ${{ env.CCACHE_DIR }}:/root/.ccache  \
             -v ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}:${{ env.ARTDIR }} \
             ${{ matrix.docker_img }} \
-            cd rpcs3 && shellcheck .ci/*.sh
+            ${{ matrix.build_sh }}
