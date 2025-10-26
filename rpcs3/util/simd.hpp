@@ -9,6 +9,9 @@
 #if defined(ARCH_X64)
 #ifdef _MSC_VER
 #include <intrin.h>
+#if defined(__clang__)
+#include <x86intrin.h>
+#endif
 #else
 #include <x86intrin.h>
 #endif
