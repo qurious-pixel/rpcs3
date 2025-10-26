@@ -111,9 +111,7 @@ jobs:
           path: /tmp/Qt
           key: ${{ steps.restore-qt-cache.outputs.cache-primary-key }}
 
-  Linux_Build:
-    # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+  Linux_Build:  
     strategy:
       fail-fast: false
       matrix:
