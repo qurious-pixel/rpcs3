@@ -33,6 +33,12 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
 	)
 elseif(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+	append_compiler_flags(
+		-Wno-unused-value
+		-Wno-pragma-pack
+		${ADDITIONAL_CC_FLAGS}
+	)
+	
 endif()
 
 check_include_files(sys/timerfd.h USBI_TIMERFD_AVAILABLE)
