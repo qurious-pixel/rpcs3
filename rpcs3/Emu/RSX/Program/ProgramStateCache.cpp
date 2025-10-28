@@ -9,7 +9,6 @@
 #if defined(ARCH_X64)
 #include "emmintrin.h"
 #include "immintrin.h"
-#include "zmmintrin.h"
 #endif
 
 #ifdef ARCH_ARM64
