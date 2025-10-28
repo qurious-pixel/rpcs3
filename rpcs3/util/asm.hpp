@@ -9,7 +9,8 @@ extern bool g_use_rtm;
 extern u64 g_rtm_tx_limit1;
 
 #ifdef _M_X64
-#if defined(_MSC_VER) && !defined(__clang__)
+//#if defined(_MSC_VER) && !defined(__clang__)
+#ifdef _MSC_VER
 extern "C"
 {
 	u32 _xbegin();
