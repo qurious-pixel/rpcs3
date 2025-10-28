@@ -31,6 +31,9 @@ extern "C"
 	void __debugbreak();
 }
 #include <intrin.h>
+#ifdef __clang__
+#include <immintrin.h>
+#endif
 #else
 #include <immintrin.h>
 #endif
