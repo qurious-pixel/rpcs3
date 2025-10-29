@@ -9,8 +9,7 @@ extern bool g_use_rtm;
 extern u64 g_rtm_tx_limit1;
 
 #ifdef _M_X64
-//#if defined(_MSC_VER) && !defined(__clang__)
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 extern "C"
 {
 	u32 _xbegin();
@@ -50,7 +49,8 @@ namespace utils
 
 		for (auto stamp0 = get_tsc(), stamp1 = stamp0; g_use_rtm && stamp1 - stamp0 <= g_rtm_tx_limit1; stamp1 = get_tsc())
 		{
-#ifndef _MSC_VER
+//#ifndef _MSC_VER
+#if !defined(_MSC_VER) || (defined(__clang__) && defined(_MSC_VER))
 			__asm__ goto ("xbegin %l[retry];" ::: "memory" : retry);
 #else
 			status = _xbegin();
