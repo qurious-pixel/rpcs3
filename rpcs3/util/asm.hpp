@@ -46,7 +46,7 @@ namespace utils
 
 		for (auto stamp0 = get_tsc(), stamp1 = stamp0; g_use_rtm && stamp1 - stamp0 <= g_rtm_tx_limit1; stamp1 = get_tsc())
 		{
-#ifndef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 			__asm__ goto ("xbegin %l[retry];" ::: "memory" : retry);
 #else
 			status = _xbegin();
@@ -70,8 +70,8 @@ namespace utils
 			else
 			{
 				auto result = std::invoke(op);
-#ifndef _MSC_VER
-				__asm__ volatile ("xend;" ::: "memory");
+#if !defined(_MSC_VER) || (defined(__clang__) && defined(_MSC_VER))		
+ 				__asm__ volatile ("xend;" ::: "memory");
 #else
 				_xend();
 #endif
