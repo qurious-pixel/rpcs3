@@ -64,7 +64,8 @@ namespace utils
 			if constexpr (std::is_void_v<R>)
 			{
 				std::invoke(op);
-#ifndef _MSC_VER
+//#ifndef _MSC_VER
+#if !defined(_MSC_VER) || (defined(__clang__) && defined(_MSC_VER))		
 				__asm__ volatile ("xend;" ::: "memory");
 #else
 				_xend();
