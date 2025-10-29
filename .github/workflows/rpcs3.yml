@@ -83,46 +83,22 @@ jobs:
         shell: pwsh
         run: |
           git clone https://github.com/microsoft/vcpkg.git
-          .\vcpkg\bootstrap-vcpkg.bat
-          
-      - name: Restore vcpkg cache
+          .\vcpkg\bootstrap-vcpkg.bat 
+       
+      - name: 'Setup NuGet Credentials for vcpkg'
         if: ${{ matrix.compiler == 'clang-cl' }}
-        uses: actions/cache/restore@main
-        id: restore-vcpkg-cache
-        with:
-          path: |
-            vcpkg/installed
-            vcpkg/buildtrees
-          key: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-POC-${{ hashFiles('**/vcpkg') }}
-          restore-keys: vcpkg-${{ runner.os }}-${{ matrix.compiler }}-${{ runner.arch }}-POC-
-
-      - name: Install dependencies with vcpkg
-        if: ${{ matrix.compiler == 'clang-cl' }}
-        shell: pwsh
-        run: >-
-          .\vcpkg\vcpkg.exe install
-          ffmpeg[avcodec,avformat,swscale,swresample]
-          libpng
-          opencv
-          qtbase
-          qtmultimedia
-          qtsvg
-          qttools
-          vulkan
-          zlib
-          --triplet $env:VCPKG_TRIPLET
-          --clean-after-build
-
-      - name: Save vcpkg cache
-        if: ${{ matrix.compiler == 'clang-cl' }}
-        #if: ${{ !steps.restore-vcpkg-cache.outputs.cache-hit && matrix.compiler == 'clang-cl' }}
-        #if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: |
-            vcpkg/installed
-            vcpkg/buildtrees
-          key: ${{ steps.restore-vcpkg-cache.outputs.cache-primary-key }}
+        shell: 'bash'
+        run: |
+          mono `./dependencies/vcpkg/vcpkg fetch nuget | tail -n 1` \
+          sources add \
+          -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
+          -storepasswordincleartext \
+          -name "GitHub" \
+          -username "${{ github.repository_owner }}" \
+          -password "${{ secrets.GITHUB_TOKEN }}"
+          mono `./dependencies/vcpkg/vcpkg fetch nuget | tail -n 1` \
+          setapikey "${{ secrets.GITHUB_TOKEN }}" \
+          -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
 
       - name: Restore LLVM Cache
         if: ${{ matrix.compiler == 'clang-cl' }} 
