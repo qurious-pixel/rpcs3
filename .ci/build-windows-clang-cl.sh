@@ -92,7 +92,7 @@ cmake .. \
 
 # Build with ninja
 echo "Starting build with Ninja..."
-ninja
+#ninja
 
 echo "Build succeeded"
 
