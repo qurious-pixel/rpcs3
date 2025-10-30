@@ -102,6 +102,14 @@ jobs:
           setapikey "${{ secrets.GITHUB_TOKEN }}" \
           -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
 
+      - name: 'NuGet Sources'
+        if: ${{ matrix.compiler == 'clang-cl' }}
+        shell: 'bash'
+        run: |
+          dotnet nuget list source
+          dotnet nuget disable source nuget.org
+          dotnet nuget enable source nuget.org
+
       - name: Restore LLVM Cache
         if: ${{ matrix.compiler == 'clang-cl' }} 
         uses: actions/cache/restore@main
