@@ -107,8 +107,8 @@ jobs:
         shell: 'bash'
         run: |
           dotnet nuget list source
-          dotnet nuget disable source nuget.org
-          dotnet nuget enable source nuget.org
+          dotnet nuget disable source GitHub
+          dotnet nuget enable source GitHub
 
       - name: Restore LLVM Cache
         if: ${{ matrix.compiler == 'clang-cl' }} 
