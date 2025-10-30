@@ -165,8 +165,8 @@ jobs:
         shell: bash
         run: |
           chmod +x .ci/build-windows-clang-cl.sh && .ci/build-windows-clang-cl.sh
-          .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
-          .ci/deploy-windows-${{ matrix.compiler }}.sh
+          #.ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
+          #.ci/deploy-windows-${{ matrix.compiler }}.sh
 
       - name: Save build Ccache
         #if: github.ref == 'refs/heads/master'
@@ -175,10 +175,10 @@ jobs:
           path: ${{ env.CCACHE_DIR }}
           key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@main
-        with:
-          name: RPCS3 for Windows (${{ runner.arch }}, ${{ matrix.compiler }})
-          path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
-          compression-level: 0
-          if-no-files-found: error
+      #- name: Upload artifacts
+      #  uses: actions/upload-artifact@main
+      #  with:
+      #    name: RPCS3 for Windows (${{ runner.arch }}, ${{ matrix.compiler }})
+      #    path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
+      #    compression-level: 0
+      #    if-no-files-found: error
