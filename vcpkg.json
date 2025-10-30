@@ -5,6 +5,7 @@
   "dependencies": [
     "libpng",
     "opencv",
+    "vulkan",
     "zlib"
   ]
 }
