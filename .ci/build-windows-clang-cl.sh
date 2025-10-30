@@ -30,9 +30,9 @@ fi
 
 echo "Found llvm-mt.exe at: $mtPath"
 
-VcpkgRoot="$(pwd)/vcpkg"
+VcpkgRoot="$VCPKG_ROOT"
 VcpkgTriplet="$VCPKG_TRIPLET"
-VcpkgInstall="$VcpkgRoot/installed/$VcpkgTriplet"
+VcpkgInstall="$VcpkgRoot/vcpkg_installed/$VcpkgTriplet"
 VcpkgInclude="$VcpkgInstall/include"
 VcpkgLib="$VcpkgInstall/lib"
 
