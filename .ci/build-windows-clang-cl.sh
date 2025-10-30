@@ -31,8 +31,9 @@ fi
 echo "Found llvm-mt.exe at: $mtPath"
 
 VcpkgRoot="$VCPKG_ROOT"
+VcpkgBuildRoot="$GITHUB_WORKSPACE/build"
 VcpkgTriplet="$VCPKG_TRIPLET"
-VcpkgInstall="$VcpkgRoot/vcpkg_installed/$VcpkgTriplet"
+VcpkgInstall="$VcpkgBuildRoot/vcpkg_installed/$VcpkgTriplet"
 VcpkgInclude="$VcpkgInstall/include"
 VcpkgLib="$VcpkgInstall/lib"
 
