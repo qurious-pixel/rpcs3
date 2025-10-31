@@ -92,7 +92,7 @@ target_include_directories(rpcs3_emu PUBLIC "${CMAKE_SOURCE_DIR}")
 
 set_source_files_properties("../../Utilities/JITLLVM.cpp" "../../Utilities/JITASM.cpp" PROPERTIES
     
-    COMPILE_FLAGS "$<IF:$<NOT:$<CXX_COMPILER_ID:MSVC>,-fno-rtti,/GR->"
+    COMPILE_FLAGS "$<IF:$<NOT:$<CXX_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>,-fno-rtti,/GR->"
     SKIP_PRECOMPILE_HEADERS ON
 )
 
