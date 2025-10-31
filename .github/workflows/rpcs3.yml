@@ -102,14 +102,6 @@ jobs:
           setapikey "${{ secrets.GITHUB_TOKEN }}" \
           -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
 
-      - name: 'NuGet Sources'
-        if: ${{ matrix.compiler == 'clang-cl' }}
-        shell: 'bash'
-        run: |
-          dotnet nuget list source
-          dotnet nuget disable source GitHub
-          dotnet nuget enable source GitHub
-
       - name: Restore LLVM Cache
         if: ${{ matrix.compiler == 'clang-cl' }} 
         uses: actions/cache/restore@main
@@ -185,10 +177,10 @@ jobs:
           path: ${{ env.CCACHE_DIR }}
           key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
-      #- name: Upload artifacts
-      #  uses: actions/upload-artifact@main
-      #  with:
-      #    name: RPCS3 for Windows (${{ runner.arch }}, ${{ matrix.compiler }})
-      #    path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
-      #    compression-level: 0
-      #    if-no-files-found: error
+      - name: Upload artifacts
+        uses: actions/upload-artifact@main
+        with:
+          name: RPCS3 for Windows (${{ runner.arch }}, ${{ matrix.compiler }})
+          path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
+          compression-level: 0
+          if-no-files-found: error
