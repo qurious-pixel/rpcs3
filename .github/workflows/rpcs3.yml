@@ -21,15 +21,10 @@ jobs:
     steps:
       - name: WSL test
         run: |
-          @echo off
-          REM Get the version of clang
-          for /f "tokens=2 delims= " %%i in ('clang --version') do set clang_version=%%i
-          
-          REM Compare the version to 19.1.7
-          if "%clang_version%" NEQ "19.1.7" (
-              echo Clang version is %clang_version%, downloading LLVM 19.1.7...
-              curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-win64.exe
-          ) else (
-              echo Clang version is up to date: %clang_version%
-          )
-        shell: cmd
+          clang --version
+          curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/clang+llvm-19.1.7-x86_64-pc-windows-msvc.tar.xz
+          tar -xvf clang+llvm-19.1.7-x86_64-pc-windows-msvc.tar.xz
+          mv /mnt/c/PROGRA~1/LLVM /mnt/c/PROGRA~1/LLVM-old
+          mv clang+llvm-19.1.7-x86_64-pc-windows-msvc /mnt/c/PROGRA~1/LLVM
+          clang --version
+        shell: bash
