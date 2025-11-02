@@ -113,10 +113,11 @@ jobs:
           
       - name: Add LLVM
         if: ${{ matrix.compiler == 'clang-cl' }}
-        shell: cmd
+        shell: bash
         run: |
-          curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-win64.exe
-          LLVM-19.1.7-win64.exe /S
+          clang --version
+          curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/clang+llvm-19.1.7-x86_64-pc-windows-msvc.tar.xz
+          tar -xf clang+llvm-19.1.7-x86_64-pc-windows-msvc.tar.xz -C "C:\Program Files\LLVM" --strip-components=1
           clang --version
  
       #- name: Save LLVM Cache
