@@ -21,5 +21,5 @@ jobs:
     steps:
       - name: WSL test
         run: |
-          ls C:\Program Files\LLVM\bin
+          ls "C:\Program Files\LLVM\bin"
         shell: bash
