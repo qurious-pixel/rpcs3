@@ -21,10 +21,5 @@ jobs:
     steps:
       - name: WSL test
         run: |
-          clang --version
-          curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/clang+llvm-19.1.7-x86_64-pc-windows-msvc.tar.xz
-          tar -xvf clang+llvm-19.1.7-x86_64-pc-windows-msvc.tar.xz
-          mv /mnt/c/PROGRA~1/LLVM /mnt/c/PROGRA~1/LLVM-old
-          mv clang+llvm-19.1.7-x86_64-pc-windows-msvc /mnt/c/PROGRA~1/LLVM
-          clang --version
+          ls /mnt/c/PROGRA~1/LLVM
         shell: bash
