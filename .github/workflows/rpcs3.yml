@@ -21,6 +21,5 @@ jobs:
     steps:
       - name: WSL test
         run: |
-          clang --version | grep version
-          
+          clang --version | awk '{ print $3 }'         
         shell: bash
