@@ -22,6 +22,6 @@ jobs:
       - name: WSL test
         run: |
           curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.4/LLVM-21.1.4-win64.exe
-          LLVM-21.1.4-win64.exe /S
+          ./LLVM-21.1.4-win64.exe /S
           clang --version
         shell: bash
