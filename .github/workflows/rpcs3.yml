@@ -22,7 +22,7 @@ jobs:
       - name: WSL test
         run: |
           clang --version
-          curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.4/LLVM-21.1.4-win64.exe
+          curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-win64.exe
           LLVM-21.1.4-win64.exe /S
           clang --version
         shell: cmd
