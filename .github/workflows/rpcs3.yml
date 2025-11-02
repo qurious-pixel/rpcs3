@@ -26,6 +26,6 @@ jobs:
           7z x llvmlibs_mt.7z
           LLVM-19.1.7-win64.exe /S
           dir "C:\Program Files\LLVM\"
-          cp -rf llvm_build/* "C:\Program Files\LLVM\"
+          cp -rf llvm_build/* "C:/Program Files/LLVM/"
           clang --version
         shell: cmd
