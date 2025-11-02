@@ -115,9 +115,12 @@ jobs:
         if: ${{ matrix.compiler == 'clang-cl' }}
         shell: bash
         run: |
-          clang --version
-          curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/clang+llvm-19.1.7-x86_64-pc-windows-msvc.tar.xz
-          tar -xf clang+llvm-19.1.7-x86_64-pc-windows-msvc.tar.xz -C "C:\Program Files\LLVM" --strip-components=1
+          curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-win64.exe
+          curl -LO https://github.com/RPCS3/llvm-mirror/releases/download/custom-build-win-19.1.7/llvmlibs_mt.7z
+          7z x llvmlibs_mt.7z
+          LLVM-19.1.7-win64.exe /S
+          dir "C:\Program Files\LLVM\"
+          cp -rf llvm_build/* "C:/Program Files/LLVM/"
           clang --version
  
       #- name: Save LLVM Cache
