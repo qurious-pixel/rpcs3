@@ -22,7 +22,7 @@ jobs:
       - name: WSL test
         run: |
           ClangVer=$(clang --version | grep version | awk '{ print $3 }')
-          if [ $ClangVer == 19.1.7 ]; then
+          if [ $ClangVer != 19.1.7 ]; then
             echo "time to get a new version, current version is $ClangVer"
           else
             echo "up-to-date"
