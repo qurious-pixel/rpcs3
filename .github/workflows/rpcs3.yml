@@ -25,6 +25,6 @@ jobs:
           curl -LO https://github.com/RPCS3/llvm-mirror/releases/download/custom-build-win-19.1.7/llvmlibs_mt.7z
           7z x llvmlibs_mt.7z
           LLVM-19.1.7-win64.exe /S
-          mv llvm_build/* C:\Program Files\LLVM\
+          mv llvm_build/* "C:\Program Files\LLVM\"
           clang --version
         shell: cmd
