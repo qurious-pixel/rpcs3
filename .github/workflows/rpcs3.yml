@@ -25,4 +25,4 @@ jobs:
           curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-win64.exe
           LLVM-19.1.7-win64.exe /S
           clang --version
-        shell: cmd
+        shell: pwsh
