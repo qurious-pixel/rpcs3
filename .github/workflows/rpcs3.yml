@@ -56,10 +56,11 @@ jobs:
 
       - name: ccache
         run: |
-          git clone https://git.samba.org/ccache
+          git clone https://github.com/ccache/ccache.git
           cd ccache
-          ./autogen.sh
-          ./configure
+          mkdir build
+          cd build
+          cmake -D CMAKE_BUILD_TYPE=Release ..
           make
           sudo make install
           ccache --version
