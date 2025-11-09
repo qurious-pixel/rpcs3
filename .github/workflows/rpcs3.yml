@@ -56,7 +56,7 @@ jobs:
 
       - name: ccache
         run: |
-          git clone git://git.samba.org/ccache
+          git clone https://git.samba.org/ccache
           cd ccache
           ./autogen.sh
           ./configure
