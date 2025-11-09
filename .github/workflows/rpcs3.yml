@@ -54,16 +54,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: ccache
-        run: |
-          git clone https://github.com/ccache/ccache.git
-          cd ccache
-          mkdir build
-          cd build
-          cmake -D CMAKE_BUILD_TYPE=Release ..
-          make
-          sudo make install
-          ccache --version
+      #- name: ccache
+      #  run: |
+      #    git clone https://github.com/ccache/ccache.git
+      #    cd ccache
+      #    mkdir build
+      #    cd build
+      #    cmake -D CMAKE_BUILD_TYPE=Release ..
+      #    make
+      #    sudo make install
+      #    ccache --version
     
       - name: Restore Build Ccache
         uses: actions/cache/restore@main
