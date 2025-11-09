@@ -55,7 +55,14 @@ jobs:
           fetch-depth: 0
 
       - name: ccache
-        run: sudo port install ccache
+        run: |
+          git clone git://git.samba.org/ccache
+          cd ccache
+          ./autogen.sh
+          ./configure
+          make
+          sudo make install
+          ccache --version
     
       - name: Restore Build Ccache
         uses: actions/cache/restore@main
