@@ -17,7 +17,7 @@ concurrency:
 jobs:
   Win32_Build:
     name: Windows LLVM Build
-    runs-on: windows-2025
+    runs-on: ubuntu-latest
     steps:
       - name: WSL test
         run: |
