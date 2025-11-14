@@ -23,8 +23,6 @@ jobs:
         run: |
           echo "date= $(date +%s)" >> $GITHUB_ENV
           echo ${{ env.date }}
-        shell: cmd
       - name: env test
         run: |
           echo ${{ env.date }}
-        shell: cmd
