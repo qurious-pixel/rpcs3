@@ -18,14 +18,10 @@ jobs:
   Win32_Build:
     name: Windows LLVM Build
     runs-on: windows-2025
+    env: 
+      DATE: $(date +%s)
     steps:
       - name: WSL test
         run: |
-          curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-win64.exe
-          curl -LO https://github.com/RPCS3/llvm-mirror/releases/download/custom-build-win-19.1.7/llvmlibs_mt.7z
-          7z x llvmlibs_mt.7z
-          LLVM-19.1.7-win64.exe /S
-          dir "C:\Program Files\LLVM\"
-          cp -rf llvm_build/* "C:/Program Files/LLVM/"
-          clang --version
+          echo ${{ env.DATE }}
         shell: cmd
