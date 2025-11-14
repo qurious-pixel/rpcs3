@@ -70,8 +70,8 @@ jobs:
         id: restore-build-ccache
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-ccache-${{ matrix.name }}-${{github.run_id}}
-          restore-keys: ${{ runner.os }}-ccache-${{ matrix.name }}-
+          key: ${{ runner.os }}-ccache-${{ matrix.name }}-new-${{github.run_id}}
+          restore-keys: ${{ runner.os }}-ccache-${{ matrix.name }}-new-
 
       - name: Restore Qt Cache
         uses: actions/cache/restore@main
