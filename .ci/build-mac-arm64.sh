@@ -28,6 +28,10 @@ export CMAKE_EXTRA_OPTS='-DLLVM_TARGETS_TO_BUILD=arm64'
 export WORKDIR;
 WORKDIR="$(pwd)"
 
+if [ ! -d "$CCACHE_DIR" ]; then
+  mkdir -p "$CCACHE_DIR"
+fi
+
 # Get Qt
 if [ ! -d "/tmp/Qt/$QT_VER" ]; then
   mkdir -p "/tmp/Qt"
