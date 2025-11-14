@@ -18,10 +18,13 @@ jobs:
   Win32_Build:
     name: Windows LLVM Build
     runs-on: windows-2025
-    env: 
-      DATE: $(date +%s)
     steps:
       - name: WSL test
         run: |
-          echo ${{ env.DATE }}
+          echo "date= $(date +%s)" >> $GITHUB_ENV
+          echo ${{ env.date }}
+        shell: cmd
+      - name: env test
+        run: |
+          echo ${{ env.date }}
         shell: cmd
