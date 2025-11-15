@@ -175,7 +175,7 @@ jobs:
           echo "CCACHE_DIR=$CCACHE_DIR"
           .ci/build-windows-clang-arm.sh
           .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
-          .ci/deploy-windows-${{ matrix.compiler }}.sh
+          .ci/deploy-windows-${{ matrix.compiler }}-arm.sh
           
       - name: install DIA SDK
         if: ${{ matrix.compiler == 'clang-cl' }}      
