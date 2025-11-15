@@ -30,12 +30,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          #- msys2: clang64
-          #  compiler: clang
+          - msys2: clangarm64
+            compiler: clang
+            arch: winarm64
+          #- compiler: clang-cl
+          #  llvmver: 20.1.8
           #  arch: win64
-          - compiler: clang-cl
-            llvmver: 20.1.8
-            arch: win64
 
     env:
       CCACHE_DIR: 'C:\ccache'
@@ -56,23 +56,23 @@ jobs:
           update: true
           cache: true
           install: |
-            mingw-w64-clang-x86_64-clang
-            mingw-w64-clang-x86_64-ccache
-            mingw-w64-clang-x86_64-cmake
-            mingw-w64-clang-x86_64-lld
-            mingw-w64-clang-x86_64-ninja
-            mingw-w64-clang-x86_64-llvm
-            mingw-w64-clang-x86_64-ffmpeg
-            mingw-w64-clang-x86_64-opencv
-            mingw-w64-clang-x86_64-glew
-            mingw-w64-clang-x86_64-vulkan
-            mingw-w64-clang-x86_64-vulkan-headers
-            mingw-w64-clang-x86_64-vulkan-loader
-            mingw-w64-clang-x86_64-gtest
-            mingw-w64-clang-x86_64-qt6-base
-            mingw-w64-clang-x86_64-qt6-declarative
-            mingw-w64-clang-x86_64-qt6-multimedia
-            mingw-w64-clang-x86_64-qt6-svg
+            mingw-w64-clang-aarch64-clang
+            mingw-w64-clang-aarch64-ccache
+            mingw-w64-clang-aarch64-cmake
+            mingw-w64-clang-aarch64-lld
+            mingw-w64-clang-aarch64-ninja
+            mingw-w64-clang-aarch64-llvm
+            mingw-w64-clang-aarch64-ffmpeg
+            mingw-w64-clang-aarch64-opencv
+            mingw-w64-clang-aarch64-glew
+            mingw-w64-clang-aarch64-vulkan
+            mingw-w64-clang-aarch64-vulkan-headers
+            mingw-w64-clang-aarch64-vulkan-loader
+            mingw-w64-clang-aarch64-gtest
+            mingw-w64-clang-aarch64-qt6-base
+            mingw-w64-clang-aarch64-qt6-declarative
+            mingw-w64-clang-aarch64-qt6-multimedia
+            mingw-w64-clang-aarch64-qt6-svg
             base-devel
             curl
             git
