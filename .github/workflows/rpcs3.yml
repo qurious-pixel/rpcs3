@@ -24,5 +24,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - run: |
-          echo "RUNNER_OS: $env:RUNNER_OS"
-          echo "RUNNER_ARCH: $env:RUNNER_ARCH"
+          echo "RUNNER_OS: ${{ env:RUNNER_OS }}"
+          echo "RUNNER_ARCH: ${{ env:RUNNER_ARCH }}"
+          echo "Architecture: ${{ env.PROCESSOR_ARCHITECTURE }}"
