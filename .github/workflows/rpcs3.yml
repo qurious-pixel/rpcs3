@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - windows-2022-arm
+          - windows-11-arm
           - windows-2022
     runs-on: ${{ matrix.os }}
     steps:
