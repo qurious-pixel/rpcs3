@@ -15,14 +15,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  Win32_Build:
-    name: Windows LLVM Build
-    runs-on: ubuntu-latest
+  windows_jobs:
+    strategy:
+      matrix:
+        os:
+          - windows-2019
+          - windows-2022
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: WSL test
-        run: |
-          echo "date= $(date +%s)" >> $GITHUB_ENV
-          echo ${{ env.date }}
-      - name: env test
-        run: |
-          echo ${{ env.date }}
+      - run: |
+          echo "RUNNER_OS: $env::RUNNER_OS"
+          echo "RUNNER_ARCH: $env::RUNNER_ARCH"
