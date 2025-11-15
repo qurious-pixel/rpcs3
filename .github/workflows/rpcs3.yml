@@ -19,10 +19,10 @@ jobs:
     strategy:
       matrix:
         os:
-          - windows-2019
+          - windows-2022-arm
           - windows-2022
     runs-on: ${{ matrix.os }}
     steps:
       - run: |
-          echo "RUNNER_OS: $env::RUNNER_OS"
-          echo "RUNNER_ARCH: $env::RUNNER_ARCH"
+          echo "RUNNER_OS: $env:RUNNER_OS"
+          echo "RUNNER_ARCH: $env:RUNNER_ARCH"
