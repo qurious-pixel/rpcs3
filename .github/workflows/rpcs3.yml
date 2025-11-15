@@ -25,4 +25,4 @@ jobs:
     steps:
       - run: |
           Get-CimInstance Win32_Processor | Select-Object Name, ProcessorId, NumberOfCores, NumberOfLogicalProcessors, MaxClockSpeed
-          Get-WmiObject Win32_Processor | Select-Object -Property Name, AddressWidth, Manufacturer, ProcessorId, DataWidth
+          Get-WmiObject Win32_Processor | Format-List *
