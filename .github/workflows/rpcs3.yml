@@ -1,8 +1,8 @@
 name: Build RPCS3
 
-defaults:
-  run:
-    shell: bash
+#defaults:
+#  run:
+#    shell: bash
 on:
   push:
     #branches:
