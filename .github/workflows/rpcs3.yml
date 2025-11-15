@@ -173,7 +173,7 @@ jobs:
         run: |
           export CCACHE_DIR=$(cygpath -u "$CCACHE_DIR")
           echo "CCACHE_DIR=$CCACHE_DIR"
-          .ci/build-windows-clang.sh
+          .ci/build-windows-clang-arm.sh
           .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
           .ci/deploy-windows-${{ matrix.compiler }}.sh
           
