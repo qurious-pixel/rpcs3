@@ -25,3 +25,5 @@ jobs:
     steps:
       - run: |
           echo "Architecture: $env:PROCESSOR_ARCHITECTURE"
+          echo "RUNNER_OS: $env:RUNNER_OS"
+          echo "RUNNER_ARCH: $env:RUNNER_ARCH"
