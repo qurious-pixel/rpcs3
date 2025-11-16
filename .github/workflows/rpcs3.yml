@@ -437,7 +437,6 @@ jobs:
           .\vcpkg\bootstrap-vcpkg.bat
 
       - name: 'Setup NuGet Credentials for vcpkg'
-        shell: 'bash'
         run: |
           `./vcpkg/vcpkg fetch nuget | tail -n 1` \
           sources add \
@@ -496,7 +495,6 @@ jobs:
           "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
 
       - name: Build RPCS3
-        shell: bash
         run: |
           .ci/build-windows-clang-cl.sh
           .ci/setup-windows-ci-vars.sh ${{ matrix.arch }} ${{ matrix.compiler }}
