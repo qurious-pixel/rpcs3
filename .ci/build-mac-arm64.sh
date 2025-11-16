@@ -1,4 +1,3 @@
-
 #!/bin/sh -ex
 
 # shellcheck disable=SC2086
