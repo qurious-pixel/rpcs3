@@ -326,7 +326,7 @@ jobs:
           key: ${{ steps.restore-dependencies-cache.outputs.cache-primary-key }}
 
 
-  Windows_Build_Clang (MSYS2):
+  Windows_Build_MSYS2:
     # Only run push event on master branch of main repo, but run all PRs
     if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
     name: RPCS3 Windows Clang
@@ -405,7 +405,7 @@ jobs:
           compression-level: 0
           if-no-files-found: error
 
-  Windows_Build_Clang (CLANG-CL):
+  Windows_Build_CLANG-CL:
     # Only run push event on master branch of main repo, but run all PRs
     if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
     runs-on: windows-2025
