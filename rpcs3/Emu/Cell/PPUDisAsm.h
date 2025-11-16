@@ -26,6 +26,7 @@ private:
 		case 0x3: return "so";
 		default: fmt::throw_exception("Unreachable");
 		}
+		return nullptr;
 	}
 
 private:
