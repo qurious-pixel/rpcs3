@@ -554,7 +554,6 @@ public:
 		default:
 			fmt::throw_exception("Unexpected slice value (%d)", slice);
 		}
-		return nullptr;
 	}
 
 	//Single-precision exception flags (all 4 slices)
