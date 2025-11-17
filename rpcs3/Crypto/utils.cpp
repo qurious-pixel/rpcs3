@@ -172,6 +172,7 @@ std::array<u8, PASSPHRASE_KEY_LEN> vtrm_get_laid_paid_from_type(int type)
 	case 3: return sc_combine_laid_paid(LAID_2, PAID_69);
 	default:
 		fmt::throw_exception("vtrm_get_laid_paid_from_type: Wrong type specified (type=%d)", type);
+		return {};
 	}
 }
 
@@ -218,3 +219,4 @@ int vtrm_decrypt_with_portability(int type, u8* iv, u8* input, u8* output)
 {
 	return sc_decrypt(vtrm_portability_type_mapper(type), vtrm_portability_laid_paid(), iv, input, output);
 }
+
