@@ -553,6 +553,7 @@ public:
 
 		default:
 			fmt::throw_exception("Unexpected slice value (%d)", slice);
+			return 0;
 		}
 	}
 
