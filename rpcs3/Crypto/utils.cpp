@@ -212,6 +212,7 @@ const u8* vtrm_portability_type_mapper(int type)
 	case 3: return SC_KEY_FOR_MASTER_2;
 	default:
 		fmt::throw_exception("vtrm_portability_type_mapper: Wrong type specified (type=%d)", type);
+		return nullptr;
 	}
 }
 
@@ -219,4 +220,5 @@ int vtrm_decrypt_with_portability(int type, u8* iv, u8* input, u8* output)
 {
 	return sc_decrypt(vtrm_portability_type_mapper(type), vtrm_portability_laid_paid(), iv, input, output);
 }
+
 
