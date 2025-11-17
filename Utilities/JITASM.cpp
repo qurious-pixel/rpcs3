@@ -611,6 +611,7 @@ asmjit::x86::Mem asmjit::simd_builder::ptr_scale_for_vec(u32 esize, const x86::G
 	case 4: return x86::ptr(base, index, 2, 0);
 	case 8: return x86::ptr(base, index, 3, 0);
 	default: fmt::throw_exception("Bad esize");
+	return {};
 	}
 }
 
