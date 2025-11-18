@@ -159,7 +159,7 @@ bool CubebBackend::Open(std::string_view dev_id, AudioFreq freq, AudioSampleSize
 		}
 
 		fmt::throw_exception("Invalid audio layout %d", static_cast<u32>(m_layout));
-		return CUBEB_LAYOUT_INVALID;
+		return CUBEB_LAYOUT_UNDEFINED;
 	}();
 	stream_param.prefs = m_dev_collection_cb_enabled && device.handle ? CUBEB_STREAM_PREF_DISABLE_DEVICE_SWITCHING : CUBEB_STREAM_PREF_NONE;
 
