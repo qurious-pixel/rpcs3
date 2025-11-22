@@ -60,7 +60,7 @@ jobs:
 
       - name: New llvm prebuild
         shell: pwsh
-        run: Get-Content file.txt | ForEach-Object { $_ -replace 'github.com/RPCS3', 'github.com/qurious-pixel' } | Set-Content .ci/setup-windows.sh
+        run: Get-Content .ci/setup-windows.sh | ForEach-Object { $_ -replace 'github.com/RPCS3', 'github.com/qurious-pixel' } | Set-Content .ci/setup-windows.sh
 
       - name: Setup env
         shell: pwsh
