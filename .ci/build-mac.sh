@@ -6,6 +6,7 @@ export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1
 export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_NO_INSTALL_CLEANUP=1
 
+sudo xcode-select --switch /Library/Developer/CommandLineTools
 brew install -f --overwrite --quiet ccache pipenv "llvm@$LLVM_COMPILER_VER"
 brew link -f --overwrite --quiet "llvm@$LLVM_COMPILER_VER"
 # shellcheck disable=SC3009
