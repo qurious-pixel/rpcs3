@@ -79,7 +79,11 @@ jobs:
         run: |
           cat > llvm21.sh << EOF
           #!/bin/bash
-          set -x         
+          set -x
+          pwd
+          ls -al
+          ls -al /rpcs3
+          ls -al /rpcs3/.ci
           curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.6/llvm-project-21.1.6.src.tar.xz && \
           tar -xf llvm-*.tar.xz && \
           cd llvm-*/llvm && \
