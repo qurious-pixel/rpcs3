@@ -80,35 +80,45 @@ jobs:
           cat > llvm21.sh << EOF
           #!/bin/bash
           set -x
-          pwd
-          ls -al
-          ls -al /rpcs3
-          ls -al /rpcs3/.ci
-          mkdir -p llvm-21/llvm && \
+          curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.6/llvm-project-21.1.6.src.tar.xz && \
+          tar -xf llvm-*.tar.xz && \
           cd llvm-*/llvm && \
           mkdir build && cd build && \
+          CXXFLAGS="-msse -msse2" cmake .. -G Ninja -DCMAKE_C_COMPILER=clang-21 -DCMAKE_CXX_COMPILER=clang++-21 -DCMAKE_INSTALL_PREFIX=/opt/llvm  \
+          -DLLVM_ENABLE_CXX1Y=ON -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_INTEL_JITEVENTS=ON -DLLVM_USE_PERF=ON \
+          -DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=OFF \
+          -DLLVM_INCLUDE_UTILS=OFF -DLLVM_INCLUDE_BENCHMARKS=OFF -DWITH_POLLY=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF && \
+          ninja && \
+          ninja install && \
           cd ../../.. && \
-          pwd
+          rm ./*.tar.xz && \
+          rm -r llvm-*
           
           EOF
           chmod +x llvm21.sh
+          
       - name: llvm aarch64 build
         run: |
           cat > llvm21-aarch64.sh << EOF
           #!/bin/bash
           set -x
-          pwd
-          ls -al
-          ls -al /rpcs3
-          ls -al /rpcs3/.ci
-          mkdir -p llvm-21/llvm && \
+          curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.6/llvm-project-21.1.6.src.tar.xz && \
+          tar -xf llvm-*.tar.xz && \
           cd llvm-*/llvm && \
           mkdir build && cd build && \
+          cmake .. -G Ninja -DCMAKE_C_COMPILER=clang-21 -DCMAKE_CXX_COMPILER=clang++-21 -DCMAKE_INSTALL_PREFIX=/opt/llvm  \
+          -DLLVM_ENABLE_CXX1Y=ON -DLLVM_TARGETS_TO_BUILD="AArch64" -DCMAKE_BUILD_TYPE=MinSizeRel -DLLVM_USE_PERF=ON \
+          -DLLVM_BUILD_RUNTIME=OFF -DLLVM_BUILD_TOOLS=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=OFF \
+          -DLLVM_INCLUDE_UTILS=OFF -DLLVM_INCLUDE_BENCHMARKS=OFF -DWITH_POLLY=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF && \
+          ninja && \
+          ninja install && \
           cd ../../.. && \
-          pwd
+          rm ./*.tar.xz && \
+          rm -r llvm-*
           
           EOF
           chmod +x llvm21-aarch64.sh
+          
           
       - name: Restore build Ccache
         uses: actions/cache/restore@main
