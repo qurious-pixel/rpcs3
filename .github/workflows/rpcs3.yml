@@ -96,8 +96,8 @@ jobs:
           ninja install && \
           cd ../../.. && \
           rm ./*.tar.xz && \
-          rm -r llvm-* \
-          cd /rpcs3/.ci/ \
+          rm -r llvm-* && \
+          cd /rpcs3/.ci/ && \
           ./build-linux.sh
           
           EOF
@@ -123,8 +123,8 @@ jobs:
           ninja install && \
           cd ../../.. && \
           rm ./*.tar.xz && \
-          rm -r llvm-* \
-          cd /rpcs3/.ci/ \
+          rm -r llvm-* && \
+          cd /rpcs3/.ci/ && \
           ./build-linux-aarch64.sh
           
           EOF
