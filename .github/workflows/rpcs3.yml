@@ -89,10 +89,6 @@ jobs:
           mkdir build && cd build && \
           cd ../../.. && \
           pwd
-          ls -al /rpcs3
-          ls -al /rpcs3/.ci
-          cd /rpcs3/.ci/ && \
-          ./build-linux.sh
           
           EOF
           chmod +x llvm21.sh
@@ -110,10 +106,6 @@ jobs:
           mkdir build && cd build && \
           cd ../../.. && \
           pwd
-          ls -al /rpcs3
-          ls -al /rpcs3/.ci
-          cd /rpcs3/.ci/ && \
-          ./build-linux-aarch64.sh
           
           EOF
           chmod +x llvm21-aarch64.sh
@@ -135,7 +127,7 @@ jobs:
             -v ${{ env.CCACHE_DIR }}:/root/.ccache  \
             -v ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}:${{ env.ARTDIR }} \
             ${{ matrix.docker_img }} \
-            ${{ matrix.build_sh }}
+            sh -c "/rpcs3/llvm21.sh && ${{ matrix.build_sh }}"
 
       - name: Save build Ccache
         uses: actions/cache/save@main
