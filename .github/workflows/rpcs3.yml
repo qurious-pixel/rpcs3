@@ -78,7 +78,7 @@ jobs:
       - name: llvm build
         run: |
           cat > llvm21.sh << EOF
-          
+          #!/bin/bash
           LLVMVER=21
           CLANG_BINARY=clang-${LLVMVER}
           CLANGXX_BINARY=clang++-${LLVMVER}
