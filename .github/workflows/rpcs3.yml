@@ -65,6 +65,10 @@ jobs:
           $tmp = "$src.tmp"
           Get-Content -LiteralPath $src -Raw | ForEach-Object { $_ -replace 'github.com/RPCS3', 'github.com/qurious-pixel' } | Set-Content -LiteralPath $tmp
           Move-Item -Force -LiteralPath $tmp -Destination $src
+          $src = '.ci/get_keys-windows.sh'
+          $tmp = "$src.tmp"
+          Get-Content -LiteralPath $src -Raw | ForEach-Object { $_ -replace 'github.com/RPCS3', 'github.com/qurious-pixel' } | Set-Content -LiteralPath $tmp
+          Move-Item -Force -LiteralPath $tmp -Destination $src
 
       - name: Setup env
         shell: pwsh
