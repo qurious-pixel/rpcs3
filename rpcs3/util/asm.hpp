@@ -158,7 +158,11 @@ namespace utils
 		else
 			return std::countr_zero(arg.lo);
 #else
-		return std::countr_zero(arg);
+	    const u64 hi = static_cast<u64>(arg >> 64);
+	    if (hi != 0)
+	        return static_cast<u32>(std::countr_zero(hi));
+	    const u64 lo = static_cast<u64>(arg);
+	    return static_cast<u32>(std::countr_zero(lo) + 64u);
 #endif
 	}
 
@@ -170,7 +174,11 @@ namespace utils
 		else
 			return std::countl_zero(arg.lo) + 64;
 #else
-		return std::countl_zero(arg);
+	    const u64 hi = static_cast<u64>(arg >> 64);
+	    if (hi != 0)
+	        return static_cast<u32>(std::countl_zero(hi));
+	    const u64 lo = static_cast<u64>(arg);
+	    return static_cast<u32>(std::countl_zero(lo) + 64u);
 #endif
 	}
 
