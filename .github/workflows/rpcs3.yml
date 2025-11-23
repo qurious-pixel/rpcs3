@@ -9,9 +9,6 @@ on:
       - master # Only trigger push event on 'master' branch
   pull_request:
   workflow_dispatch:
-
-permissions:
-  packages: write
   
 concurrency:
   group: ${{ github.ref }}-${{ github.event_name }}
