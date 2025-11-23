@@ -4,6 +4,7 @@
 #include "util/tsc.hpp"
 #include "util/atomic.hpp"
 #include <functional>
+#include <bit>
 
 #ifdef ARCH_X64
 #if defined(_MSC_VER) && !defined(__clang__)
