@@ -4,7 +4,6 @@
 #include "util/tsc.hpp"
 #include "util/atomic.hpp"
 #include <functional>
-#include <bit>
 
 #ifdef ARCH_X64
 #if defined(_MSC_VER) && !defined(__clang__)
@@ -67,7 +66,7 @@ namespace utils
 
 	constexpr u32 popcnt128(const u128& v)
 	{
-#if defined(_MSC_VER) && !defined(__clang__)
+#if defined(_MSC_VER) // && !defined(__clang__)
 		return std::popcount(v.lo) + std::popcount(v.hi);
 #else
 		return std::popcount(v);
