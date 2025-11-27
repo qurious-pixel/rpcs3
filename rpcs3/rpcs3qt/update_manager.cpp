@@ -228,7 +228,7 @@ bool update_manager::handle_json(bool automatic, bool check_only, bool auto_acce
 
 	if (hash_found)
 	{
-		const QString old_version = v.isString() ? v.toString() : QStringLiteral("0.0.38-18359");
+		const QString old_version = QStringLiteral("0.0.38-18359");
 		m_old_version = old_version.toStdString();
 
 		if (diff_msec < 0)
