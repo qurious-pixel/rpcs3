@@ -122,7 +122,7 @@ bool update_manager::handle_json(bool automatic, bool check_only, bool auto_acce
 	const int return_code       = json_data["return_code"].toInt(-255);
 
 	bool hash_found = true;
-/*
+
 	if (return_code < 0)
 	{
 		std::string error_message;
@@ -150,7 +150,7 @@ bool update_manager::handle_json(bool automatic, bool check_only, bool auto_acce
 			return false;
 		}
 	}
-*/
+
 	const auto& current = json_data["current_build"];
 	const auto& latest = json_data["latest_build"];
 
@@ -228,7 +228,7 @@ bool update_manager::handle_json(bool automatic, bool check_only, bool auto_acce
 
 	if (hash_found)
 	{
-		const QString old_version = current["version"].toString();
+		const QString old_version = v.isString() ? v.toString() : QStringLiteral("0.0.38-18359");
 		m_old_version = old_version.toStdString();
 
 		if (diff_msec < 0)
