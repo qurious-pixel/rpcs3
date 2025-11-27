@@ -296,7 +296,9 @@ bool update_manager::handle_json(bool automatic, bool check_only, bool auto_acce
 
 					if (QJsonValue version = changelog_entry["version"]; version.isString())
 					{
-						entry.version = version.toString();
+    					const QString ver = version.toString();
+    					const QUrl url = QUrl(QStringLiteral("https://github.com/RPCS3/rpcs3/pull/%1").arg(ver));
+    					entry.version = QStringLiteral("<a href=\"%1\">%2</a>").arg(url.toString(), ver);
 					}
 					else
 					{
