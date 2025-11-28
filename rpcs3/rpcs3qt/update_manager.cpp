@@ -296,9 +296,11 @@ bool update_manager::handle_json(bool automatic, bool check_only, bool auto_acce
 
 					if (QJsonValue version = changelog_entry["version"]; version.isString())
 					{
-    					const QString ver = version.toString();
-    					const QUrl url = QUrl(QStringLiteral("https://github.com/RPCS3/rpcs3/pull/%1").arg(ver));
-    					entry.version = QUrl(QStringLiteral("<a href=\"%1\">%2</a>").arg(url, ver.toHtmlEscaped()));
+						entry.version = version.toString();
+						entry.versionUrl = QUrl::fromUserInput(QStringLiteral("https://github.com/RPCS3/rpcs3/pull/%1").arg(entry.version));
+						label->setText(QStringLiteral("<a href=\"%1\">%2</a>").arg(entry.versionUrl.toString(), entry.version.toHtmlEscaped()));
+						label->setTextInteractionFlags(Qt::TextBrowserInteraction);
+						label->setOpenExternalLinks(true);
 					}
 					else
 					{
