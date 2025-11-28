@@ -53,7 +53,7 @@ cmake ..                                               \
     -DLLVM_DIR=/opt/llvm/lib/cmake/llvm                \
     -DSTATIC_LINK_LLVM=ON                              \
     -DBUILD_RPCS3_TESTS=OFF                            \
-    -DRUN_RPCS3_TESTS=OFF                              \    
+    -DRUN_RPCS3_TESTS=OFF                              \
     -G Ninja
 
 ninja; build_status=$?;
