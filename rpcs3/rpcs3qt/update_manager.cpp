@@ -58,7 +58,7 @@ void update_manager::check_for_updates(bool automatic, bool check_only, bool aut
 
 	m_update_message.clear();
 	m_changelog.clear();
-
+/*
 	if (automatic)
 	{
 		// Don't check for updates on local builds
@@ -76,7 +76,7 @@ void update_manager::check_for_updates(bool automatic, bool check_only, bool aut
 		}
 #endif
 	}
-
+*/
 	m_parent     = parent;
 	m_downloader = new downloader(parent);
 
@@ -108,8 +108,8 @@ void update_manager::check_for_updates(bool automatic, bool check_only, bool aut
 
 	const utils::OS_version os = utils::get_OS_version();
 
-	const std::string url = fmt::format("https://update.rpcs3.net/?api=v3&c=%s&os_type=%s&os_arch=%s&os_version=%i.%i.%i",
-		rpcs3::get_commit_and_hash().second, os.type, os.arch, os.version_major, os.version_minor, os.version_patch);
+	const std::string url = fmt::format("https://update.rpcs3.net/?api=v3&c=c669a0be&os_type=%s&os_arch=%s&os_version=%i.%i.%i",
+		os.type, os.arch, os.version_major, os.version_minor, os.version_patch);
 
 	m_downloader->start(url, true, !automatic, tr("Checking For Updates"), true);
 }
