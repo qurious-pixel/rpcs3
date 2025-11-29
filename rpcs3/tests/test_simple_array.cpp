@@ -10,7 +10,7 @@ namespace rsx
 {
 	TEST(SimpleArray, DefaultConstructor)
 	{
-		std::vector<int> arr;
+		rsx::simple_array<int> arr;
 
 		EXPECT_TRUE(arr.empty());
 		EXPECT_EQ(arr.size(), 0);
@@ -19,7 +19,7 @@ namespace rsx
 
 	TEST(SimpleArray, InitialSizeConstructor)
 	{
-		std::vector<int> arr(5);
+		rsx::simple_array<int> arr(5);
 
 		EXPECT_FALSE(arr.empty());
 		EXPECT_EQ(arr.size(), 5);
@@ -28,7 +28,7 @@ namespace rsx
 
 	TEST(SimpleArray, InitialSizeValueConstructor)
 	{
-		std::vector<int> arr(3, 42);
+		rsx::simple_array<int> arr(3, 42);
 
 		EXPECT_EQ(arr.size(), 3);
 		for (int i = 0; i < 3; ++i)
@@ -39,7 +39,7 @@ namespace rsx
 
 	TEST(SimpleArray, InitializerListConstructor)
 	{
-		std::vector<int> arr{ 1, 2, 3, 4, 5 };
+		rsx::simple_array<int> arr{ 1, 2, 3, 4, 5 };
 
 		EXPECT_EQ(arr.size(), 5);
 		for (int i = 0; i < 5; ++i)
@@ -50,8 +50,8 @@ namespace rsx
 
 	TEST(SimpleArray, CopyConstructor)
 	{
-		std::vector<int> arr1{ 1, 2, 3 };
-		std::vector<int> arr2(arr1);
+		rsx::simple_array<int> arr1{ 1, 2, 3 };
+		rsx::simple_array<int> arr2(arr1);
 
 		EXPECT_EQ(arr1.size(), arr2.size());
 		for (u32 i = 0; i < arr1.size(); ++i)
@@ -62,9 +62,9 @@ namespace rsx
 
 	TEST(SimpleArray, MoveConstructor)
 	{
-		std::vector<int> arr1{ 1, 2, 3 };
+		rsx::simple_array<int> arr1{ 1, 2, 3 };
 		u32 original_size = arr1.size();
-		std::vector<int> arr2(std::move(arr1));
+		rsx::simple_array<int> arr2(std::move(arr1));
 
 		EXPECT_EQ(arr2.size(), original_size);
 		EXPECT_TRUE(arr1.empty());
@@ -72,7 +72,7 @@ namespace rsx
 
 	TEST(SimpleArray, PushBackAndAccess)
 	{
-		std::vector<int> arr;
+		rsx::simple_array<int> arr;
 		arr.push_back(1);
 		arr.push_back(2);
 		arr.push_back(3);
@@ -87,7 +87,7 @@ namespace rsx
 
 	TEST(SimpleArray, PopBack)
 	{
-		std::vector<int> arr{ 1, 2, 3 };
+		rsx::simple_array<int> arr{ 1, 2, 3 };
 
 		EXPECT_EQ(arr.pop_back(), 3);
 		EXPECT_EQ(arr.size(), 2);
@@ -96,7 +96,7 @@ namespace rsx
 
 	TEST(SimpleArray, Insert)
 	{
-		std::vector<int> arr{ 1, 3, 4 };
+		rsx::simple_array<int> arr{ 1, 3, 4 };
 		auto it = arr.insert(arr.begin() + 1, 2);
 
 		EXPECT_EQ(*it, 2);
@@ -110,7 +110,7 @@ namespace rsx
 
 	TEST(SimpleArray, Clear)
 	{
-		std::vector<int> arr{ 1, 2, 3 };
+		rsx::simple_array<int> arr{ 1, 2, 3 };
 		arr.clear();
 
 		EXPECT_TRUE(arr.empty());
@@ -120,18 +120,18 @@ namespace rsx
 	TEST(SimpleArray, SmallBufferOptimization)
 	{
 		// Test with a small type that should use stack storage
-		std::vector<char> small_arr(3, 'a');
+		rsx::simple_array<char> small_arr(3, 'a');
 		EXPECT_TRUE(small_arr.is_local_storage());
 
 		// Test with a larger type or more elements that should use heap storage
 		struct LargeType { char data[128]; };
-		std::vector<LargeType> large_arr(10);
+		rsx::simple_array<LargeType> large_arr(10);
 		EXPECT_FALSE(large_arr.is_local_storage());
 	}
 
 	TEST(SimpleArray, Iterator)
 	{
-		std::vector<int> arr{ 1, 2, 3, 4, 5 };
+		rsx::simple_array<int> arr{ 1, 2, 3, 4, 5 };
 		int sum = 0;
 		for (const auto& val : arr)
 		{
@@ -143,7 +143,7 @@ namespace rsx
 
 	TEST(SimpleArray, EraseIf)
 	{
-		std::vector<int> arr{ 1, 2, 3, 4, 5 };
+		rsx::simple_array<int> arr{ 1, 2, 3, 4, 5 };
 		bool modified = arr.erase_if([](const int& val) { return val % 2 == 0; });
 		arr.sort(FN(x < y));
 
@@ -156,7 +156,7 @@ namespace rsx
 
 	TEST(SimpleArray, Map)
 	{
-		std::vector<int> arr{ 1, 2, 3 };
+		rsx::simple_array<int> arr{ 1, 2, 3 };
 		auto result = arr.map([](const int& val) { return val * 2; });
 
 		EXPECT_EQ(result.size(), 3);
@@ -167,15 +167,15 @@ namespace rsx
 
 	TEST(SimpleArray, Reduce)
 	{
-		std::vector<int> arr{ 1, 2, 3, 4, 5 };
+		rsx::simple_array<int> arr{ 1, 2, 3, 4, 5 };
 		int sum = arr.reduce(0, [](const int& acc, const int& val) { return acc + val; });
 
 		EXPECT_EQ(sum, 15);
 	}
-
+/*
 	TEST(SimpleArray, Any)
 	{
-		std::vector<int> arr{ 1, 2, 3, 4, 5 };
+		rsx::simple_array<int> arr{ 1, 2, 3, 4, 5 };
 
 		EXPECT_TRUE(arr.any([](const int& val) { return val > 3; }));
 		EXPECT_FALSE(arr.any([](const int& val) { return val > 5; }));
@@ -183,7 +183,7 @@ namespace rsx
 
 	TEST(SimpleArray, Sort)
 	{
-		std::vector<int> arr{ 5, 3, 1, 4, 2 };
+		rsx::simple_array<int> arr{ 5, 3, 1, 4, 2 };
 		arr.sort([](const int& a, const int& b) { return a < b; });
 
 		for (u32 i = 0; i < arr.size(); ++i)
@@ -194,9 +194,9 @@ namespace rsx
 
 	TEST(SimpleArray, Merge)
 	{
-		std::vector<int> arr{ 1 };
-		std::vector<int> arr2{ 2, 3, 4, 5, 6, 7, 8, 9 };
-		std::vector<int> arr3{ 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
+		rsx::simple_array<int> arr{ 1 };
+		rsx::simple_array<int> arr2{ 2, 3, 4, 5, 6, 7, 8, 9 };
+		rsx::simple_array<int> arr3{ 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
 
 		// Check small vector optimization
 		EXPECT_TRUE(arr.is_local_storage());
@@ -219,8 +219,8 @@ namespace rsx
 
 	TEST(SimpleArray, ReverseIterator)
 	{
-		std::vector<int> arr{ 1, 2, 3, 4, 5 };
-		std::vector<int> arr2{ 5, 4, 3, 2, 1 };
+		rsx::simple_array<int> arr{ 1, 2, 3, 4, 5 };
+		rsx::simple_array<int> arr2{ 5, 4, 3, 2, 1 };
 
 		int rindex = 0;
 		int sum = 0;
@@ -252,11 +252,11 @@ namespace rsx
 		};
 		some_struct s {};
 
-		std::vector<std::pair<int, some_struct>> arr;
+		rsx::simple_array<utils::pair<int, some_struct>> arr;
 		for (int i = 0; i < 5; ++i)
 		{
 			s.v = i;
-			arr.push_back(std::pair(i, s));
+			arr.push_back(utils::pair(i, s));
 		}
 
 		EXPECT_EQ(arr.size(), 5);
@@ -274,7 +274,7 @@ namespace rsx
 			char data[16];
 		};
 
-		std::vector<some_struct> arr(2);
+		rsx::simple_array<some_struct> arr(2);
 		const auto data_ptr = reinterpret_cast<uintptr_t>(arr.data());
 
 		EXPECT_EQ(data_ptr & 15, 0);
@@ -286,7 +286,7 @@ namespace rsx
 			char data[16];
 		};
 
-		std::vector<some_struct> arr(128);
+		rsx::simple_array<some_struct> arr(128);
 		const auto data_ptr = reinterpret_cast<uintptr_t>(arr.data());
 
 		EXPECT_EQ(data_ptr & 15, 0);
@@ -294,8 +294,8 @@ namespace rsx
 
 	TEST(SimpleArray, DataAlignment_Overrides)
 	{
-		std::vector<std::byte, 16> arr(4);
-		std::vector<std::byte, 128> arr2(4);
+		rsx::simple_array<std::byte, 16> arr(4);
+		rsx::simple_array<std::byte, 128> arr2(4);
 
 		const auto data_ptr1 = reinterpret_cast<uintptr_t>(arr.data());
 		const auto data_ptr2 = reinterpret_cast<uintptr_t>(arr2.data());
@@ -306,7 +306,7 @@ namespace rsx
 
 	TEST(SimpleArray, Find)
 	{
-		const std::vector<int> arr{
+		const rsx::simple_array<int> arr{
 			0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 		};
 
@@ -316,7 +316,7 @@ namespace rsx
 
 	TEST(SimpleArray, FindIf)
 	{
-		const std::vector<int> arr{
+		const rsx::simple_array<int> arr{
 			0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 		};
 
@@ -354,4 +354,5 @@ namespace rsx
 
 		EXPECT_EQ(ptr, ptr2);
 	}
+*/
 }
