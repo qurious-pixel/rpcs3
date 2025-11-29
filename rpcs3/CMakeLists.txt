@@ -190,8 +190,9 @@ if(BUILD_RPCS3_TESTS)
             tests/test_fmt.cpp
             tests/test_address_range.cpp
             tests/test_rsx_cfg.cpp
+            tests/test_tuple.cpp
     )
-#            tests/test_tuple.cpp
+
 #            tests/test_pair.cpp
 #            tests/test_simple_array.cpp
 
