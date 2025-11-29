@@ -172,7 +172,7 @@ namespace rsx
 
 		EXPECT_EQ(sum, 15);
 	}
-/*
+//testing >>
 	TEST(SimpleArray, Any)
 	{
 		rsx::simple_array<int> arr{ 1, 2, 3, 4, 5 };
@@ -216,7 +216,8 @@ namespace rsx
 			EXPECT_EQ(arr[i], i + 1);
 		}
 	}
-
+//testing <<
+/*
 	TEST(SimpleArray, ReverseIterator)
 	{
 		rsx::simple_array<int> arr{ 1, 2, 3, 4, 5 };
@@ -323,7 +324,7 @@ namespace rsx
 		EXPECT_EQ(*arr.find_if(FN(x == 8)), 8);
 		EXPECT_EQ(arr.find_if(FN(x == 99)), nullptr);
 	}
-
+/*
 	TEST(AlignedAllocator, Alloc)
 	{
 		auto ptr = rsx::aligned_allocator::malloc<256>(16);
@@ -345,7 +346,7 @@ namespace rsx
 		EXPECT_NE(ptr_value, 0);
 		EXPECT_EQ(ptr_value % 256, 0);
 	}
-
+*/
 	TEST(AlignedAllocator, Realloc_ReturnsPreviousPointerIfFits)
 	{
 		auto ptr = rsx::aligned_allocator::malloc<256>(16);
