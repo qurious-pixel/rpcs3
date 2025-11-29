@@ -73,30 +73,6 @@ jobs:
       - name: Build
         run: ${{ matrix.build_sh }}
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@main
-        with:
-          name: RPCS3 for Mac (${{ matrix.name }})
-          path: ${{ env.BUILD_ARTIFACTSTAGINGDIRECTORY }}
-          compression-level: 0
-
-      - name: Export Variables
-        run: |
-          while IFS='=' read -r key val; do
-            # Skip lines that are empty or start with '#'
-            [[ -z "$key" || "$key" =~ ^# ]] && continue
-            echo "$key=$val" >> "${{ github.env }}"
-          done < .ci/ci-vars.env
-
-      - name: Deploy master build to GitHub Releases
-        if: |
-          github.event_name != 'pull_request' &&
-          github.repository == 'RPCS3/rpcs3' &&
-          github.ref == 'refs/heads/master'
-        env:
-          RPCS3_TOKEN: ${{ secrets.RPCS3_TOKEN }}
-        run: .ci/github-upload.sh
-
       - name: Save Build Ccache
         #if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
