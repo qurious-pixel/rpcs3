@@ -226,11 +226,19 @@ namespace rsx
 				return;
 			}
 
-			// Use memcpy to allow compiler optimizations
+/*			// Use memcpy to allow compiler optimizations
 			Ty _stack_alloc[_local_capacity];
 			std::memcpy(_stack_alloc, that._data, that.size_bytes());
 			std::memcpy(that._data, _data, size_bytes());
 			std::memcpy(_data, _stack_alloc, that.size_bytes());
+			std::swap(_size, that._size);
+*/
+			std::aligned_storage_t<sizeof(Ty), alignof(Ty)> tmp_storage[(std::max(this_bytes, that_bytes) + sizeof(Ty)-1)/sizeof(Ty)];
+			char* tmp = reinterpret_cast<char*>(tmp_storage);
+			
+			std::memcpy(tmp, that._data, that_bytes);
+			std::memcpy(that._data, _data, this_bytes);
+			std::memcpy(_data, tmp, that_bytes);
 			std::swap(_size, that._size);
 		}
 
