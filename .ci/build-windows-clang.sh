@@ -60,5 +60,5 @@ cd ..
 
 # If it compiled succesfully let's deploy.
 if [ "$build_status" -eq 0 ]; then
-    .ci/deploy-windows-clang.sh "${CPU_ARCH}"
+    .ci/deploy-windows-clang.sh "${CPU_ARCH}" "${MSYS2}"
 fi
