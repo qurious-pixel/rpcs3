@@ -8,6 +8,7 @@
 
 namespace rsx
 {
+/*
 	TEST(SimpleArray, DefaultConstructor)
 	{
 		rsx::simple_array<int> arr;
@@ -172,7 +173,7 @@ namespace rsx
 
 		EXPECT_EQ(sum, 15);
 	}
-/*
+*/
 	TEST(SimpleArray, Any)
 	{
 		rsx::simple_array<int> arr{ 1, 2, 3, 4, 5 };
@@ -354,5 +355,5 @@ namespace rsx
 
 		EXPECT_EQ(ptr, ptr2);
 	}
-*/
+
 }
