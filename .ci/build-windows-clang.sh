@@ -23,7 +23,7 @@ else
 fi
 
 cmake ..                                               \
-    -DCMAKE_PREFIX_PATH=/clang64                       \
+    -DCMAKE_PREFIX_PATH=/"${msys2}"                    \
     -DCMAKE_INSTALL_PREFIX=/usr                        \
     -DUSE_NATIVE_INSTRUCTIONS=OFF                      \
     -DUSE_PRECOMPILED_HEADERS=OFF                      \
@@ -44,8 +44,8 @@ cmake ..                                               \
     -DUSE_DISCORD_RPC=ON                               \
     -DOpenGL_GL_PREFERENCE=LEGACY                      \
     -DWITH_LLVM=ON                                     \
-    -DLLVM_DIR=/clang64/lib/cmake/llvm                 \
-    -DVulkan_LIBRARY=/clang64/lib/libvulkan-1.dll.a    \
+    -DLLVM_DIR=/"${msys2}"/lib/cmake/llvm              \
+    -DVulkan_LIBRARY=/"${msys2}"/lib/libvulkan-1.dll.a \
     -DSTATIC_LINK_LLVM=ON                              \
     -DBUILD_RPCS3_TESTS=OFF                            \
     -DRUN_RPCS3_TESTS=OFF                              \
@@ -57,5 +57,5 @@ cd ..
 
 # If it compiled succesfully let's deploy.
 if [ "$build_status" -eq 0 ]; then
-    .ci/deploy-windows-clang.sh "x86_64"
+    .ci/deploy-windows-clang.sh "${arch}"
 fi
