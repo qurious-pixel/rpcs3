@@ -121,7 +121,7 @@ export MACOSX_DEPLOYMENT_TARGET=14.0
 
 cd ..
 
-# If it compiled succesfully let's deploy.
-if [ "$build_status" -eq 0 ]; then
-    .ci/deploy-mac-arm64.sh
-fi
+## If it compiled succesfully let's deploy.
+#if [ "$build_status" -eq 0 ]; then
+#    .ci/deploy-mac-arm64.sh
+#fi
