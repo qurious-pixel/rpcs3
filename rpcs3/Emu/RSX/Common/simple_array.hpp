@@ -233,12 +233,14 @@ namespace rsx
 			std::memcpy(_data, _stack_alloc, that.size_bytes());
 			std::swap(_size, that._size);
 */
-			std::aligned_storage_t<sizeof(Ty), alignof(Ty)> tmp_storage[(std::max(this_bytes, that_bytes) + sizeof(Ty)-1)/sizeof(Ty)];
-			char* tmp = reinterpret_cast<char*>(tmp_storage);
+			const size_t this_bytes = size_bytes();
+			const size_t that_bytes = that.size_bytes();
+			size_t tmp_bytes = std::max(this_bytes, that_bytes);
+			Ty _stack_alloc_bytes[(tmp_bytes + sizeof(Ty) - 1) / sizeof(Ty)]; // allocate Ty-sized array
 			
-			std::memcpy(tmp, that._data, that_bytes);
-			std::memcpy(that._data, _data, this_bytes);
-			std::memcpy(_data, tmp, that_bytes);
+			std::memcpy(_stack_alloc_bytes, _data, this_bytes);
+			std::memcpy(that._data, _data, that_bytes);            // actually want this->data -> that->data? see note
+			std::memcpy(_data, _stack_alloc_bytes, this_bytes);
 			std::swap(_size, that._size);
 		}
 
