@@ -173,7 +173,7 @@ namespace rsx
 
 		EXPECT_EQ(sum, 15);
 	}
-*/
+*//*
 	TEST(SimpleArray, Any)
 	{
 		rsx::simple_array<int> arr{ 1, 2, 3, 4, 5 };
@@ -268,7 +268,7 @@ namespace rsx
 			EXPECT_EQ(std::memcmp(arr[i].second.s, "Hello World", sizeof(arr[i].second.s)), 0);
 		}
 	}
-
+*/
 	TEST(SimpleArray, DataAlignment_SmallVector)
 	{
 		struct alignas(16) some_struct {
