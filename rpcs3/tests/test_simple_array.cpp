@@ -252,11 +252,11 @@ namespace rsx
 		};
 		some_struct s {};
 
-		rsx::simple_array<utils::pair<int, some_struct>> arr;
+		rsx::simple_array<std::pair<int, some_struct>> arr;
 		for (int i = 0; i < 5; ++i)
 		{
 			s.v = i;
-			arr.push_back(utils::pair(i, s));
+			arr.push_back(std::pair(i, s));
 		}
 
 		EXPECT_EQ(arr.size(), 5);
