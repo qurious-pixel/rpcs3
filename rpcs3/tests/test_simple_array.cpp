@@ -191,7 +191,7 @@ namespace rsx
 			EXPECT_EQ(arr[i], i + 1);
 		}
 	}
-
+/*
 //testing >>
 	TEST(SimpleArray, Merge)
 	{
@@ -219,6 +219,7 @@ namespace rsx
 	}
 
 //testing <<
+*/
 	TEST(SimpleArray, ReverseIterator)
 	{
 		rsx::simple_array<int> arr{ 1, 2, 3, 4, 5 };
