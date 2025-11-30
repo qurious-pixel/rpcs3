@@ -172,7 +172,6 @@ namespace rsx
 
 		EXPECT_EQ(sum, 15);
 	}
-//testing >>
 
 	TEST(SimpleArray, Any)
 	{
@@ -192,8 +191,8 @@ namespace rsx
 			EXPECT_EQ(arr[i], i + 1);
 		}
 	}
-//testing <<
-/*
+
+//testing >>
 	TEST(SimpleArray, Merge)
 	{
 		rsx::simple_array<int> arr{ 1 };
@@ -219,7 +218,7 @@ namespace rsx
 		}
 	}
 
-*/
+//testing <<
 	TEST(SimpleArray, ReverseIterator)
 	{
 		rsx::simple_array<int> arr{ 1, 2, 3, 4, 5 };
