@@ -83,8 +83,8 @@ mkdir build && cd build || exit 1
 export MACOSX_DEPLOYMENT_TARGET=14.0
 
 "/opt/homebrew/bin/cmake" .. \
-    -DBUILD_RPCS3_TESTS=OFF \
-    -DRUN_RPCS3_TESTS=OFF \
+    -DBUILD_RPCS3_TESTS=ON \
+    -DRUN_RPCS3_TESTS=ON \
     -DUSE_SDL=ON \
     -DUSE_DISCORD_RPC=ON \
     -DUSE_VULKAN=ON \
@@ -124,6 +124,6 @@ export MACOSX_DEPLOYMENT_TARGET=14.0
 cd ..
 
 # If it compiled succesfully let's deploy.
-if [ "$build_status" -eq 0 ]; then
-    .ci/deploy-mac.sh
-fi
+#if [ "$build_status" -eq 0 ]; then
+#    .ci/deploy-mac.sh
+#fi
