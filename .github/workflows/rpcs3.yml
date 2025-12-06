@@ -22,32 +22,16 @@ env:
   BUILD_ARTIFACTSTAGINGDIRECTORY: ${{ github.workspace }}/artifacts/
 
 jobs:
-  Mac_Build:
-    # Only run push event on master branch of main repo, but run all PRs
-    #if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: Intel
-            build_sh: .ci/build-mac.sh
-            UPLOAD_COMMIT_HASH: 51ae32f468089a8169aaf1567de355ff4a3e0842
-            UPLOAD_REPO_FULL_NAME: rpcs3/rpcs3-binaries-mac
-          - name: Apple Silicon
-            build_sh: .ci/build-mac-arm64.sh
-            UPLOAD_COMMIT_HASH: 8e21bdbc40711a3fccd18fbf17b742348b0f4281
-            UPLOAD_REPO_FULL_NAME: rpcs3/rpcs3-binaries-mac-arm64
-    name: RPCS3 Mac ${{ matrix.name }} 
-    runs-on: macos-14
+  FreeBSD_Build:
+      # Only run push event on master branch of main repo, but run all PRs
+    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+    name: RPCS3 FreeBSD 
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
     env:
-      CCACHE_DIR: /tmp/ccache_dir
-      QT_VER: '6.7.3'
+      CCACHE_DIR: ${{ github.workspace }}/ccache
       QT_VER_MAIN: '6'
-      LLVM_COMPILER_VER: '21'
-      RELEASE_MESSAGE: ../GitHubReleaseMessage.txt
-      UPLOAD_COMMIT_HASH: ${{ matrix.UPLOAD_COMMIT_HASH }}
-      UPLOAD_REPO_FULL_NAME: ${{ matrix.UPLOAD_REPO_FULL_NAME }}
-      RUN_UNIT_TESTS: github.event_name == 'pull_request' && 'ON' || 'OFF'
+      LLVM_COMPILER_VER: '19'
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
@@ -59,30 +43,20 @@ jobs:
         id: restore-build-ccache
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-ccache-${{ matrix.name }}-${{github.run_id}}
-          restore-keys: ${{ runner.os }}-ccache-${{ matrix.name }}-
+          key: FreeBSD-ccache-${{github.run_id}}
+          restore-keys: FreeBSD-ccache-
 
-      - name: Restore Qt Cache
-        uses: actions/cache/restore@main
-        id: restore-qt-cache
+      - name: FreeBSD build
+        id: root
+        uses: vmactions/freebsd-vm@v1
         with:
-          path: /tmp/Qt
-          key: ${{ runner.os }}-qt-${{ matrix.name }}-${{ env.QT_VER }}
-          restore-keys: ${{ runner.os }}-qt-${{ matrix.name }}-${{ env.QT_VER }}
-
-      - name: Build
-        run: ${{ matrix.build_sh }}
+          envs: 'QT_VER_MAIN LLVM_COMPILER_VER CCACHE_DIR'
+          usesh: true
+          run: .ci/install-freebsd.sh && .ci/build-freebsd.sh
 
       - name: Save Build Ccache
-        #if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
-
-      - name: Save Qt Cache
-        #if: github.ref == 'refs/heads/master'
-        uses: actions/cache/save@main
-        with:
-          path: /tmp/Qt
-          key: ${{ steps.restore-qt-cache.outputs.cache-primary-key }}
