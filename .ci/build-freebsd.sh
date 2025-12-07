@@ -16,7 +16,7 @@ CONFIGURE_ARGS="
 	-DUSE_SYSTEM_LIBPNG=ON
  	-DUSE_SYSTEM_LIBUSB=ON
 	-DUSE_SYSTEM_OPENCV=ON
-	-DNORETURN="[[noreturn]] ~throw_exception();"
+	-DCMAKE_CXX_FLAGS="-Wno-return-type"
 "
 
 # base Clang workaround (missing clang-scan-deps)
