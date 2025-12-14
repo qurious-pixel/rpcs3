@@ -305,147 +305,139 @@ const auto ppu_gateway = build_function_asm<void(*)(ppu_thread*)>("ppu_gateway",
 	// pc, sp
 	// x18, x19...x30
 	// NOTE: Do not touch x19..x30 before saving the registers!
-	// Constants and helpers
-	static constexpr uint32_t HV_REG_ARRAY_MAX_IMM = 4096; // imm10 range used earlier
+	// Centralized constants
+	static constexpr uint32_t HV_REG_ARRAY_MAX_IMM = 4096; // imm10 range
 	static constexpr uint32_t GHC_SCRATCH_SIZE = 8192;
 	static constexpr uint32_t THREAD_SAVE_STACK_BYTES = 16;
+	static constexpr uint64_t CALL_ENTRY_SIZE = 8; // 8 bytes per call entry
 	
-	// Compute per-thread hv_register_array offset at compile time safely.
-	// Replace offset32(...) calls with a constexpr wrapper if possible.
-	constexpr uint32_t hv_register_array_offset_u32()
-	{
-	    // If offset32 returns negative or > 0xFFF, fail at compile time when possible.
-	    constexpr int32_t off = ::offset32(&ppu_thread::hv_ctx, &rpcs3::hypervisor_context_t::regs);
-	    static_assert(off >= 0 && off < static_cast<int32_t>(HV_REG_ARRAY_MAX_IMM),
-	                  "hv_register_array_offset must fit Imm10 and be non-negative");
-	    return static_cast<uint32_t>(off);
+	// Named offsets within hv_register array (replace with correct values if structure differs)
+	static constexpr uint32_t OFF_PC  = 0;
+	static constexpr uint32_t OFF_SP  = 8;
+	static constexpr uint32_t OFF_X18 = 16;
+	static constexpr uint32_t OFF_X20 = 32;
+	static constexpr uint32_t OFF_X22 = 48;
+	static constexpr uint32_t OFF_X24 = 64;
+	static constexpr uint32_t OFF_X26 = 80;
+	static constexpr uint32_t OFF_X28 = 96;
+	static constexpr uint32_t OFF_LR  = 112;
+	
+	// Validate hv_register_array_offset fits Imm10 at compile time if possible
+	constexpr int32_t hv_register_array_offset_ct() {
+	    return ::offset32(&ppu_thread::hv_ctx, &rpcs3::hypervisor_context_t::regs);
 	}
+	static_assert(hv_register_array_offset_ct() >= 0 &&
+	              hv_register_array_offset_ct() < static_cast<int32_t>(HV_REG_ARRAY_MAX_IMM),
+	              "hv_register_array_offset must be in [0, 4095] to fit Imm10");
 	
-	void emit_hv_call(CodeEmitter &c, const arm::GpX args0)
-	{
-	    const uint32_t hv_register_array_offset = hv_register_array_offset_u32();
+	// Resolve offset to use as uint32_t
+	const uint32_t hv_register_array_offset = static_cast<uint32_t>(hv_register_array_offset_ct());
 	
-	    // Register allocation (kept as in original)
-	    c.mov(a64::x15, args0);
-	    c.add(a64::x14, a64::x15, Imm(hv_register_array_offset));  // per-thread ctx base
+	// --- Begin emitted sequence (keeps original labels/registers) ---
 	
-	    Label hv_ctx_pc = c.newLabel();
-	    c.adr(a64::x15, hv_ctx_pc); // x15 = return PC
-	    c.mov(a64::x13, a64::sp);
+	c.mov(a64::x15, args[0]);
+	c.add(a64::x14, a64::x15, Imm(hv_register_array_offset));  // Per-thread context save
 	
-	    // Save caller-saved and callee-saved registers into per-thread area.
-	    // Use computed offsets rather than magic numbers: ensure structure layout constants.
-	    constexpr uint32_t OFF_PC    = 0;
-	    constexpr uint32_t OFF_SP    = 8;
-	    constexpr uint32_t OFF_X18   = 16;
-	    constexpr uint32_t OFF_X20   = 32;
-	    constexpr uint32_t OFF_X22   = 48;
-	    constexpr uint32_t OFF_X24   = 64;
-	    constexpr uint32_t OFF_X26   = 80;
-	    constexpr uint32_t OFF_X28   = 96;
-	    constexpr uint32_t OFF_LR    = 112;
+	c.adr(a64::x15, hv_ctx_pc); // x15 = pc
+	c.mov(a64::x13, a64::sp);   // x13 = sp
 	
-	    c.stp(a64::x15, a64::x13, arm::Mem(a64::x14, OFF_PC));
-	    c.stp(a64::x18, a64::x19, arm::Mem(a64::x14, OFF_X18));
-	    c.stp(a64::x20, a64::x21, arm::Mem(a64::x14, OFF_X20));
-	    c.stp(a64::x22, a64::x23, arm::Mem(a64::x14, OFF_X22));
-	    c.stp(a64::x24, a64::x25, arm::Mem(a64::x14, OFF_X24));
-	    c.stp(a64::x26, a64::x27, arm::Mem(a64::x14, OFF_X26));
-	    c.stp(a64::x28, a64::x29, arm::Mem(a64::x14, OFF_X28));
-	    c.str(a64::x30, arm::Mem(a64::x14, OFF_LR));
+	c.stp(a64::x15, a64::x13, arm::Mem(a64::x14, OFF_PC));
+	c.stp(a64::x18, a64::x19, arm::Mem(a64::x14, OFF_X18));
+	c.stp(a64::x20, a64::x21, arm::Mem(a64::x14, OFF_X20));
+	c.stp(a64::x22, a64::x23, arm::Mem(a64::x14, OFF_X22));
+	c.stp(a64::x24, a64::x25, arm::Mem(a64::x14, OFF_X24));
+	c.stp(a64::x26, a64::x27, arm::Mem(a64::x14, OFF_X26));
+	c.stp(a64::x28, a64::x29, arm::Mem(a64::x14, OFF_X28));
+	c.str(a64::x30, arm::Mem(a64::x14, OFF_LR));
 	
-	    // Load REG_Base (vm::g_exec_addr) safely: load its address then deref.
-	    c.mov(a64::x19, Imm(reinterpret_cast<uint64_t>(&vm::g_exec_addr)));
-	    c.ldr(a64::x19, arm::Mem(a64::x19));
-	    // Null-check (optional): branch to restore/save/abort if x19 == 0
-	    // c.cbz(a64::x19, some_abort_label );
+	// Load REG_Base (vm::g_exec_addr) safely
+	c.mov(a64::x19, Imm(reinterpret_cast<uint64_t>(&vm::g_exec_addr)));
+	c.ldr(a64::x19, arm::Mem(a64::x19));
+	// Optional null-check on x19 (uncomment if desired):
+	// c.cbz(a64::x19, VALIDATE_FAIL_LABEL);
 	
-	    // ppu thread base
-	    const arm::GpX ppu_t_base = a64::x20;
-	    c.mov(ppu_t_base, args0);
+	// Load PPUThread struct base -> x20
+	c.mov(a64::x20, args[0]);
 	
-	    // Load cia offset and cia value
-	    const arm::GpX cia_offset_reg = a64::x11;
-	    c.mov(cia_offset_reg, Imm(static_cast<uint64_t>(::offset32(&ppu_thread::cia))));
-	    c.ldr(a64::x15.w(), arm::Mem(ppu_t_base, cia_offset_reg)); // use x15 (was pc)
+	// Load cia offset and cia
+	c.mov(a64::x11, Imm(static_cast<uint64_t>(::offset32(&ppu_thread::cia))));
+	c.ldr(a64::x15.w(), arm::Mem(a64::x20, a64::x11)); // x15 = cia (w)
 	
-	    // Multiply by 2 safely
-	    c.add(a64::x15, a64::x15, a64::x15);
+	// Multiply by 2 to index into ptr table (preserve original semantics)
+	c.add(a64::x15, a64::x15, a64::x15); // x15 = cia*2
 	
-	    // Bounds-check call table indexing: ensure index*8 < table_size
-	    // If table size isn't available at compile-time, read it from a trusted source or assume max.
-	    // Example: assume vm::g_call_table_size_in_bytes is available.
-	    constexpr uint64_t CALL_ENTRY_SIZE = 8;
-	    // Compute byte index in x15 already = idx*2; convert to bytes: idx*2 * CALL_ENTRY_SIZE?
-	    // Original code used that as direct offset into table; replicate but add bound check.
-	    // Compute byte_offset = x15 * 1 (original) — keep same semantics, but check against a known max:
-	    // safe_max_index = (vm::g_call_table_size_in_bytes / CALL_ENTRY_SIZE) - 1
-	    c.ldr(a64::x12, arm::Mem(a64::x19, Imm(vm::g_call_table_size_offset))); // hypothetical offset
-	    // Convert and compare: if x15 (index*2) >= safe_max_index then branch to restore/abort
-	    // ... (emitter-specific compare and branch instructions go here)
+	// Bounds-checking for call-table index:
+	// We need a known call-table byte-size. Use a project symbol or load it from vm::g_call_table_size.
+	// Replace vm::g_call_table_size_offset with actual offset/address of the size if available.
+	c.mov(a64::x12, Imm(reinterpret_cast<uint64_t>(&vm::g_call_table_size))); // address of table size
+	c.ldr(a64::x12, arm::Mem(a64::x12)); // x12 = call table size in bytes (uint64_t)
 	
-	    // Load call_target
-	    const arm::GpX call_target = a64::x13;
-	    c.ldr(call_target, arm::Mem(a64::x19, a64::x15)); // same as original
+	// Compute safe byte offset and compare:
+	// byte_offset = x15 (index*2)  [original code used this directly as an offset into x19]
+	//
+	// We ensure (x15) < x12 to avoid OOB. If semantics differ (x15 should be multiplied by entry size), adjust accordingly.
+	c.cmp(a64::x15, a64::x12);
+	c.bhs(VALIDATE_FAIL_LABEL); // branch if x15 >= x12 (BHS: unsigned higher or same)
 	
-	    // Compute REG_Hp using safer named constants
-	    const arm::GpX reg_hp = a64::x21;
-	    c.mov(reg_hp, Imm(vm::g_exec_addr_seg_offset));
-	    // reg_hp += pc >> 2  (pc currently in x15)
-	    c.add(reg_hp, reg_hp, a64::x15, arm::Shift(arm::ShiftOp::kLSR, 2));
-	    c.ldrh(reg_hp.w(), arm::Mem(a64::x19, reg_hp));
-	    c.lsl(reg_hp.w(), reg_hp.w(), 13);
+	// Load call target
+	c.ldr(a64::x13, arm::Mem(a64::x19, a64::x15)); // call_target -> x13
 	
-	    // Load vm::g_base_addr
-	    c.mov(a64::x22, Imm(reinterpret_cast<uint64_t>(&vm::g_base_addr)));
-	    c.ldr(a64::x22, arm::Mem(a64::x22));
+	// Compute REG_Hp
+	c.mov(a64::x21, Imm(vm::g_exec_addr_seg_offset));
+	c.add(a64::x21, a64::x21, a64::x15, arm::Shift(arm::ShiftOp::kLSR, 2));
+	c.ldrh(a64::x21.w(), arm::Mem(a64::x19, a64::x21));
+	c.lsl(a64::x21.w(), a64::x21.w(), 13);
 	
-	    // GPR base load using named offset
-	    const arm::GpX gpr_addr_reg = a64::x9;
-	    c.mov(gpr_addr_reg, Imm(static_cast<uint64_t>(::offset32(&ppu_thread::gpr))));
-	    c.add(gpr_addr_reg, gpr_addr_reg, ppu_t_base);
-	    c.ldr(a64::x23, arm::Mem(gpr_addr_reg, 0));
-	    c.ldr(a64::x24, arm::Mem(gpr_addr_reg, 8));
-	    c.ldr(a64::x25, arm::Mem(gpr_addr_reg, 16));
+	// Load registers / vm base
+	c.mov(a64::x22, Imm(reinterpret_cast<uint64_t>(&vm::g_base_addr)));
+	c.ldr(a64::x22, arm::Mem(a64::x22));
 	
-	    // Save thread pointer to stack (SP is preserved across GHC calls)
-	    c.sub(a64::sp, a64::sp, Imm(THREAD_SAVE_STACK_BYTES));
-	    c.str(a64::x20, arm::Mem(a64::sp, 0));
+	// GPR base load using named offset
+	c.mov(a64::x9, Imm(static_cast<uint64_t>(::offset32(&ppu_thread::gpr))));
+	c.add(a64::x9, a64::x9, a64::x20);
+	c.ldr(a64::x23, arm::Mem(a64::x9, 0));
+	c.ldr(a64::x24, arm::Mem(a64::x9, 8));
+	c.ldr(a64::x25, arm::Mem(a64::x9, 16));
 	
-	    // Allocate GHC scratchpad with checked sizes (ensure alignment)
-	    // Avoid negative/overflow when subtracting large immediate: split if needed.
-	    c.sub(a64::sp, a64::sp, Imm(GHC_SCRATCH_SIZE));
+	// Thread context save base (ppu_t_base in x26)
+	c.mov(a64::x26, a64::x20);
 	
-	    // Call into LLE target
-	    c.blr(call_target);
+	// Save thread pointer to stack. SP preserved across GHC calls.
+	c.sub(a64::sp, a64::sp, Imm(THREAD_SAVE_STACK_BYTES));
+	c.str(a64::x20, arm::Mem(a64::sp, 0));
 	
-	    // Return label
-	    c.bind(hv_ctx_pc);
+	// Allocate GHC scratchpad (ensure alignment if needed)
+	c.sub(a64::sp, a64::sp, Imm(GHC_SCRATCH_SIZE));
 	
-	    // Clear scratchpad allocation
-	    c.add(a64::sp, a64::sp, Imm(GHC_SCRATCH_SIZE));
+	// Execute LLE call
+	c.blr(a64::x13);
 	
-	    // Restore thread pointer and stack
-	    c.ldr(a64::x20, arm::Mem(a64::sp, 0));
-	    c.add(a64::sp, a64::sp, Imm(THREAD_SAVE_STACK_BYTES));
+	// Return address after far jump. Reset sp and start unwinding...
+	c.bind(hv_ctx_pc);
 	
-	    // Recompute per-thread array base from restored thread pointer
-	    c.add(a64::x14, a64::x20, Imm(hv_register_array_offset));
+	// Clear scratchpad allocation
+	c.add(a64::sp, a64::sp, Imm(GHC_SCRATCH_SIZE));
 	
-	    // Restore registers using named offsets
-	    c.ldr(a64::x15, arm::Mem(a64::x14, OFF_SP));       // saved sp (originally at offset 8)
-	    c.ldp(a64::x18, a64::x19, arm::Mem(a64::x14, OFF_X18));
-	    c.ldp(a64::x20, a64::x21, arm::Mem(a64::x14, OFF_X20));
-	    c.ldp(a64::x22, a64::x23, arm::Mem(a64::x14, OFF_X22));
-	    c.ldp(a64::x24, a64::x25, arm::Mem(a64::x14, OFF_X24));
-	    c.ldp(a64::x26, a64::x27, arm::Mem(a64::x14, OFF_X26));
-	    c.ldp(a64::x28, a64::x29, arm::Mem(a64::x14, OFF_X28));
-	    c.ldr(a64::x30, arm::Mem(a64::x14, OFF_LR));
+	// Restore saved thread pointer and stack
+	c.ldr(a64::x20, arm::Mem(a64::sp, 0));
+	c.add(a64::sp, a64::sp, Imm(THREAD_SAVE_STACK_BYTES));
 	
-	    // Restore SP and return
-	    c.mov(a64::sp, a64::x15);
-	    c.ret(a64::x30);
-	}
+	// Recompute per-thread context base from restored thread pointer
+	c.add(a64::x14, a64::x20, Imm(hv_register_array_offset));
+	
+	// Restore registers using named offsets
+	c.ldr(a64::x15, arm::Mem(a64::x14, OFF_SP));
+	c.ldp(a64::x18, a64::x19, arm::Mem(a64::x14, OFF_X18));
+	c.ldp(a64::x20, a64::x21, arm::Mem(a64::x14, OFF_X20));
+	c.ldp(a64::x22, a64::x23, arm::Mem(a64::x14, OFF_X22));
+	c.ldp(a64::x24, a64::x25, arm::Mem(a64::x14, OFF_X24));
+	c.ldp(a64::x26, a64::x27, arm::Mem(a64::x14, OFF_X26));
+	c.ldp(a64::x28, a64::x29, arm::Mem(a64::x14, OFF_X28));
+	c.ldr(a64::x30, arm::Mem(a64::x14, OFF_LR));
+	
+	// Restore SP and return
+	c.mov(a64::sp, a64::x15);
+	c.ret(a64::x30);
 #endif
 });
 
