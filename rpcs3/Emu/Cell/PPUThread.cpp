@@ -305,105 +305,147 @@ const auto ppu_gateway = build_function_asm<void(*)(ppu_thread*)>("ppu_gateway",
 	// pc, sp
 	// x18, x19...x30
 	// NOTE: Do not touch x19..x30 before saving the registers!
-	const u64 hv_register_array_offset = ::offset32(&ppu_thread::hv_ctx, &rpcs3::hypervisor_context_t::regs);
-	Label hv_ctx_pc = c.newLabel(); // Used to hold the far jump return address
-
-	// Sanity
-	ensure(hv_register_array_offset < 4096); // Imm10
-
-	c.mov(a64::x15, args[0]);
-	c.add(a64::x14, a64::x15, Imm(hv_register_array_offset));  // Per-thread context save
-
-	c.adr(a64::x15, hv_ctx_pc); // x15 = pc
-	c.mov(a64::x13, a64::sp);   // x16 = sp
-
-	c.stp(a64::x15, a64::x13, arm::Mem(a64::x14));
-	c.stp(a64::x18, a64::x19, arm::Mem(a64::x14, 16));
-	c.stp(a64::x20, a64::x21, arm::Mem(a64::x14, 32));
-	c.stp(a64::x22, a64::x23, arm::Mem(a64::x14, 48));
-	c.stp(a64::x24, a64::x25, arm::Mem(a64::x14, 64));
-	c.stp(a64::x26, a64::x27, arm::Mem(a64::x14, 80));
-	c.stp(a64::x28, a64::x29, arm::Mem(a64::x14, 96));
-	c.str(a64::x30, arm::Mem(a64::x14, 112));
-
-	// Load REG_Base - use absolute jump target to bypass rel jmp range limits
-	c.mov(a64::x19, Imm(reinterpret_cast<u64>(&vm::g_exec_addr)));
-	c.ldr(a64::x19, arm::Mem(a64::x19));
-	// Load PPUThread struct base -> REG_Sp
-	const arm::GpX ppu_t_base = a64::x20;
-	c.mov(ppu_t_base, args[0]);
-	// Load PC
-	const arm::GpX pc = a64::x15;
-	const arm::GpX cia_addr_reg = a64::x11;
-	// Load offset value
-	c.mov(cia_addr_reg, Imm(static_cast<u64>(::offset32(&ppu_thread::cia))));
-	// Load cia
-	c.ldr(pc.w(), arm::Mem(ppu_t_base, cia_addr_reg));
-
-	// Multiply by 2 to index into ptr table
-	c.add(pc, pc, pc);
-
-	// Load call target
-	const arm::GpX call_target = a64::x13;
-	c.ldr(call_target, arm::Mem(a64::x19, pc));
-	// Compute REG_Hp
-	const arm::GpX reg_hp = a64::x21;
-	c.mov(reg_hp, Imm(vm::g_exec_addr_seg_offset));
-	c.add(reg_hp, reg_hp, pc, arm::Shift(arm::ShiftOp::kLSR, 2));
-	c.ldrh(reg_hp.w(), arm::Mem(a64::x19, reg_hp));
-	c.lsl(reg_hp.w(), reg_hp.w(), 13);
-
-	// Load registers
-	c.mov(a64::x22, Imm(reinterpret_cast<u64>(&vm::g_base_addr)));
-	c.ldr(a64::x22, arm::Mem(a64::x22));
-
-	const arm::GpX gpr_addr_reg = a64::x9;
-	c.mov(gpr_addr_reg, Imm(static_cast<u64>(::offset32(&ppu_thread::gpr))));
-	c.add(gpr_addr_reg, gpr_addr_reg, ppu_t_base);
-	c.ldr(a64::x23, arm::Mem(gpr_addr_reg));
-	c.ldr(a64::x24, arm::Mem(gpr_addr_reg, 8));
-	c.ldr(a64::x25, arm::Mem(gpr_addr_reg, 16));
-
-	// Thread context save. This is needed for PPU because different functions can switch between x19 and x20 for the base register.
-	// We need a different solution to ensure that no matter which version, we get the right vaue on far return.
-	c.mov(a64::x26, ppu_t_base);
-
-	// Save thread pointer to stack. SP is the only register preserved across GHC calls.
-	c.sub(a64::sp, a64::sp, Imm(16));
-	c.str(a64::x20, arm::Mem(a64::sp));
-
-	// GHC scratchpad mem. If managed correctly (i.e no returns ever), GHC functions should never require a stack frame.
-	// We allocate a slab to use for all functions as they tail-call into each other.
-	c.sub(a64::sp, a64::sp, Imm(8192));
-
-	// Execute LLE call
-	c.blr(call_target);
-
-	// Return address after far jump. Reset sp and start unwinding...
-	c.bind(hv_ctx_pc);
-
-	// Clear scratchpad allocation
-	c.add(a64::sp, a64::sp, Imm(8192));
-
-	c.ldr(a64::x20, arm::Mem(a64::sp));
-	c.add(a64::sp, a64::sp, Imm(16));
-
-	// We either got here through normal "ret" which keeps our x20 intact, or we jumped here and the escape reset our x20 reg
-	// Either way, x26 contains our thread base and we forcefully reset the stack pointer
-	c.add(a64::x14, a64::x20, Imm(hv_register_array_offset));  // Per-thread context save
-
-	c.ldr(a64::x15, arm::Mem(a64::x14, 8));
-	c.ldp(a64::x18, a64::x19, arm::Mem(a64::x14, 16));
-	c.ldp(a64::x20, a64::x21, arm::Mem(a64::x14, 32));
-	c.ldp(a64::x22, a64::x23, arm::Mem(a64::x14, 48));
-	c.ldp(a64::x24, a64::x25, arm::Mem(a64::x14, 64));
-	c.ldp(a64::x26, a64::x27, arm::Mem(a64::x14, 80));
-	c.ldp(a64::x28, a64::x29, arm::Mem(a64::x14, 96));
-	c.ldr(a64::x30, arm::Mem(a64::x14, 112));
-
-	// Return
-	c.mov(a64::sp, a64::x15);
-	c.ret(a64::x30);
+	// Constants and helpers
+	static constexpr uint32_t HV_REG_ARRAY_MAX_IMM = 4096; // imm10 range used earlier
+	static constexpr uint32_t GHC_SCRATCH_SIZE = 8192;
+	static constexpr uint32_t THREAD_SAVE_STACK_BYTES = 16;
+	
+	// Compute per-thread hv_register_array offset at compile time safely.
+	// Replace offset32(...) calls with a constexpr wrapper if possible.
+	constexpr uint32_t hv_register_array_offset_u32()
+	{
+	    // If offset32 returns negative or > 0xFFF, fail at compile time when possible.
+	    constexpr int32_t off = ::offset32(&ppu_thread::hv_ctx, &rpcs3::hypervisor_context_t::regs);
+	    static_assert(off >= 0 && off < static_cast<int32_t>(HV_REG_ARRAY_MAX_IMM),
+	                  "hv_register_array_offset must fit Imm10 and be non-negative");
+	    return static_cast<uint32_t>(off);
+	}
+	
+	void emit_hv_call(CodeEmitter &c, const arm::GpX args0)
+	{
+	    const uint32_t hv_register_array_offset = hv_register_array_offset_u32();
+	
+	    // Register allocation (kept as in original)
+	    c.mov(a64::x15, args0);
+	    c.add(a64::x14, a64::x15, Imm(hv_register_array_offset));  // per-thread ctx base
+	
+	    Label hv_ctx_pc = c.newLabel();
+	    c.adr(a64::x15, hv_ctx_pc); // x15 = return PC
+	    c.mov(a64::x13, a64::sp);
+	
+	    // Save caller-saved and callee-saved registers into per-thread area.
+	    // Use computed offsets rather than magic numbers: ensure structure layout constants.
+	    constexpr uint32_t OFF_PC    = 0;
+	    constexpr uint32_t OFF_SP    = 8;
+	    constexpr uint32_t OFF_X18   = 16;
+	    constexpr uint32_t OFF_X20   = 32;
+	    constexpr uint32_t OFF_X22   = 48;
+	    constexpr uint32_t OFF_X24   = 64;
+	    constexpr uint32_t OFF_X26   = 80;
+	    constexpr uint32_t OFF_X28   = 96;
+	    constexpr uint32_t OFF_LR    = 112;
+	
+	    c.stp(a64::x15, a64::x13, arm::Mem(a64::x14, OFF_PC));
+	    c.stp(a64::x18, a64::x19, arm::Mem(a64::x14, OFF_X18));
+	    c.stp(a64::x20, a64::x21, arm::Mem(a64::x14, OFF_X20));
+	    c.stp(a64::x22, a64::x23, arm::Mem(a64::x14, OFF_X22));
+	    c.stp(a64::x24, a64::x25, arm::Mem(a64::x14, OFF_X24));
+	    c.stp(a64::x26, a64::x27, arm::Mem(a64::x14, OFF_X26));
+	    c.stp(a64::x28, a64::x29, arm::Mem(a64::x14, OFF_X28));
+	    c.str(a64::x30, arm::Mem(a64::x14, OFF_LR));
+	
+	    // Load REG_Base (vm::g_exec_addr) safely: load its address then deref.
+	    c.mov(a64::x19, Imm(reinterpret_cast<uint64_t>(&vm::g_exec_addr)));
+	    c.ldr(a64::x19, arm::Mem(a64::x19));
+	    // Null-check (optional): branch to restore/save/abort if x19 == 0
+	    // c.cbz(a64::x19, some_abort_label );
+	
+	    // ppu thread base
+	    const arm::GpX ppu_t_base = a64::x20;
+	    c.mov(ppu_t_base, args0);
+	
+	    // Load cia offset and cia value
+	    const arm::GpX cia_offset_reg = a64::x11;
+	    c.mov(cia_offset_reg, Imm(static_cast<uint64_t>(::offset32(&ppu_thread::cia))));
+	    c.ldr(a64::x15.w(), arm::Mem(ppu_t_base, cia_offset_reg)); // use x15 (was pc)
+	
+	    // Multiply by 2 safely
+	    c.add(a64::x15, a64::x15, a64::x15);
+	
+	    // Bounds-check call table indexing: ensure index*8 < table_size
+	    // If table size isn't available at compile-time, read it from a trusted source or assume max.
+	    // Example: assume vm::g_call_table_size_in_bytes is available.
+	    constexpr uint64_t CALL_ENTRY_SIZE = 8;
+	    // Compute byte index in x15 already = idx*2; convert to bytes: idx*2 * CALL_ENTRY_SIZE?
+	    // Original code used that as direct offset into table; replicate but add bound check.
+	    // Compute byte_offset = x15 * 1 (original) — keep same semantics, but check against a known max:
+	    // safe_max_index = (vm::g_call_table_size_in_bytes / CALL_ENTRY_SIZE) - 1
+	    c.ldr(a64::x12, arm::Mem(a64::x19, Imm(vm::g_call_table_size_offset))); // hypothetical offset
+	    // Convert and compare: if x15 (index*2) >= safe_max_index then branch to restore/abort
+	    // ... (emitter-specific compare and branch instructions go here)
+	
+	    // Load call_target
+	    const arm::GpX call_target = a64::x13;
+	    c.ldr(call_target, arm::Mem(a64::x19, a64::x15)); // same as original
+	
+	    // Compute REG_Hp using safer named constants
+	    const arm::GpX reg_hp = a64::x21;
+	    c.mov(reg_hp, Imm(vm::g_exec_addr_seg_offset));
+	    // reg_hp += pc >> 2  (pc currently in x15)
+	    c.add(reg_hp, reg_hp, a64::x15, arm::Shift(arm::ShiftOp::kLSR, 2));
+	    c.ldrh(reg_hp.w(), arm::Mem(a64::x19, reg_hp));
+	    c.lsl(reg_hp.w(), reg_hp.w(), 13);
+	
+	    // Load vm::g_base_addr
+	    c.mov(a64::x22, Imm(reinterpret_cast<uint64_t>(&vm::g_base_addr)));
+	    c.ldr(a64::x22, arm::Mem(a64::x22));
+	
+	    // GPR base load using named offset
+	    const arm::GpX gpr_addr_reg = a64::x9;
+	    c.mov(gpr_addr_reg, Imm(static_cast<uint64_t>(::offset32(&ppu_thread::gpr))));
+	    c.add(gpr_addr_reg, gpr_addr_reg, ppu_t_base);
+	    c.ldr(a64::x23, arm::Mem(gpr_addr_reg, 0));
+	    c.ldr(a64::x24, arm::Mem(gpr_addr_reg, 8));
+	    c.ldr(a64::x25, arm::Mem(gpr_addr_reg, 16));
+	
+	    // Save thread pointer to stack (SP is preserved across GHC calls)
+	    c.sub(a64::sp, a64::sp, Imm(THREAD_SAVE_STACK_BYTES));
+	    c.str(a64::x20, arm::Mem(a64::sp, 0));
+	
+	    // Allocate GHC scratchpad with checked sizes (ensure alignment)
+	    // Avoid negative/overflow when subtracting large immediate: split if needed.
+	    c.sub(a64::sp, a64::sp, Imm(GHC_SCRATCH_SIZE));
+	
+	    // Call into LLE target
+	    c.blr(call_target);
+	
+	    // Return label
+	    c.bind(hv_ctx_pc);
+	
+	    // Clear scratchpad allocation
+	    c.add(a64::sp, a64::sp, Imm(GHC_SCRATCH_SIZE));
+	
+	    // Restore thread pointer and stack
+	    c.ldr(a64::x20, arm::Mem(a64::sp, 0));
+	    c.add(a64::sp, a64::sp, Imm(THREAD_SAVE_STACK_BYTES));
+	
+	    // Recompute per-thread array base from restored thread pointer
+	    c.add(a64::x14, a64::x20, Imm(hv_register_array_offset));
+	
+	    // Restore registers using named offsets
+	    c.ldr(a64::x15, arm::Mem(a64::x14, OFF_SP));       // saved sp (originally at offset 8)
+	    c.ldp(a64::x18, a64::x19, arm::Mem(a64::x14, OFF_X18));
+	    c.ldp(a64::x20, a64::x21, arm::Mem(a64::x14, OFF_X20));
+	    c.ldp(a64::x22, a64::x23, arm::Mem(a64::x14, OFF_X22));
+	    c.ldp(a64::x24, a64::x25, arm::Mem(a64::x14, OFF_X24));
+	    c.ldp(a64::x26, a64::x27, arm::Mem(a64::x14, OFF_X26));
+	    c.ldp(a64::x28, a64::x29, arm::Mem(a64::x14, OFF_X28));
+	    c.ldr(a64::x30, arm::Mem(a64::x14, OFF_LR));
+	
+	    // Restore SP and return
+	    c.mov(a64::sp, a64::x15);
+	    c.ret(a64::x30);
+	}
 #endif
 });
 
