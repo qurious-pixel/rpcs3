@@ -2,7 +2,7 @@ name: Build RPCS3
 
 defaults:
   run:
-    shell: pwsh
+    shell: bash
 on:
   push:
     #branches:
@@ -15,14 +15,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  windows_jobs:
-    strategy:
-      matrix:
-        os:
-          - windows-11-arm
-          - windows-2022
-    runs-on: ${{ matrix.os }}
+  test_job:
+    runs-on: ubuntu-latest
     steps:
-      - run: |
-          Get-CimInstance Win32_Processor | Select-Object Name, ProcessorId, NumberOfCores, NumberOfLogicalProcessors, MaxClockSpeed
-          Get-WmiObject Win32_Processor | Format-List *
+    - uses: actions/checkout@v4
+    - name: make file
+      run: touch upload.txt
+    - name: Create or update GitHub release and upload assets
+      #if: github.ref == 'refs/heads/master' && success()
+      run: gh release create test upload.txt --title "Release upload test"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
