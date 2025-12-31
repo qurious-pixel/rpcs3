@@ -393,9 +393,9 @@ namespace fmt
 			raw_throw_exception(src_loc, reinterpret_cast<const char*>(fmt), type_info_v<Args...>, fmt_args_t<Args...>{fmt_unveil<Args>::get(args)...});
 		}
 
-#if !defined(_MSC_VER) || defined(__clang__)
-		[[noreturn]] ~throw_exception() = default;
-#endif
+//#if !defined(_MSC_VER) || defined(__clang__)
+//		[[noreturn]] ~throw_exception() = default;
+//#endif
 	};
 
 	template <typename CharT, usz N, typename... Args>
