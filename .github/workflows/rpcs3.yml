@@ -5,8 +5,6 @@ defaults:
     shell: bash
 on:
   push:
-    branches:
-      - master # Only trigger push event on 'master' branch
   pull_request:
   workflow_dispatch:
 
