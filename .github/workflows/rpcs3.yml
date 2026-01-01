@@ -13,8 +13,22 @@ jobs:
     - name: Setup BSD
       run: |
         python3 /anyvm.org/anyvm.py --os freebsd
-    - name: clone repo
-      run: |
-        pwd
-        ls -al
-        ls -al /
+    - name: Checkout repository
+      uses: actions/checkout@main
+      with:
+        fetch-depth: 0
+    - name: Restore Build Ccache
+      uses: actions/cache/restore@main
+      id: restore-build-ccache
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: FreeBSD-ccache-${{github.run_id}}
+        restore-keys: FreeBSD-ccache-
+    - name: FreeBSD build
+      run: .ci/install-freebsd.sh && .ci/build-freebsd.sh
+    - name: Save Build Ccache
+      if: github.ref == 'refs/heads/master'
+      uses: actions/cache/save@main
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
