@@ -10,13 +10,15 @@ jobs:
     container:
       image: ghcr.io/anyvm-org/anyvm:latest
     steps:
-    - name: Setup BSD
-      run: |
-        python3 /anyvm.org/anyvm.py --os freebsd
     - name: Checkout repository
       uses: actions/checkout@main
       with:
         fetch-depth: 0
+    - name: Setup BSD
+      run: |
+        python3 /anyvm.org/anyvm.py --os freebsd -- uname -a
+    - name: FreeBSD build
+      run: uname -a 
     #- name: Restore Build Ccache
     #  uses: actions/cache/restore@main
     #  id: restore-build-ccache
@@ -24,8 +26,8 @@ jobs:
     #    path: ${{ env.CCACHE_DIR }}
     #    key: FreeBSD-ccache-${{github.run_id}}
     #    restore-keys: FreeBSD-ccache-
-    - name: FreeBSD build
-      run: bash .ci/install-freebsd.sh && bash .ci/build-freebsd.sh
+    #- name: FreeBSD build
+    #  run: bash .ci/install-freebsd.sh && bash .ci/build-freebsd.sh
     #- name: Save Build Ccache
     #  if: github.ref == 'refs/heads/master'
     #  uses: actions/cache/save@main
