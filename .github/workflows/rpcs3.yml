@@ -25,7 +25,7 @@ jobs:
     #    key: FreeBSD-ccache-${{github.run_id}}
     #    restore-keys: FreeBSD-ccache-
     - name: FreeBSD build
-      run: .ci/install-freebsd.sh && .ci/build-freebsd.sh
+      run: bash .ci/install-freebsd.sh && bash .ci/build-freebsd.sh
     #- name: Save Build Ccache
     #  if: github.ref == 'refs/heads/master'
     #  uses: actions/cache/save@main
