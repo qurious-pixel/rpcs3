@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/anyvm-org/anyvm:latest
-      options: --os freebsd
+      #options: --os freebsd
     steps:
     - name: test
       run: uname -a
