@@ -10,9 +10,11 @@ jobs:
     container:
       image: ghcr.io/anyvm-org/anyvm:latest
     steps:
-    - name: test
+    - name: Setup BSD
+      run: |
+        python3 /anyvm.org/anyvm.py --os freebsd
+    - name: clone repo
       run: |
         pwd
         ls -al
         ls -al /
-        python3 /anyvm.org/anyvm.py --os freebsd -- uname -a
