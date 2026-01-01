@@ -16,9 +16,9 @@ jobs:
         fetch-depth: 0
     - name: Setup BSD
       run: |
-        python3 /anyvm.org/anyvm.py --os freebsd -- uname -a
-    - name: FreeBSD build
-      run: uname -a 
+        python3 /anyvm.org/anyvm.py --os freebsd -- .ci/install-freebsd.sh && .ci/build-freebsd.sh
+    #- name: FreeBSD build
+    #  run: uname -a 
     #- name: Restore Build Ccache
     #  uses: actions/cache/restore@main
     #  id: restore-build-ccache
