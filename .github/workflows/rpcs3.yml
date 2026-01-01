@@ -8,7 +8,7 @@ jobs:
   build-rpcs3:
     runs-on: ubuntu-latest
     container:
-      image: anyvm-org/anyvm:latest
+      image: anyvm:latest
       options: --os freebsd
     steps:
     - name: test
