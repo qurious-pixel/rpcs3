@@ -1,29 +1,15 @@
 name: Build RPCS3
 
-defaults:
-  run:
-    shell: bash
 on:
+  workflow_call:
   push:
-    #branches:
-    #  - master # Only trigger push event on 'master' branch
-  pull_request:
-  workflow_dispatch:
-
-concurrency:
-  group: ${{ github.ref }}-${{ github.event_name }}
-  cancel-in-progress: true
 
 jobs:
-  test_job:
+  build-rpcs3:
     runs-on: ubuntu-latest
-    permissions: write-all
+    container:
+      image: anyvm-org/anyvm:latest
+      options: --os freebsd
     steps:
-    - uses: actions/checkout@v4
-    - name: make file
-      run: echo "Release upload test" > upload.txt
-    - name: Create or update GitHub release and upload assets
-      #if: github.ref == 'refs/heads/master' && success()
-      run: gh release create test upload.txt --title "Release upload test" -R qurious-pixel/llvm-mirror
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: test
+      run: uname -a
