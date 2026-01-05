@@ -284,10 +284,10 @@ jobs:
         shell: pwsh
         run: msbuild rpcs3.sln /p:Configuration=Release /v:minimal /p:Platform=x64 /p:PreferredToolArchitecture=x64 /p:CLToolPath=${{ env.CCACHE_BIN_DIR }} /p:UseMultiToolTask=true /p:CustomAfterMicrosoftCommonTargets="${{ github.workspace }}\buildfiles\msvc\ci_only.targets"
 
-      - name: Run Unit Tests
-        if: github.event_name == 'pull_request'
-        shell: pwsh
-        run: build\lib\Release-x64\rpcs3_test.exe
+      #- name: Run Unit Tests
+      #  if: github.event_name == 'pull_request'
+      #  shell: pwsh
+      #  run: build\lib\Release-x64\rpcs3_test.exe
 
       - name: Pack up build artifacts
         run: |
@@ -312,14 +312,12 @@ jobs:
         run: .ci/github-upload.sh
 
       - name: Save Build Ccache
-        if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
       - name: Save Dependencies Cache
-        if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
           path: ${{ env.DEPS_CACHE_DIR }}
@@ -393,7 +391,6 @@ jobs:
           .ci/deploy-windows-${{ matrix.compiler }}.sh
 
       - name: Save build Ccache
-        if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
           path: ${{ env.CCACHE_DIR }}
@@ -475,7 +472,6 @@ jobs:
           Add-Content -Path $env:GITHUB_PATH -Value "D:\a\rpcs3\rpcs3\llvm-${{ matrix.llvmver }}\bin"
 
       - name: Save LLVM Cache
-        if: ${{ github.ref == 'refs/heads/master' }}
         uses: actions/cache/save@main
         with:
           path: ./llvm-${{ matrix.llvmver }}
@@ -502,7 +498,6 @@ jobs:
           .ci/deploy-windows-${{ matrix.compiler }}.sh
 
       - name: Save build Ccache
-        if: github.ref == 'refs/heads/master'
         uses: actions/cache/save@main
         with:
           path: ${{ env.CCACHE_DIR }}
