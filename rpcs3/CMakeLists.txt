@@ -148,6 +148,7 @@ if (NOT ANDROID)
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/GuiConfigs $<TARGET_FILE_DIR:rpcs3>/GuiConfigs
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/test $<TARGET_FILE_DIR:rpcs3>/test
             )
+        #[[
         get_target_property(WINDEPLOYQT_EXECUTABLE Qt6::windeployqt IMPORTED_LOCATION) 
         add_custom_command(TARGET rpcs3 POST_BUILD
             COMMAND ${WINDEPLOYQT_EXECUTABLE} --no-compiler-runtime --no-opengl-sw --no-patchqt
@@ -159,6 +160,24 @@ if (NOT ANDROID)
                 $<TARGET_FILE:rpcs3>
 
             )
+            ]]
+            set(QT_DEPLOY_ROOT "$<TARGET_FILE_DIR:rpcs3>/qt6")
+            add_custom_command(TARGET rpcs3 POST_BUILD
+                # Create the directory first to ensure it exists
+                COMMAND ${CMAKE_COMMAND} -E make_directory "${QT_DEPLOY_ROOT}"
+                
+                # Run windeployqt with the --dir flag. 
+                # This forces it to put EVERYTHING (plugins + translations) into /qt6
+                COMMAND ${WINDEPLOYQT_EXECUTABLE} 
+                    --dir "${QT_DEPLOY_ROOT}"
+                    --translations
+                    --no-compiler-runtime
+                    --no-opengl-sw
+                    --verbose 2
+                    $<TARGET_FILE:rpcs3>
+            
+                COMMENT "Deploying all Qt6 assets into the qt6/ prefix"
+            ) 
     endif()
 
     # Unix installation
