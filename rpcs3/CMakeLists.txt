@@ -154,7 +154,7 @@ if (NOT ANDROID)
                 --translations --no-system-d3d-compiler --no-system-dxc-compiler --no-quick-import
                 --dir "$<IF:$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>,qt6,share/qt6>"
                 --plugindir "plugins"
-                --translationdir "translations>"
+                --translationdir "translations"
                 --verbose 2
                 $<TARGET_FILE:rpcs3>
             )
