@@ -161,23 +161,18 @@ if (NOT ANDROID)
 
             )
             ]]
-            set(QT_DEPLOY_ROOT "$<TARGET_FILE_DIR:rpcs3>/qt6")
-            add_custom_command(TARGET rpcs3 POST_BUILD
-                # Create the directory first to ensure it exists
-                COMMAND ${CMAKE_COMMAND} -E make_directory "${QT_DEPLOY_ROOT}"
-                
-                # Run windeployqt with the --dir flag. 
-                # This forces it to put EVERYTHING (plugins + translations) into /qt6
-                COMMAND ${WINDEPLOYQT_EXECUTABLE} 
-                    --dir "${QT_DEPLOY_ROOT}"
-                    --translations
-                    --no-compiler-runtime
-                    --no-opengl-sw
-                    --verbose 2
-                    $<TARGET_FILE:rpcs3>
-            
-                COMMENT "Deploying all Qt6 assets into the qt6/ prefix"
-            ) 
+        get_target_property(WINDEPLOYQT_EXECUTABLE Qt6::windeployqt IMPORTED_LOCATION) 
+        add_custom_command(TARGET rpcs3 POST_BUILD
+            COMMAND ${WINDEPLOYQT_EXECUTABLE} --no-compiler-runtime --no-opengl-sw --no-patchqt
+                --no-system-d3d-compiler --no-system-dxc-compiler --no-quick-import
+                --plugindir "$<IF:$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>,$<TARGET_FILE_DIR:rpcs3>/qt6/plugins,$<TARGET_FILE_DIR:rpcs3>/share/qt6/plugins>"
+                --translationdir "$<IF:$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>,$<TARGET_FILE_DIR:rpcs3>/qt6/translations,$<TARGET_FILE_DIR:rpcs3>/share/qt6/translations>"
+                --qtconf "$<TARGET_FILE_DIR:rpcs3>qt.conf"
+                --verbose 0
+                --verbose 2
+                $<TARGET_FILE:rpcs3>
+
+            )
     endif()
 
     # Unix installation
