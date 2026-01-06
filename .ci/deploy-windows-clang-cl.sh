@@ -26,7 +26,7 @@ curl -fsSL 'https://raw.githubusercontent.com/gabomdq/SDL_GameControllerDB/maste
 curl -fsSL 'https://rpcs3.net/compatibility?api=v1&export' | iconv -t UTF-8 1> ./bin/GuiConfigs/compat_database.dat
 
 # Set Qt plugin & translation path
-cp rpcs3/qt/etc/qt.conf ./bin/qt.conf
+cp D:\a\rpcs3\rpcs3\rpcs3\qt\etc\qt.conf ./bin/qt.conf
 
 # Download translations
 mkdir -p ./bin/qt6/translations
