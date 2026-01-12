@@ -42,11 +42,7 @@ echo "Configuring git safe directory"
 git config --global --add safe.directory '*'
 
 # Qt6 translations
-ls -al "$VcpkgInstall/"
-ls -al "$VcpkgInstall/plugins"
-mkdir -p "$VcpkgInstall/qt6/translations/"
-cp -a "$VcpkgInstall/translations/Qt6/" "$VcpkgInstall/qt6/translations/"
-ls -al "$VcpkgInstall/qt6/translations/"
+ls -al "$VCPKG_ROOT/"
 
 # Initialize submodules except certain ones
 echo "Initializing submodules"
@@ -97,6 +93,12 @@ cmake .. \
     -DBUILD_RPCS3_TESTS=OFF
 
 echo "CMake configuration complete"
+
+# Qt6 translations
+ls -al "$VcpkgInstall/"
+mkdir -p "$VcpkgInstall/qt6/translations/"
+cp -a "$VcpkgInstall/translations/Qt6/" "$VcpkgInstall/qt6/translations/"
+ls -al "$VcpkgInstall/qt6/translations/"
 
 # Build with ninja
 echo "Starting build with Ninja..."
