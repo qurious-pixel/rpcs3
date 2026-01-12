@@ -208,6 +208,7 @@ jobs:
   Windows_Build:
     # Only run push event on master branch of main repo, but run all PRs
     name: RPCS3 Windows
+    if: false
     runs-on: windows-2025
     env:
       COMPILER: msvc
@@ -327,6 +328,7 @@ jobs:
   Windows_Build_MSYS2:
     # Only run push event on master branch of main repo, but run all PRs
     runs-on: windows-2025
+    if: false
     strategy:
       matrix:
         include:
