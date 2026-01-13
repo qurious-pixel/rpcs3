@@ -93,8 +93,9 @@ echo "CMake configuration complete"
 
 # Qt6 translations
 ls -al "$VcpkgInstall/Qt6/"
+ls -al "$VcpkgInstall/translations/Qt6/"
 mkdir -p "$VcpkgInstall/Qt6/translations/"
-cp -r "$VcpkgInstall/Qt6/translations/Qt6/" "$VcpkgInstall/Qt6/translations/"
+cp -r "$VcpkgInstall/translations/Qt6/" "$VcpkgInstall/Qt6/translations/"
 ls -al "$VcpkgInstall/Qt6/translations/"
 
 # Build with ninja
