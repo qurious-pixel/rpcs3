@@ -95,7 +95,7 @@ set -x
 # Qt6 translations
 mkdir -p "$VcpkgInstall"/Qt6/translations/
 ls -al "$VcpkgInstall"
-ls -al "$VcpkgInstall"/tools/Qt6/
+ls -al "$VcpkgInstall"/tools/Qt6/bin
 cp "$VcpkgInstall"/translations/Qt6/* "$VcpkgInstall"/Qt6/translations/
 set +x
 
