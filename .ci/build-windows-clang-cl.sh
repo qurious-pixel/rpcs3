@@ -96,6 +96,7 @@ set -x
 mkdir -p "$VcpkgInstall"/Qt6/translations/
 ls -al "$VcpkgInstall"
 ls -al "$VcpkgInstall"/tools/Qt6/bin
+sed -i '0,/Translations=translations\/Qt6\//s|Translations=translations/Qt6/|Translations=Qt6/translations/|' "$VcpkgInstall"/tools/Qt6/bin/qt.conf
 cat "$VcpkgInstall"/tools/Qt6/bin/qt.conf
 cp "$VcpkgInstall"/translations/Qt6/* "$VcpkgInstall"/Qt6/translations/
 "$VcpkgInstall"/tools/Qt6/bin/qmake -query QT_INSTALL_TRANSLATIONS
