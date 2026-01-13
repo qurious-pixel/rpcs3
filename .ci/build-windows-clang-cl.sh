@@ -94,7 +94,9 @@ echo "CMake configuration complete"
 set -x
 # Qt6 translations
 mkdir -p "$VcpkgInstall"/Qt6/translations/
-ls -al "$VcpkgInstall"/Qt6/
+ls -al "$VcpkgInstall"
+ls -al "$VcpkgInstall"/tools
+ls -al "$VcpkgInstall"/bin
 ls -al "$VcpkgInstall"/translations/Qt6/
 cp "$VcpkgInstall"/translations/Qt6/* "$VcpkgInstall"/Qt6/translations/
 ls -al "$VcpkgInstall"/Qt6/translations/
