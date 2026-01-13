@@ -91,11 +91,15 @@ cmake .. \
 
 echo "CMake configuration complete"
 
+set -x
 # Qt6 translations
-mkdir -p "$VcpkgInstall/Qt6/translations/"
-ls -al "$VcpkgInstall/Qt6/"
-cp "$VcpkgInstall/translations/Qt6/*" "$VcpkgInstall/Qt6/translations/"
-ls -al "$VcpkgInstall/Qt6/translations/"
+mkdir -p "$VcpkgInstall"/Qt6/translations/
+ls -al "$VcpkgInstall"/Qt6/
+ls -al "$VcpkgInstall"/translations/Qt6/
+cp "$VcpkgInstall"/translations/Qt6/* "$VcpkgInstall"/Qt6/translations/
+ls -al "$VcpkgInstall"/Qt6/translations/
+set +x
+
 
 # Build with ninja
 echo "Starting build with Ninja..."
