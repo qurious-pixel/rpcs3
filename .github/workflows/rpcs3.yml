@@ -24,7 +24,7 @@ env:
 
 jobs:
   Linux_Build:
-    if: false
+    #if: false
     # Only run push event on master branch of main repo, but run all PRs
     strategy:
       fail-fast: false
