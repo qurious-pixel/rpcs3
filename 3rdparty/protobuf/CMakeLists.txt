@@ -3,9 +3,16 @@ if (USE_SYSTEM_PROTOBUF)
 	pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET protobuf>=29.0.0)
 	target_link_libraries(3rdparty_protobuf INTERFACE PkgConfig::PROTOBUF)
 	set(PROTOBUF_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../rpcs3/Emu/NP/generated/")
-	execute_process(COMMAND protoc --cpp_out="${PROTOBUF_DIR}" --proto_path="${PROTOBUF_DIR}" np2_structs.proto RESULT_VARIABLE PROTOBUF_CMD_ERROR)
-	if(PROTOBUF_CMD_ERROR AND NOT PROTOBUF_CMD_ERROR EQUAL 0)
-		message(FATAL_ERROR "protoc failed to regenerate protobuf files.")
+	execute_process(
+	    COMMAND protoc --cpp_out="${PROTOBUF_DIR}" --proto_path="${PROTOBUF_DIR}" np2_structs.proto 
+	    OUTPUT_VARIABLE PROTOC_OUT 
+	    ERROR_VARIABLE PROTOC_ERR
+	    RESULT_VARIABLE PROTOBUF_CMD_ERROR
+	)
+	if(PROTOBUF_CMD_ERROR)
+	    message(STATUS "Protoc Output: ${PROTOC_OUT}")
+	    message(STATUS "Protoc Error: ${PROTOC_ERR}")
+	    message(FATAL_ERROR "protoc failed...")
 	endif()
 else()
 	option(protobuf_INSTALL "Install protobuf binaries and files" OFF)
