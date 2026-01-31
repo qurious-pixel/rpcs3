@@ -3,6 +3,9 @@ if (USE_SYSTEM_PROTOBUF)
 	pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET protobuf>=29.0.0)
 	target_link_libraries(3rdparty_protobuf INTERFACE PkgConfig::PROTOBUF)
 	set(PROTOBUF_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../rpcs3/Emu/NP/generated/")
+	if(NOT EXISTS "${PROTOBUF_DIR}/np2_structs.proto")
+	    message(FATAL_ERROR "CANNOT FIND PROTO FILE AT: ${PROTOBUF_DIR}/np2_structs.proto")
+	endif()
 	execute_process(
 	    COMMAND protoc --cpp_out="${PROTOBUF_DIR}" --proto_path="${PROTOBUF_DIR}" np2_structs.proto 
 	    OUTPUT_VARIABLE PROTOC_OUT 
