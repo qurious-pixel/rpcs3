@@ -1,17 +1,23 @@
 add_library(3rdparty_protobuf INTERFACE)
 if (USE_SYSTEM_PROTOBUF)
-	pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET protobuf>=29.0.0)
-	target_link_libraries(3rdparty_protobuf INTERFACE PkgConfig::PROTOBUF)
-	set(PROTOBUF_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../rpcs3/Emu/NP/generated/")
-	if(NOT EXISTS "${PROTOBUF_DIR}/np2_structs.proto")
-	    message(FATAL_ERROR "CANNOT FIND PROTO FILE AT: ${PROTOBUF_DIR}/np2_structs.proto")
-	endif()
-	execute_process(
-	    COMMAND protoc --cpp_out="${PROTOBUF_DIR}" --proto_path="${PROTOBUF_DIR}" np2_structs.proto 
-	    OUTPUT_VARIABLE PROTOC_OUT 
-	    ERROR_VARIABLE PROTOC_ERR
-	    RESULT_VARIABLE PROTOBUF_CMD_ERROR
-	)
+    pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET protobuf>=29.0.0)
+    
+    # Add this line to find the actual compiler executable
+    find_program(PROTOBUF_PROTOC_EXECUTABLE NAMES protoc)
+    
+    if(NOT PROTOBUF_PROTOC_EXECUTABLE)
+        message(FATAL_ERROR "Found protobuf library, but could not find protoc executable!")
+    endif()
+
+    target_link_libraries(3rdparty_protobuf INTERFACE PkgConfig::PROTOBUF)
+    set(PROTOBUF_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../rpcs3/Emu/NP/generated/")
+    
+    # Use the absolute path to the executable found above
+    execute_process(
+        COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} --cpp_out="${PROTOBUF_DIR}" --proto_path="${PROTOBUF_DIR}" np2_structs.proto 
+        WORKING_DIRECTORY "${PROTOBUF_DIR}" # Run inside the folder to avoid path issues
+        RESULT_VARIABLE PROTOBUF_CMD_ERROR
+    )
 	if(PROTOBUF_CMD_ERROR)
 	    message(STATUS "Protoc Output: ${PROTOC_OUT}")
 	    message(STATUS "Protoc Error: ${PROTOC_ERR}")
