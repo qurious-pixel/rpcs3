@@ -1,6 +1,6 @@
 add_library(3rdparty_protobuf INTERFACE)
 if (USE_SYSTEM_PROTOBUF)
-	pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET protobuf>=33.0.0)
+	pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET protobuf>=29.0.0)
 	target_link_libraries(3rdparty_protobuf INTERFACE PkgConfig::PROTOBUF)
 	set(PROTOBUF_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../rpcs3/Emu/NP/generated/")
 	execute_process(COMMAND protoc --cpp_out="${PROTOBUF_DIR}" --proto_path="${PROTOBUF_DIR}" np2_structs.proto RESULT_VARIABLE PROTOBUF_CMD_ERROR)
