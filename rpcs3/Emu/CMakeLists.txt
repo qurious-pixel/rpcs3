@@ -453,8 +453,14 @@ target_sources(rpcs3_emu PRIVATE
     NP/upnp_config.cpp
     NP/upnp_handler.cpp
     NP/ip_address.cpp
-    NP/generated/np2_structs.pb.cc
 )
+
+if (USE_SYSTEM_PROTOBUF)
+    protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS NP/generated/np2_structs.proto)
+    target_sources(rpcs3_emu PRIVATE ${PROTO_SRCS})
+else()
+    target_sources(rpcs3_emu PRIVATE NP/generated/np2_structs.pb.cc)
+endif()
 
 # Memory
 target_sources(rpcs3_emu PRIVATE
