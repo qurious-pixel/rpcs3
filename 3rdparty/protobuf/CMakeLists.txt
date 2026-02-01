@@ -1,35 +1,46 @@
-# --- 3rdparty/protobuf/CMakeLists.txt ---
-
 add_library(3rdparty_protobuf INTERFACE)
 
 if (USE_SYSTEM_PROTOBUF)
     pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET protobuf>=29.0.0)
     
-    # Locate the compiler and log it for GitHub Actions visibility
     find_program(PROTOBUF_PROTOC_EXECUTABLE NAMES protoc REQUIRED)
     message(STATUS "Using protoc from: ${PROTOBUF_PROTOC_EXECUTABLE}")
 
-    # Normalize the path to avoid "protoc is too dumb" errors
-    get_filename_component(PROTOBUF_GEN_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../rpcs3/Emu/NP/generated" ABSOLUTE)
-    file(MAKE_DIRECTORY "${PROTOBUF_GEN_DIR}")
+    # 1. Resolve to a clean absolute path (No trailing slashes)
+    get_filename_component(PROTO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../rpcs3/Emu/NP/generated" ABSOLUTE)
+    
+    # 2. Ensure directory exists
+    file(MAKE_DIRECTORY "${PROTO_DIR}")
+
+    # 3. Define the file (must be an exact child of PROTO_DIR string-wise)
+    set(PROTO_INPUT "${PROTO_DIR}/np2_structs.proto")
+
+    if(NOT EXISTS "${PROTO_INPUT}")
+        message(FATAL_ERROR "Could not find: ${PROTO_INPUT}")
+    endif()
+
+    # 4. Use NATIVE_PATH to handle Windows backslashes correctly for the CLI
+    file(TO_NATIVE_PATH "${PROTO_DIR}" PROTO_DIR_NATIVE)
+    file(TO_NATIVE_PATH "${PROTO_INPUT}" PROTO_INPUT_NATIVE)
+
+    message(STATUS "Running protoc on: ${PROTO_INPUT_NATIVE}")
 
     execute_process(
         COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} 
-                --cpp_out="${PROTOBUF_GEN_DIR}" 
-                --proto_path="${PROTOBUF_GEN_DIR}" 
-                "${PROTOBUF_GEN_DIR}/np2_structs.proto"
+                --cpp_out="${PROTO_DIR_NATIVE}" 
+                --proto_path="${PROTO_DIR_NATIVE}" 
+                "${PROTO_INPUT_NATIVE}"
         RESULT_VARIABLE PROTOBUF_CMD_ERROR
         ERROR_VARIABLE PROTOC_STDERR
     )
 
     if(PROTOBUF_CMD_ERROR)
-        message(FATAL_ERROR "Protoc failed with error: ${PROTOC_STDERR}")
+        message(STATUS "Protoc Stderr: ${PROTOC_STDERR}")
+        message(FATAL_ERROR "protoc failed to regenerate protobuf files.")
     endif()
 
     target_link_libraries(3rdparty_protobuf INTERFACE PkgConfig::PROTOBUF)
-
 else()
-    # Built-in fallback logic
     option(protobuf_INSTALL "Install protobuf binaries and files" OFF)
     option(protobuf_BUILD_TESTS "Build tests" OFF)
     option(protobuf_BUILD_CONFORMANCE "Build conformance tests" OFF)
