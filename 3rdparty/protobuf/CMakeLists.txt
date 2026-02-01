@@ -27,11 +27,13 @@ if (USE_SYSTEM_PROTOBUF)
 
     execute_process(
         COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} 
-                --cpp_out="${PROTO_DIR_NATIVE}" 
-                --proto_path="${PROTO_DIR_NATIVE}" 
-                "${PROTO_INPUT_NATIVE}"
+                --cpp_out=. 
+                --proto_path=. 
+                np2_structs.proto
+        WORKING_DIRECTORY "${PROTO_DIR}"
         RESULT_VARIABLE PROTOBUF_CMD_ERROR
         ERROR_VARIABLE PROTOC_STDERR
+        OUTPUT_VARIABLE PROTOC_STDOUT
     )
 
     if(PROTOBUF_CMD_ERROR)
