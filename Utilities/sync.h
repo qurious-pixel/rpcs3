@@ -10,6 +10,7 @@
 #define NOMINMAX
 #endif
 #include <Windows.h>
+#include <winioctl.h>
 #include <ctime>
 #elif __linux__
 #include <sys/syscall.h>
