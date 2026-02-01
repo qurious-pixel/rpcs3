@@ -6,6 +6,8 @@
 #include "util/dyn_lib.hpp"
 #include "Utilities/lockless.h"
 #include <Windows.h>
+#include <winioctl.h>
+#include <winternl.h>
 #include <span>
 #else
 #include <sys/mman.h>
