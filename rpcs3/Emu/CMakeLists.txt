@@ -455,12 +455,34 @@ target_sources(rpcs3_emu PRIVATE
     NP/ip_address.cpp
 )
 
-if (USE_SYSTEM_PROTOBUF)
-    protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS NP/generated/np2_structs.proto)
-    target_sources(rpcs3_emu PRIVATE ${PROTO_SRCS})
-else()
-    target_sources(rpcs3_emu PRIVATE NP/generated/np2_structs.pb.cc)
+# 2. Setup Protobuf Generation Paths
+set(NP_PROTO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/NP/generated")
+set(NP_PROTO_INPUT "${NP_PROTO_DIR}/np2_structs.proto")
+set(NP_PROTO_GEN_CC "${NP_PROTO_DIR}/np2_structs.pb.cc")
+set(NP_PROTO_GEN_H  "${NP_PROTO_DIR}/np2_structs.pb.h")
+
+# 3. Validation: Ensure we have the compiler
+if (NOT PROTOBUF_PROTOC_EXECUTABLE)
+    # Fallback search if the variable hasn't propagated from 3rdparty
+    find_program(PROTOBUF_PROTOC_EXECUTABLE NAMES protoc REQUIRED)
 endif()
+
+# 4. Define the Generation Command
+# We use WORKING_DIRECTORY to stay relative and avoid Windows path limits/syntax errors
+add_custom_command(
+    OUTPUT "${NP_PROTO_GEN_CC}" "${NP_PROTO_GEN_H}"
+    COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} 
+            --cpp_out=. 
+            --proto_path=. 
+            np2_structs.proto
+    WORKING_DIRECTORY "${NP_PROTO_DIR}"
+    DEPENDS "${NP_PROTO_INPUT}"
+    COMMENT "Generating Protobuf C++ files for NP2"
+    VERBATIM
+)
+
+# 5. Add the generated file to the build target
+target_sources(rpcs3_emu PRIVATE "${NP_PROTO_GEN_CC}")
 
 # Memory
 target_sources(rpcs3_emu PRIVATE
