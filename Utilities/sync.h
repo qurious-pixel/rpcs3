@@ -11,6 +11,11 @@
 #endif
 #include <Windows.h>
 #include <winioctl.h>
+typedef LONG NTSTATUS;
+typedef NTSTATUS *PNTSTATUS;
+#ifndef BOOLEAN
+typedef BYTE BOOLEAN;
+#endif
 #include <ctime>
 #elif __linux__
 #include <sys/syscall.h>
