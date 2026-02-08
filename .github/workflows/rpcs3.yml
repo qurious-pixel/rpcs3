@@ -464,9 +464,8 @@ jobs:
       X_VCPKG_NUGET_ID: "GitHub"
       X_VCPKG_NUGET_USER: "${{ github.actor }}"
       X_VCPKG_NUGET_PASSWORD: "${{ secrets.GITHUB_TOKEN }}"
-      NUGET_CREDENTIALPROVIDER_SESSIONTOKENCACHE_ENABLED: 'true'
-      VCPKG_FORCE_NUGET_BOOTSTRAP: '1'
-      DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER: '0'
+      NUGET_CREDENTIALPROVIDERS_AUTODETECT: 'false'
+      VCPKG_MAX_CONCURRENCY: '1'
     name: RPCS3 Windows Clang (Clang-CL)
     steps:
       - name: Checkout repository
@@ -480,12 +479,29 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
 
-      - name: 'Clear NuGet Locals (Nuclear Option)'
+      - name: 'Force NuGet to use Basic Auth'
         shell: pwsh
         run: |
+          # 1. Clear everything out
           dotnet nuget locals all --clear
+          
+          # 2. Find the vcpkg-specific nuget.exe
           $NUGET_EXE = (& ./vcpkg/vcpkg fetch nuget | Select-Object -Last 1)
-          & $NUGET_EXE sources Clear
+          
+          # 3. Create a clean, local nuget.config so vcpkg doesn't use the system one
+          $configPath = "${{ github.workspace }}\nuget.config"
+          & $NUGET_EXE spec -Force
+          & $NUGET_EXE sources Clear -ConfigPath $configPath
+          & $NUGET_EXE sources add `
+            -Name "GitHub" `
+            -Source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" `
+            -UserName "${{ github.actor }}" `
+            -Password "${{ secrets.GITHUB_TOKEN }}" `
+            -StorePasswordInClearText `
+            -ConfigPath $configPath
+            
+          # 4. Tell vcpkg to use THIS specific config
+          echo "VCPKG_NUGET_CONFIG=$configPath" >> $env:GITHUB_ENV
 
       - name: 'Setup NuGet Credentials for vcpkg'
         if: false
