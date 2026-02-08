@@ -480,6 +480,13 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
 
+      - name: 'Clear NuGet Locals (Nuclear Option)'
+        shell: pwsh
+        run: |
+          dotnet nuget locals all --clear
+          $NUGET_EXE = (& ./vcpkg/vcpkg fetch nuget | Select-Object -Last 1)
+          & $NUGET_EXE sources Clear
+
       - name: 'Setup NuGet Credentials for vcpkg'
         if: false
         run: |
