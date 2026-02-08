@@ -482,25 +482,22 @@ jobs:
       - name: 'Force NuGet to use Basic Auth'
         shell: pwsh
         run: |
-          # 1. Clear everything out
+          # 1. Clear existing local caches
           dotnet nuget locals all --clear
           
-          # 2. Find the vcpkg-specific nuget.exe
-          $NUGET_EXE = (& ./vcpkg/vcpkg fetch nuget | Select-Object -Last 1)
-          
-          # 3. Create a clean, local nuget.config so vcpkg doesn't use the system one
+          # 2. Create a clean nuget.config in the workspace
           $configPath = "${{ github.workspace }}\nuget.config"
-          & $NUGET_EXE spec -Force
-          & $NUGET_EXE sources Clear -ConfigPath $configPath
-          & $NUGET_EXE sources add `
-            -Name "GitHub" `
-            -Source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" `
-            -UserName "${{ github.actor }}" `
-            -Password "${{ secrets.GITHUB_TOKEN }}" `
-            -StorePasswordInClearText `
-            -ConfigPath $configPath
+          
+          # 3. Use dotnet to add the source. This is more reliable than nuget.exe in CI.
+          dotnet new nugetconfig --force --output "${{ github.workspace }}"
+          dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" `
+            --name "GitHub" `
+            --username "${{ github.actor }}" `
+            --password "${{ secrets.GITHUB_TOKEN }}" `
+            --store-password-in-clear-text `
+            --configfile "$configPath"
             
-          # 4. Tell vcpkg to use THIS specific config
+          # 4. Export the config path so vcpkg finds it
           echo "VCPKG_NUGET_CONFIG=$configPath" >> $env:GITHUB_ENV
 
       - name: 'Setup NuGet Credentials for vcpkg'
