@@ -461,6 +461,9 @@ jobs:
       VCPKG_BUILD_TYPE: release
       VCPKG_ROOT: "${{github.workspace}}/vcpkg"
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
+      X_VCPKG_NUGET_ID: "GitHub"
+      X_VCPKG_NUGET_USER: "${{ github.repository_owner }}"
+      X_VCPKG_NUGET_PASSWORD: "${{ secrets.GITHUB_TOKEN }}"
     name: RPCS3 Windows Clang (Clang-CL)
     steps:
       - name: Checkout repository
