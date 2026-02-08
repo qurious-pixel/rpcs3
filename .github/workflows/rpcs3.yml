@@ -464,6 +464,9 @@ jobs:
       X_VCPKG_NUGET_ID: "GitHub"
       X_VCPKG_NUGET_USER: "${{ github.actor }}"
       X_VCPKG_NUGET_PASSWORD: "${{ secrets.GITHUB_TOKEN }}"
+      NUGET_CREDENTIALPROVIDER_SESSIONTOKENCACHE_ENABLED: 'true'
+      VCPKG_FORCE_NUGET_BOOTSTRAP: '1'
+      DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER: '0'
     name: RPCS3 Windows Clang (Clang-CL)
     steps:
       - name: Checkout repository
