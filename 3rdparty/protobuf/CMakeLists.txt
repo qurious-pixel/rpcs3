@@ -1,4 +1,8 @@
 add_library(3rdparty_protobuf INTERFACE)
+if(VCPKG_TOOLCHAIN_FILE)
+    message(STATUS "Vcpkg installed path: ${VcpkgInstall}")
+    set(CMAKE_IGNORE_PATH "${VcpkgInstall}")
+endif()
 if (USE_SYSTEM_PROTOBUF)
 	pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET protobuf>=33.0.0)
 	target_link_libraries(3rdparty_protobuf INTERFACE PkgConfig::PROTOBUF)
