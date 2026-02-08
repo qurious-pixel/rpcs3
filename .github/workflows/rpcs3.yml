@@ -476,15 +476,16 @@ jobs:
 
       - name: 'Setup NuGet Credentials for vcpkg'
         run: |
-          `./vcpkg/vcpkg fetch nuget | tail -n 1` \
-          sources add \
+          NUGET_EXE=$(./vcpkg/vcpkg fetch nuget | tail -n 1)
+          $NUGET_EXE sources remove -Name "GitHub" || true
+          $NUGET_EXE sources add \
           -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
           -storepasswordincleartext \
           -name "GitHub" \
           -username "${{ github.repository_owner }}" \
           -password "${{ secrets.GITHUB_TOKEN }}"
           `./vcpkg/vcpkg fetch nuget | tail -n 1` \
-          setapikey "${{ secrets.GITHUB_TOKEN }}" \
+          $NUGET_EXE setapikey "${{ secrets.GITHUB_TOKEN }}" \
           -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
 
       - name: Restore LLVM Cache
