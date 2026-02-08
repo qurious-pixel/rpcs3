@@ -1,7 +1,7 @@
 add_library(3rdparty_protobuf INTERFACE)
 #if(VCPKG_TOOLCHAIN_FILE)
 	message(STATUS "VCPKG_ROOT: ${VCPKG_ROOT}")
-    message(STATUS "Vcpkg installed path: D:/a/rpcs3/rpcs3/build/vcpkg_installed/x64-windows/")
+    message(STATUS "Vcpkg installed path: D:/a/rpcs3/rpcs3/build/vcpkg_installed/x64-windows/include/google/protobuf")
     #set(CMAKE_IGNORE_PATH "D:/a/rpcs3/rpcs3/build/vcpkg_installed/x64-windows/")
 #endif()
 if (USE_SYSTEM_PROTOBUF)
