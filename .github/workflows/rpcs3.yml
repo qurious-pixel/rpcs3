@@ -460,9 +460,9 @@ jobs:
       VCPKG_TRIPLET: x64-windows
       VCPKG_BUILD_TYPE: release
       VCPKG_ROOT: "${{github.workspace}}/vcpkg"
-      VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
+      VCPKG_BINARY_SOURCES: 'clear;nuget,https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json,readwrite'
       X_VCPKG_NUGET_ID: "GitHub"
-      X_VCPKG_NUGET_USER: "${{ github.repository_owner }}"
+      X_VCPKG_NUGET_USER: "${{ github.actor }}"
       X_VCPKG_NUGET_PASSWORD: "${{ secrets.GITHUB_TOKEN }}"
     name: RPCS3 Windows Clang (Clang-CL)
     steps:
@@ -478,6 +478,7 @@ jobs:
           .\vcpkg\bootstrap-vcpkg.bat
 
       - name: 'Setup NuGet Credentials for vcpkg'
+        if: false
         run: |
           NUGET_EXE=$(./vcpkg/vcpkg fetch nuget | tail -n 1)
           echo "Using NuGet from: $NUGET_EXE"
