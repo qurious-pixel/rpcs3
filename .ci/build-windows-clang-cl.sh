@@ -75,6 +75,7 @@ cmake .. \
     -DFFMPEG_LIBAVUTIL="$VcpkgLib/avutil.lib" \
     -DFFMPEG_LIBSWSCALE="$VcpkgLib/swscale.lib" \
     -DFFMPEG_LIBSWRESAMPLE="$VcpkgLib/swresample.lib" \
+    -DCMAKE_DISABLE_FIND_PACKAGE_Protobuf=ON \
     -DUSE_SYSTEM_CURL=OFF \
     -DUSE_FAUDIO=OFF \
     -DUSE_SDL=ON \
