@@ -2,7 +2,7 @@ add_library(3rdparty_protobuf INTERFACE)
 #if(VCPKG_TOOLCHAIN_FILE)
 	#message(STATUS "VCPKG_ROOT: ${VCPKG_ROOT}")
     #message(STATUS "Vcpkg installed path: D:/a/rpcs3/rpcs3/build/vcpkg_installed/x64-windows/include/google/protobuf")
-    set(CMAKE_IGNORE_PATH "D:/a/rpcs3/rpcs3/build/vcpkg_installed/x64-windows/include/google/protobuf")
+    #set(CMAKE_IGNORE_PATH "D:/a/rpcs3/rpcs3/build/vcpkg_installed/x64-windows/include/google/protobuf")
 #endif()
 if (USE_SYSTEM_PROTOBUF)
 	pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET protobuf>=33.0.0)
@@ -27,6 +27,20 @@ else()
 	option(protobuf_LOCAL_DEPENDENCIES_ONLY "Prevent downloading any dependencies from GitHub. If this option is set, the dependency must be available locally as an installed package." OFF)
 
 	add_subdirectory(protobuf EXCLUDE_FROM_ALL)
-	target_include_directories(3rdparty_protobuf SYSTEM INTERFACE protobuf/src)
+	#target_include_directories(3rdparty_protobuf SYSTEM INTERFACE protobuf/src)
+	arget_include_directories(3rdparty_protobuf BEFORE INTERFACE 
+        "${CMAKE_CURRENT_SOURCE_DIR}/protobuf/src"
+    )
 	target_link_libraries(3rdparty_protobuf INTERFACE libprotobuf)
+	set(PROTOC_EXECUTABLE $<TARGET_FILE:protoc>)
+    set(PROTOBUF_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../rpcs3/Emu/NP/generated/")
+    execute_process(
+        COMMAND ${PROTOC_EXECUTABLE} --cpp_out="${PROTOBUF_DIR}" --proto_path="${PROTOBUF_DIR}" np2_structs.proto 
+        WORKING_DIRECTORY "${PROTOBUF_DIR}"
+        RESULT_VARIABLE PROTOBUF_CMD_ERROR
+    )
+    
+    if(PROTOBUF_CMD_ERROR AND NOT PROTOBUF_CMD_ERROR EQUAL 0)
+        message(FATAL_ERROR "Local protoc failed to regenerate protobuf files.")
+    endif()
 endif()
