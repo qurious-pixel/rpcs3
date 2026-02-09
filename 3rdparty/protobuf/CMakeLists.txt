@@ -28,7 +28,7 @@ else()
 
 	add_subdirectory(protobuf EXCLUDE_FROM_ALL)
 	#target_include_directories(3rdparty_protobuf SYSTEM INTERFACE protobuf/src)
-	arget_include_directories(3rdparty_protobuf BEFORE INTERFACE 
+	target_include_directories(3rdparty_protobuf BEFORE INTERFACE 
         "${CMAKE_CURRENT_SOURCE_DIR}/protobuf/src"
     )
 	target_link_libraries(3rdparty_protobuf INTERFACE libprotobuf)
