@@ -452,10 +452,10 @@ target_sources(rpcs3_emu PRIVATE
     NP/rpcn_countries.cpp
     NP/upnp_config.cpp
     NP/upnp_handler.cpp
-    NP/ip_address.cpp
-    # NP/generated/np2_structs.pb.cc
+    NP/ip_address.cpp   
 )
 add_dependencies(rpcs3_emu 3rdparty_protobuf)
+# NP/generated/np2_structs.pb.cc
 
 # Memory
 target_sources(rpcs3_emu PRIVATE
