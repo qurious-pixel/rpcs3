@@ -34,13 +34,21 @@ else()
 	target_link_libraries(3rdparty_protobuf INTERFACE libprotobuf)
 	set(PROTOC_EXECUTABLE $<TARGET_FILE:protoc>)
     set(PROTOBUF_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../rpcs3/Emu/NP/generated/")
-    execute_process(
-        COMMAND ${PROTOC_EXECUTABLE} --cpp_out="${PROTOBUF_DIR}" --proto_path="${PROTOBUF_DIR}" np2_structs.proto 
-        WORKING_DIRECTORY "${PROTOBUF_DIR}"
-        RESULT_VARIABLE PROTOBUF_CMD_ERROR
+    # 1. Define where the generated files will go
+    set(PROTO_SRC "${PROTOBUF_DIR}/np2_structs.pb.cc")
+    set(PROTO_HDR "${PROTOBUF_DIR}/np2_structs.pb.h")
+
+    # 2. Tell CMake how to generate these files
+    add_custom_command(
+        OUTPUT "${PROTO_SRC}" "${PROTO_HDR}"
+    COMMAND protoc --cpp_out="${PROTOBUF_DIR}" --proto_path="${PROTOBUF_DIR}" np2_structs.proto
+    DEPENDS protoc "${PROTOBUF_DIR}/np2_structs.proto"
+    WORKING_DIRECTORY "${PROTOBUF_DIR}"
+    COMMENT "Running C++ protocol buffer compiler on np2_structs.proto"
+    VERBATIM
     )
-    
-    if(PROTOBUF_CMD_ERROR AND NOT PROTOBUF_CMD_ERROR EQUAL 0)
-        message(FATAL_ERROR "Local protoc failed to regenerate protobuf files.")
-    endif()
+
+# 3. Add the generated files to your library/executable
+# This triggers the custom command above when you build this target
+target_sources(3rdparty_protobuf INTERFACE "${PROTO_SRC}" "${PROTO_HDR}")
 endif()
