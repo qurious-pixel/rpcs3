@@ -23,5 +23,11 @@
     "qttranslations",
     "vulkan",
     "zlib"
+  ],
+  "overrides": [
+    {
+      "name": "protobuf",
+      "version": "6.33.4"
+    }
   ]
 }
