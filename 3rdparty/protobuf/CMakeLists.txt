@@ -7,7 +7,8 @@ if (USE_SYSTEM_PROTOBUF)
 		# 2. Define the pathing variables
 		set(NP_PROTO_DIR "${CMAKE_SOURCE_DIR}/rpcs3/Emu/NP/generated")
 		set(NP_PROTO_FILE "${NP_PROTO_DIR}/np2_structs.proto")
-		set(BUILD_SHARED_LIBS ON)
+		set(protobuf_BUILD_SHARED_LIBS ON)
+		set(protobuf_SHARED_OR_STATIC "SHARED")
 		
 		# 3. Create the output directory if it doesn't exist
 		file(MAKE_DIRECTORY "${NP_PROTO_DIR}")
