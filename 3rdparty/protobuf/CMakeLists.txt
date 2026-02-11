@@ -5,12 +5,12 @@ if (USE_SYSTEM_PROTOBUF)
 		find_package(Protobuf REQUIRED)
 		
 		# 2. Define the pathing variables
-		set(NP_PROTO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rpcs3/Emu/NP")
+		set(NP_PROTO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rpcs3/Emu/NP/generated")
 		set(NP_PROTO_FILE "${NP_PROTO_DIR}/np2_structs.proto")
 		set(NP_GEN_DIR "${NP_PROTO_DIR}/generated")
 		
 		# 3. Create the output directory if it doesn't exist
-		file(MAKE_DIRECTORY "${NP_GEN_DIR}")
+		file(MAKE_DIRECTORY "${NP_PROTO_DIR}")
 		
 		# 4. Set the "Base" for imports. 
 		# This tells CMake: "Treat the project root as the -I path"
