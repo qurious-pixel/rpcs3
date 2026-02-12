@@ -9,6 +9,7 @@ if (USE_SYSTEM_PROTOBUF)
 		set(NP_PROTO_FILE "${NP_PROTO_DIR}/np2_structs.proto")
 		set(protobuf_BUILD_SHARED_LIBS ON)
 		set(protobuf_SHARED_OR_STATIC "SHARED")
+		set(protobuf_MSVC_STATIC_RUNTIME OFF)
 		
 		# 3. Create the output directory if it doesn't exist
 		file(MAKE_DIRECTORY "${NP_PROTO_DIR}")
