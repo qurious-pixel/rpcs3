@@ -87,7 +87,10 @@ cmake .. \
     -DUSE_SYSTEM_ZSTD=ON \
     -DWITH_LLVM=ON \
     -DSTATIC_LINK_LLVM=ON \
-    -DBUILD_RPCS3_TESTS=OFF
+    -DBUILD_RPCS3_TESTS=OFF \
+    -DProtobuf_USE_STATIC_LIBS=ON \
+    -Dprotobuf_MSVC_STATIC_RUNTIME=ON \
+    -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
 
 echo "CMake configuration complete"
 
