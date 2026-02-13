@@ -1,4 +1,8 @@
 add_library(3rdparty_protobuf INTERFACE)
+if(VCPKG_ROOT)
+    set(protobuf_BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
+    message(STATUS "VCPKG detected: Building Protobuf as a shared library")
+endif()
 if (USE_SYSTEM_PROTOBUF)
 	if (USE_LTO)
 		# 1. Locate Protobuf (VCPKG compatible)
