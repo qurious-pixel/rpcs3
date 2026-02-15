@@ -12,7 +12,7 @@ git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/libsdl
 #OPENAL Fixes
 #sed -i '1i #include <cstdint>' 3rdparty/OpenAL/openal-soft/common/altypes.hpp
 git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft fetch origin
-git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft --work-tree=3rdparty/OpenAL/openal-soft checkout 30339efe90407f728ae4ebf922e1916eff9fa472
+git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft --work-tree=3rdparty/OpenAL/openal-soft checkout c41d64c6a35f6174bf4a27010aeac52a8d3bb2c6
 git submodule status 3rdparty/OpenAL/openal-soft
 
 mkdir build && cd build || exit 1
@@ -48,7 +48,7 @@ cmake ..                                               \
     -DSTATIC_LINK_LLVM=ON                              \
     -DBUILD_RPCS3_TESTS="${RUN_UNIT_TESTS}"            \
     -DRUN_RPCS3_TESTS="${RUN_UNIT_TESTS}"              \
-    -DALSOFT_BACKEND_PIPEWIRE=OFF                      \
+    -DALSOFT_BACKEND_PIPEWIRE=ON                       \
     -G Ninja
 
 ninja; build_status=$?;
