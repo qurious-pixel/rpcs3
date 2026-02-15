@@ -29,6 +29,7 @@ else
 fi
 
 export LINKER_FLAG="-fuse-ld=${LINKER}"
+apt -y install libqt6gui6
 export QT_QPA_PLATFORM="offscreen"
 
 cmake ..                                               \
