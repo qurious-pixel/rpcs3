@@ -48,7 +48,7 @@ cmake ..                                               \
     -DSTATIC_LINK_LLVM=ON                              \
     -DBUILD_RPCS3_TESTS="${RUN_UNIT_TESTS}"            \
     -DRUN_RPCS3_TESTS="${RUN_UNIT_TESTS}"              \
-    -DALSOFT_BACKEND_PIPEWIRE=ON                       \
+    -DQT_QPA_PLATFORM="offscreen"                      \
     -G Ninja
 
 ninja; build_status=$?;
