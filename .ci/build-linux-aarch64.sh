@@ -10,7 +10,8 @@ git config --global --add safe.directory '*'
 # shellcheck disable=SC2046
 git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/libsdl-org/ && !/curl/ && !/zlib/ { print $3 }' .gitmodules)
 #OPENAL Fixes
-sed -i '1i #include <cstdint>' 3rdparty/OpenAL/openal-soft/common/altypes.hpp
+#sed -i '1i #include <cstdint>' 3rdparty/OpenAL/openal-soft/common/altypes.hpp
+git --work-tree=3rdparty/OpenAL/openal-soft/ checkout d962591268e708cc579b654765d93d60d4366aca -- .
 
 mkdir build && cd build || exit 1
 
