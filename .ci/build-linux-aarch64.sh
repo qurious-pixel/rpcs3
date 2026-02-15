@@ -12,7 +12,7 @@ git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/libsdl
 #OPENAL Fixes
 #sed -i '1i #include <cstdint>' 3rdparty/OpenAL/openal-soft/common/altypes.hpp
 git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft fetch origin
-git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft --work-tree=3rdparty/OpenAL/openal-soft checkout c41d64c6a35f6174bf4a27010aeac52a8d3bb2c6
+git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft --work-tree=3rdparty/OpenAL/openal-soft checkout 50a777be67adb66a453aa26a92cb9c7edb8a5cec
 git submodule status 3rdparty/OpenAL/openal-soft
 
 mkdir build && cd build || exit 1
@@ -29,9 +29,6 @@ else
 fi
 
 export LINKER_FLAG="-fuse-ld=${LINKER}"
-apt update
-apt -y install libqt6opengl6-dev qt6-qpa-plugins
-export QT_QPA_PLATFORM="offscreen"
 
 cmake ..                                               \
     -DCMAKE_INSTALL_PREFIX=/usr                        \
