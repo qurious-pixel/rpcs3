@@ -48,6 +48,7 @@ cmake ..                                               \
     -DSTATIC_LINK_LLVM=ON                              \
     -DBUILD_RPCS3_TESTS="${RUN_UNIT_TESTS}"            \
     -DRUN_RPCS3_TESTS="${RUN_UNIT_TESTS}"              \
+    -DALSOFT_BACKEND_PIPEWIRE=OFF                      \
     -G Ninja
 
 ninja; build_status=$?;
