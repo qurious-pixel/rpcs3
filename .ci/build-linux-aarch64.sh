@@ -16,11 +16,14 @@ git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft --work-tree=3rdparty/Open
 git submodule status 3rdparty/OpenAL/openal-soft
 
 sed -i 's/gsl::narrow_cast/static_cast/g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
-# Replace OpenAL's custom u64 with standard unsigned long long
-sed -i 's/\bu64\b/unsigned long long/g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
-# Replace custom uint32_t with standard version
-sed -i 's/\buint32_t\b/unsigned int/g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
+# 1. Fix 'unsigned long long' by using 'uint64_t' (single word)
+sed -i 's/unsigned long long/uint64_t/g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
 
+# 2. Fix 'unsigned int' by using 'uint32_t' (single word)
+sed -i 's/unsigned int/uint32_t/g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
+
+# 3. Clean up the .c_val error (since we are no longer using the custom Strong Types)
+sed -i 's/\.c_val//g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
 mkdir build && cd build || exit 1
 
 if [ "$COMPILER" = "gcc" ]; then
