@@ -14,6 +14,7 @@ git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/libsdl
 git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft fetch origin
 git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft --work-tree=3rdparty/OpenAL/openal-soft checkout 50a777be67adb66a453aa26a92cb9c7edb8a5cec
 git submodule status 3rdparty/OpenAL/openal-soft
+sed -i 's/gsl::narrow_cast/static_cast/g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
 
 mkdir build && cd build || exit 1
 
