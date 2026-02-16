@@ -15,15 +15,20 @@ git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft fetch origin
 git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft --work-tree=3rdparty/OpenAL/openal-soft checkout 50a777be67adb66a453aa26a92cb9c7edb8a5cec
 git submodule status 3rdparty/OpenAL/openal-soft
 
+# 1. Revert the "Strong Casts" back to standard functional casts
 sed -i 's/gsl::narrow_cast/static_cast/g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
-# 1. Fix 'unsigned long long' by using 'uint64_t' (single word)
-sed -i 's/unsigned long long/uint64_t/g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
 
-# 2. Fix 'unsigned int' by using 'uint32_t' (single word)
-sed -i 's/unsigned int/uint32_t/g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
+# 2. Convert OpenAL aliases to standard single-word types (compatible with {} init)
+sed -i 's/\bu64\b/uint64_t/g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
+sed -i 's/\buint32_t\b/uint32_t/g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
 
-# 3. Clean up the .c_val error (since we are no longer using the custom Strong Types)
+# 3. Remove the internal '.c_val' accessors (only used by the Strong Types)
 sed -i 's/\.c_val//g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
+
+# 4. Fix specific multi-word type errors in initialization lists
+sed -i 's/unsigned int{/uint32_t{/g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
+sed -i 's/unsigned long long{/uint64_t{/g' 3rdparty/OpenAL/openal-soft/alc/backends/pipewire.cpp
+
 mkdir build && cd build || exit 1
 
 if [ "$COMPILER" = "gcc" ]; then
