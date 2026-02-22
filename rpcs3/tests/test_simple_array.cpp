@@ -383,8 +383,9 @@ namespace rsx
 	{
 		auto ptr = rsx::aligned_allocator::malloc<256>(16);
 		auto ptr2 = rsx::aligned_allocator::realloc<256>(ptr, 16, 8);
-		rsx::aligned_allocator::free(ptr2);
 
 		EXPECT_EQ(ptr, ptr2);
+
+		rsx::aligned_allocator::free(ptr2);
 	}
 }
