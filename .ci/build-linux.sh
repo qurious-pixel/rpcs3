@@ -13,7 +13,7 @@ git submodule -q update --init $(awk '/path/ && !/llvm/ && !/opencv/ && !/libsdl
 #OPENAL Fixes
 #sed -i '1i #include <cstdint>' 3rdparty/OpenAL/openal-soft/common/altypes.hpp
 git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft fetch origin
-git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft --work-tree=3rdparty/OpenAL/openal-soft checkout 30339efe90407f728ae4ebf922e1916eff9fa472
+git --git-dir=.git/modules/3rdparty/OpenAL/openal-soft --work-tree=3rdparty/OpenAL/openal-soft checkout 75c00596307bf05ba7bbc8c7022836bf52f17477
 git submodule status 3rdparty/OpenAL/openal-soft
 
 mkdir build && cd build || exit 1
