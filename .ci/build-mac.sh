@@ -20,7 +20,7 @@ if [ "$AARCH64" -eq 1 ]; then
   brew unlink --quiet ffmpeg fmt qtbase qtsvg qtdeclarative
 else
   arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  arch -x86_64 /usr/local/bin/brew install -f --overwrite --quiet python@3.14 opencv@4 "llvm@$LLVM_COMPILER_VER" sdl3 vulkan-headers vulkan-loader molten-vk
+  arch -x86_64 /usr/local/bin/brew install -f --overwrite --quiet protobuf@33 python@3.14 opencv@4 "llvm@$LLVM_COMPILER_VER" sdl3 vulkan-headers vulkan-loader molten-vk
   arch -x86_64 /usr/local/bin/brew unlink  --quiet ffmpeg qtbase qtsvg qtdeclarative
 fi
 
@@ -122,7 +122,7 @@ cmake .. \
     -DUSE_SYSTEM_MVK=ON \
     -DUSE_SYSTEM_SDL=ON \
     -DUSE_SYSTEM_OPENCV=ON \
-    -DUSE_SYSTEM_PROTOBUF=ON \
+    -DUSE_SYSTEM_PROTOBUF=OFF \
     -G Ninja
 fi
 
