@@ -22,6 +22,7 @@ else
   arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   arch -x86_64 /usr/local/bin/brew install -f --overwrite --quiet protobuf@33 python@3.14 opencv@4 "llvm@$LLVM_COMPILER_VER" sdl3 vulkan-headers vulkan-loader molten-vk
   arch -x86_64 /usr/local/bin/brew unlink  --quiet ffmpeg qtbase qtsvg qtdeclarative
+  arch -x86_64 /usr/local/bin/brew link --overwrite --force protobuf@33
 fi
 
 export CXX=clang++
