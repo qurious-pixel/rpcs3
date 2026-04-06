@@ -333,13 +333,7 @@ endif()
 add_subdirectory(llvm EXCLUDE_FROM_ALL)
 
 # WOLFSSL
-add_compile_definitions(
-    OPENSSL_EXTRA
-    OPENSSL_ALL
-    HAVE_WOLFSSL_SSL_H
-)
 add_subdirectory(wolfssl EXCLUDE_FROM_ALL)
-target_compile_definitions(wolfssl PUBLIC WOLFSSL_HAVE_CURVE_LIST)
 
 # CURL
 add_subdirectory(curl EXCLUDE_FROM_ALL)
