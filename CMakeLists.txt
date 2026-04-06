@@ -85,7 +85,7 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug" AND NOT MSVC)
     add_compile_definitions(_DEBUG)
 endif()
 
-if(MSVC)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:/MP>")
 endif()
 
