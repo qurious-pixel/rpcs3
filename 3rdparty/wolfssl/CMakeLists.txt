@@ -28,7 +28,8 @@ else()
 		# Disable 128-bit Math
 		set(WOLFSSL_ASM ON CACHE BOOL "" FORCE)
 		set(WOLFSSL_FAST_MATH OFF CACHE BOOL "" FORCE)
-		target_compile_definitions(wolfssl PUBLIC WOLFSSL_SP_NO_128BIT FP_MAX_BITS=4096 WOLFSSL_CURL)
+		target_compile_definitions(wolfssl PUBLIC WOLFSSL_SP_NO_128BIT FP_MAX_BITS=4096)
+		option(WOLFSSL_CURL "Enable CURL support (default: disabled)" ON)
 
 		# Disable warnings
 		target_compile_options(wolfssl PRIVATE /w)
