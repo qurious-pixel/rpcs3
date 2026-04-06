@@ -29,7 +29,15 @@ else()
 		set(WOLFSSL_ASM ON CACHE BOOL "" FORCE)
 		set(WOLFSSL_FAST_MATH OFF CACHE BOOL "" FORCE)
 		set(WOLFSSL_CURL ON)
-		target_compile_definitions(wolfssl PUBLIC WOLFSSL_SP_NO_128BIT FP_MAX_BITS=4096 OPENSSL_EXTRA HAVE_ECC)
+		target_compile_definitions(wolfssl PUBLIC 
+	        WOLFSSL_SP_NO_128BIT 
+	        FP_MAX_BITS=4096 
+	        OPENSSL_EXTRA 
+	        HAVE_ECC
+	        WOLFSSL_MD4
+	        WOLFSSL_MD5
+	        WOLFSSL_DES_ECB
+	    )
 
 		# Disable warnings
 		target_compile_options(wolfssl PRIVATE /w)
