@@ -19,7 +19,10 @@ else()
 	option(WOLFSSL_OPENSSLEXTRA "Enable extra OpenSSL API, size+ (default: disabled)" ON)
 	option(WOLFSSL_HARDEN "Enable Hardened build, Enables Timing Resistance and Blinding (default: enabled)" OFF)
 	option(WOLFSSL_ALT_CERT_CHAINS "Enable support for Alternate certification chains (default: disabled)" ON)
-
+	set(WOLFSSL_MD4 "yes" CACHE BOOL "" FORCE)
+	set(WOLFSSL_CURL "yes" CACHE BOOL "" FORCE)
+	set(WOLFSSL_DES_ECB "yes" CACHE BOOL "" FORCE)
+	
 	add_subdirectory(wolfssl EXCLUDE_FROM_ALL)
 
 	target_compile_definitions(wolfssl PUBLIC WOLFSSL_DES_ECB HAVE_WRITE_DUP WOLFSSL_NO_OPTIONS_H)
