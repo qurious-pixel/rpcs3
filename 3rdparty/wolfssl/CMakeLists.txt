@@ -22,7 +22,7 @@ else()
 
 	add_subdirectory(wolfssl EXCLUDE_FROM_ALL)
 
-	target_compile_definitions(wolfssl PUBLIC WOLFSSL_DES_ECB HAVE_WRITE_DUP WOLFSSL_NO_OPTIONS_H)
+	target_compile_definitions(wolfssl PUBLIC WOLFSSL_DES_ECB HAVE_WRITE_DUP WOLFSSL_NO_OPTIONS_H OPENSSL_EXTRA HAVE_ECC)
 
 	if(MSVC AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 		# Disable 128-bit Math
