@@ -87,6 +87,7 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:/MP>")
+    add_link_options("/ENTRY:mainCRTStartup")
 endif()
 
 if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
