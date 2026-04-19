@@ -4,11 +4,15 @@
 cd build || exit 1
 
 cd bin
+git clone --revision=32dceb35e2c95b46cec501033cbc3a1ddf32d6e8 https://github.com/KhronosGroup/MoltenVK.git
+cd MoltenVK
+./fetchDependencies --macos
+make macos MVK_USE_METAL_PRIVATE_API=1
+cd ../
+
 mkdir -p "rpcs3.app/Contents/Resources/vulkan/icd.d" || true
-wget https://github.com/KhronosGroup/MoltenVK/releases/download/v1.4.1/MoltenVK-macos-privateapi.tar
-tar -xvf MoltenVK-macos-privateapi.tar
-cp "MoltenVK/MoltenVK/dynamic/dylib/macOS/libMoltenVK.dylib" "rpcs3.app/Contents/Frameworks/libMoltenVK.dylib"
-cp "MoltenVK/MoltenVK/dynamic/dylib/macOS/MoltenVK_icd.json" "rpcs3.app/Contents/Resources/vulkan/icd.d/MoltenVK_icd.json"
+cp "MoltenVK/Package/Latest/MoltenVK/dynamic/dylib/macOS/libMoltenVK.dylib" "rpcs3.app/Contents/Frameworks/libMoltenVK.dylib"
+cp "MoltenVK/Package/Latest/MoltenVK/dynamic/dylib/macOS/MoltenVK_icd.json" "rpcs3.app/Contents/Resources/vulkan/icd.d/MoltenVK_icd.json"
 sed -i '' "s/.\//..\/..\/..\/Frameworks\//g" "rpcs3.app/Contents/Resources/vulkan/icd.d/MoltenVK_icd.json"
 
 cp "$(realpath $BREW_PATH/opt/llvm@$LLVM_COMPILER_VER/lib/c++/libc++abi.1.0.dylib)" "rpcs3.app/Contents/Frameworks/libc++abi.1.dylib"
@@ -21,7 +25,7 @@ rm -rf "rpcs3.app/Contents/Frameworks/QtPdf.framework" \
 "rpcs3.app/Contents/Frameworks/QtVirtualKeyboard.framework" \
 "rpcs3.app/Contents/Plugins/platforminputcontexts" \
 "rpcs3.app/Contents/Plugins/virtualkeyboard" \
-"rpcs3.app/Contents/Resources/git"
+"rpcs3.app/Contents/Resources/git" || true
 
 ../../.ci/optimize-mac.sh rpcs3.app
 
@@ -49,7 +53,7 @@ QT_TRANS="$WORKDIR/qt-downloader/$QT_VER/clang_64/translations"
 cp $QT_TRANS/qt_*.qm rpcs3.app/Contents/translations
 cp $QT_TRANS/qtbase_*.qm rpcs3.app/Contents/translations
 cp $QT_TRANS/qtmultimedia_*.qm rpcs3.app/Contents/translations
-rm -f rpcs3.app/Contents/translations/qt_help_*.qm
+rm -f rpcs3.app/Contents/translations/qt_help_*.qm || true
 
 # Need to do this rename hack due to case insensitive filesystem
 mv rpcs3.app RPCS3_.app

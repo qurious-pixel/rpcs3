@@ -42,10 +42,10 @@ enum class emu_settings_type
 	PerformanceReport,
 	FullWidthAVX512,
 	PPUNJFixup,
+	PPUVNANFixup,
 	AccurateDFMA,
 	AccuratePPUSAT,
 	AccuratePPUNJ,
-	FixupPPUVNAN,
 	AccuratePPUVNAN,
 	AccuratePPUFPCC,
 	MaxPreemptCount,
@@ -82,6 +82,7 @@ enum class emu_settings_type
 	ShaderPrecisionQuality,
 	StereoRenderEnabled,
 	StereoRenderMode,
+	ScreenSize,
 	AnisotropicFilterOverride,
 	TextureLodBias,
 	ResolutionScale,
@@ -108,6 +109,7 @@ enum class emu_settings_type
 	DisableAsyncHostMM,
 	UseReBAR,
 	RecordWithOverlays,
+	DisableHWTexelRemapping,
 
 	// Performance Overlay
 	PerfOverlayEnabled,
@@ -126,6 +128,7 @@ enum class emu_settings_type
 	PerfOverlayMarginY,
 	PerfOverlayCenterX,
 	PerfOverlayCenterY,
+	PerfOverlayUseWindowSpace,
 
 	// Shader Loading Dialog
 	ShaderLoadBgEnabled,
@@ -187,9 +190,11 @@ enum class emu_settings_type
 	ShowPressureIntensityToggleHint,
 	ShowAnalogLimiterToggleHint,
 	ShowMouseAndKeyboardToggleHint,
+	ShowFatalErrorHints,
 	ShowCaptureHints,
 	WindowTitleFormat,
 	PauseDuringHomeMenu,
+	PlayMusicDuringBoot,
 	EnableGamemode,
 
 	// Network
@@ -216,6 +221,9 @@ enum class emu_settings_type
 	EmptyHdd0Tmp,
 	LimitCacheSize,
 	MaximumCacheSize,
+
+	// Log
+	Log,
 };
 
 /** A helper map that keeps track of where a given setting type is located*/
@@ -237,7 +245,7 @@ inline static const std::map<emu_settings_type, cfg_location> settings_location 
 	{ emu_settings_type::AccurateClineStores,      { "Core", "Accurate Cache Line Stores"}},
 	{ emu_settings_type::AccurateRSXAccess,        { "Core", "Accurate RSX reservation access"}},
 	{ emu_settings_type::FIFOAccuracy,             { "Core", "RSX FIFO Fetch Accuracy"}},
-	{ emu_settings_type::XFloatAccuracy,           { "Core", "XFloat Accuracy"}},
+	{ emu_settings_type::XFloatAccuracy,           { "Core", "SPU XFloat Accuracy"}},
 	{ emu_settings_type::MFCCommandsShuffling,     { "Core", "MFC Commands Shuffling Limit"}},
 	{ emu_settings_type::SetDAZandFTZ,             { "Core", "Set DAZ and FTZ"}},
 	{ emu_settings_type::SPUBlockSize,             { "Core", "SPU Block Size"}},
@@ -251,10 +259,10 @@ inline static const std::map<emu_settings_type, cfg_location> settings_location 
 	{ emu_settings_type::FullWidthAVX512,          { "Core", "Full Width AVX-512"}},
 	{ emu_settings_type::NumPPUThreads,            { "Core", "PPU Threads"}},
 	{ emu_settings_type::PPUNJFixup,               { "Core", "PPU LLVM Java Mode Handling"}},
+	{ emu_settings_type::PPUVNANFixup,             { "Core", "PPU Vector NaN Handling"}},
 	{ emu_settings_type::AccurateDFMA,             { "Core", "Use Accurate DFMA"}},
 	{ emu_settings_type::AccuratePPUSAT,           { "Core", "PPU Set Saturation Bit"}},
 	{ emu_settings_type::AccuratePPUNJ,            { "Core", "PPU Accurate Non-Java Mode"}},
-	{ emu_settings_type::FixupPPUVNAN,             { "Core", "PPU Fixup Vector NaN Values"}},
 	{ emu_settings_type::AccuratePPUVNAN,          { "Core", "PPU Accurate Vector NaN Values"}},
 	{ emu_settings_type::AccuratePPUFPCC,          { "Core", "PPU Set FPCC Bits"}},
 	{ emu_settings_type::MaxPreemptCount,          { "Core", "Max CPU Preempt Count"}},
@@ -274,7 +282,7 @@ inline static const std::map<emu_settings_type, cfg_location> settings_location 
 	{ emu_settings_type::ReadColorBuffers,           { "Video", "Read Color Buffers"}},
 	{ emu_settings_type::ReadDepthBuffer,            { "Video", "Read Depth Buffer"}},
 	{ emu_settings_type::HandleRSXTiledMemory,       { "Video", "Handle RSX Memory Tiling"}},
-	{ emu_settings_type::VSync,                      { "Video", "VSync"}},
+	{ emu_settings_type::VSync,                      { "Video", "VSync Mode"}},
 	{ emu_settings_type::DebugOutput,                { "Video", "Debug output"}},
 	{ emu_settings_type::DebugOverlay,               { "Video", "Debug overlay"}},
 	{ emu_settings_type::RenderdocCompatibility,     { "Video", "Renderdoc Compatibility Mode"}},
@@ -288,6 +296,7 @@ inline static const std::map<emu_settings_type, cfg_location> settings_location 
 	{ emu_settings_type::DisableFIFOReordering,      { "Video", "Disable FIFO Reordering"}},
 	{ emu_settings_type::StereoRenderEnabled,        { "Video", "3D Display Enabled"}},
 	{ emu_settings_type::StereoRenderMode,           { "Video", "3D Display Mode"}},
+	{ emu_settings_type::ScreenSize,                 { "Video", "Screen size in inches"}},
 	{ emu_settings_type::StrictTextureFlushing,      { "Video", "Strict Texture Flushing"}},
 	{ emu_settings_type::ForceCPUBlitEmulation,      { "Video", "Force CPU Blit"}},
 	{ emu_settings_type::DisableOnDiskShaderCache,   { "Video", "Disable On-Disk Shader Cache"}},
@@ -312,11 +321,12 @@ inline static const std::map<emu_settings_type, cfg_location> settings_location 
 	{ emu_settings_type::ForceHwMSAAResolve,         { "Video", "Force Hardware MSAA Resolve"}},
 	{ emu_settings_type::DisableAsyncHostMM,         { "Video", "Disable Asynchronous Memory Manager"}},
 	{ emu_settings_type::RecordWithOverlays,         { "Video", "Record With Overlays"}},
+	{ emu_settings_type::DisableHWTexelRemapping,    { "Video", "Disable Hardware ColorSpace Remapping"}},
+	{ emu_settings_type::FsrSharpeningStrength,      { "Video", "FidelityFX CAS Sharpening Intensity"}},
 
 	// Vulkan
-	{ emu_settings_type::VulkanAsyncTextureUploads,           { "Video", "Vulkan", "Asynchronous Texture Streaming 2"}},
+	{ emu_settings_type::VulkanAsyncTextureUploads,           { "Video", "Vulkan", "Asynchronous Texture Streaming"}},
 	{ emu_settings_type::VulkanAsyncSchedulerDriver,          { "Video", "Vulkan", "Asynchronous Queue Scheduler"}},
-	{ emu_settings_type::FsrSharpeningStrength,               { "Video", "Vulkan", "FidelityFX CAS Sharpening Intensity"}},
 	{ emu_settings_type::ExclusiveFullscreenMode,             { "Video", "Vulkan", "Exclusive Fullscreen Mode"}},
 	{ emu_settings_type::UseReBAR,                            { "Video", "Vulkan", "Use Re-BAR for GPU uploads"}},
 
@@ -333,10 +343,11 @@ inline static const std::map<emu_settings_type, cfg_location> settings_location 
 	{ emu_settings_type::PerfOverlayUpdateInterval,        { "Video", "Performance Overlay", "Metrics update interval (ms)" } },
 	{ emu_settings_type::PerfOverlayFontSize,              { "Video", "Performance Overlay", "Font size (px)" } },
 	{ emu_settings_type::PerfOverlayOpacity,               { "Video", "Performance Overlay", "Opacity (%)" } },
-	{ emu_settings_type::PerfOverlayMarginX,               { "Video", "Performance Overlay", "Horizontal Margin (px)" } },
-	{ emu_settings_type::PerfOverlayMarginY,               { "Video", "Performance Overlay", "Vertical Margin (px)" } },
+	{ emu_settings_type::PerfOverlayMarginX,               { "Video", "Performance Overlay", "Horizontal Margin (%)" } },
+	{ emu_settings_type::PerfOverlayMarginY,               { "Video", "Performance Overlay", "Vertical Margin (%)" } },
 	{ emu_settings_type::PerfOverlayCenterX,               { "Video", "Performance Overlay", "Center Horizontally" } },
 	{ emu_settings_type::PerfOverlayCenterY,               { "Video", "Performance Overlay", "Center Vertically" } },
+	{ emu_settings_type::PerfOverlayUseWindowSpace, 	   { "Video", "Performance Overlay", "Use Window Space"}},
 
 	// Shader Loading Dialog
 	{ emu_settings_type::ShaderLoadBgEnabled,      { "Video", "Shader Loading Dialog", "Allow custom background" } },
@@ -398,10 +409,12 @@ inline static const std::map<emu_settings_type, cfg_location> settings_location 
 	{ emu_settings_type::ShowPressureIntensityToggleHint, { "Miscellaneous", "Show pressure intensity toggle hint"}},
 	{ emu_settings_type::ShowAnalogLimiterToggleHint,     { "Miscellaneous", "Show analog limiter toggle hint"}},
 	{ emu_settings_type::ShowMouseAndKeyboardToggleHint,  { "Miscellaneous", "Show mouse and keyboard toggle hint"}},
+	{ emu_settings_type::ShowFatalErrorHints,             { "Miscellaneous", "Show fatal error hints"}},
 	{ emu_settings_type::ShowCaptureHints,                { "Miscellaneous", "Show capture hints" }},
 	{ emu_settings_type::SilenceAllLogs,                  { "Miscellaneous", "Silence All Logs" }},
 	{ emu_settings_type::WindowTitleFormat,               { "Miscellaneous", "Window Title Format" }},
 	{ emu_settings_type::PauseDuringHomeMenu,             { "Miscellaneous", "Pause Emulation During Home Menu" }},
+	{ emu_settings_type::PlayMusicDuringBoot,             { "Miscellaneous", "Play music during boot sequence" }},
 	{ emu_settings_type::EnableGamemode,                  { "Miscellaneous", "Enable GameMode" }},
 
 	// Networking
@@ -432,4 +445,7 @@ inline static const std::map<emu_settings_type, cfg_location> settings_location 
 	{ emu_settings_type::SuspendEmulationSavestateMode,       { "Savestate", "Suspend Emulation Savestate Mode" }},
 	{ emu_settings_type::CompatibleEmulationSavestateMode,    { "Savestate", "Compatible Savestate Mode" }},
 	{ emu_settings_type::StartSavestatePaused,                { "Savestate", "Start Paused" }},
+
+	// Logs
+	{ emu_settings_type::Log, { "Log" }},
 };

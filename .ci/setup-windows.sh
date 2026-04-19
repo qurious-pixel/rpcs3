@@ -6,7 +6,7 @@
 QT_HOST="http://qt.mirror.constant.com/"
 QT_URL_VER=$(echo "$QT_VER" | sed "s/\.//g")
 QT_VER_MSVC_UP=$(echo "${QT_VER_MSVC}" | tr '[:lower:]' '[:upper:]')
-QT_PREFIX="online/qtsdkrepository/windows_x86/desktop/qt${QT_VER_MAIN}_${QT_URL_VER}/qt${QT_VER_MAIN}_${QT_URL_VER}/qt.qt${QT_VER_MAIN}.${QT_URL_VER}."
+QT_PREFIX="online/qtsdkrepository/windows_x86/desktop/qt${QT_VER_MAIN}_${QT_URL_VER}/qt${QT_VER_MAIN}_${QT_URL_VER}_${QT_VER_MSVC}_64/qt.qt${QT_VER_MAIN}.${QT_URL_VER}."
 QT_PREFIX_2="win64_${QT_VER_MSVC}_64/${QT_VER}-0-${QT_DATE}"
 QT_SUFFIX="-Windows-Windows_11_24H2-${QT_VER_MSVC_UP}-Windows-Windows_11_24H2-X86_64.7z"
 QT_BASE_URL="${QT_HOST}${QT_PREFIX}${QT_PREFIX_2}qtbase${QT_SUFFIX}"
@@ -17,7 +17,7 @@ QT_SVG_URL="${QT_HOST}${QT_PREFIX}${QT_PREFIX_2}qtsvg${QT_SUFFIX}"
 QT_TRANSLATIONS_URL="${QT_HOST}${QT_PREFIX}${QT_PREFIX_2}qttranslations${QT_SUFFIX}"
 LLVMLIBS_URL="https://github.com/RPCS3/llvm-mirror/releases/download/custom-build-win-${LLVM_VER}/llvmlibs_mt.7z"
 VULKAN_SDK_URL="https://www.dropbox.com/scl/fi/sjjh0fc4ld281pjbl2xzu/VulkanSDK-${VULKAN_VER}-Installer.exe?rlkey=f6wzc0lvms5vwkt2z3qabfv9d&dl=1"
-CCACHE_URL="https://github.com/ccache/ccache/releases/download/v4.11.2/ccache-4.11.2-windows-x86_64.zip"
+CCACHE_URL="https://github.com/ccache/ccache/releases/download/v4.12.3/ccache-4.12.3-windows-x86_64.zip"
 
 DEP_URLS="         \
     $QT_BASE_URL   \

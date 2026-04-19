@@ -6,10 +6,12 @@
 #include "input_dialog.h"
 #include "qt_utils.h"
 #include "shortcut_utils.h"
+#include "steam_utils.h"
 #include "settings_dialog.h"
 #include "pad_settings_dialog.h"
 #include "patch_manager_dialog.h"
 #include "persistent_settings.h"
+#include "config_database.h"
 
 #include "Utilities/File.h"
 #include "Emu/system_utils.hpp"
@@ -66,8 +68,8 @@ void game_list_context_menu::show_single_selection_context_menu(const game_info&
 	// Make Actions
 	QAction* boot = new QAction(gameinfo->has_custom_config
 		? (is_current_running_game
-			? tr("&Reboot with Global Configuration")
-			: tr("&Boot with Global Configuration"))
+			? (gameinfo->has_database_config ? tr("&Reboot with Database + Global Configuration") : tr("&Reboot with Global Configuration"))
+			: (gameinfo->has_database_config ? tr("&Boot with Database + Global Configuration") : tr("&Boot with Global Configuration")))
 		: (is_current_running_game
 			? tr("&Reboot")
 			: tr("&Boot")));
@@ -155,6 +157,8 @@ void game_list_context_menu::show_single_selection_context_menu(const game_info&
 
 	addSeparator();
 
+	QAction* create_game_database_config = (gameinfo->has_custom_config || !gameinfo->has_database_config) ? nullptr
+		: addAction(tr("&Create Custom Configuration From Database Settings"));
 	QAction* configure = addAction(gameinfo->has_custom_config
 		? tr("&Change Custom Configuration")
 		: tr("&Create Custom Configuration From Global Settings"));
@@ -273,6 +277,7 @@ void game_list_context_menu::show_single_selection_context_menu(const game_info&
 	{
 		m_game_list_actions->CreateShortcuts({gameinfo}, {gui::utils::shortcut_location::desktop});
 	});
+
 #ifdef _WIN32
 	QAction* create_start_menu_shortcut = manage_game_menu->addAction(tr("&Create Start Menu Shortcut"));
 #elif defined(__APPLE__)
@@ -284,6 +289,17 @@ void game_list_context_menu::show_single_selection_context_menu(const game_info&
 	{
 		m_game_list_actions->CreateShortcuts({gameinfo}, {gui::utils::shortcut_location::applications});
 	});
+
+	if (gui::utils::steam_shortcut::steam_installed())
+	{
+		const bool steam_running = gui::utils::steam_shortcut::is_steam_running();
+		QAction* create_steam_shortcut = manage_game_menu->addAction(steam_running ? tr("&Create Steam Shortcut (Steam must be closed)") : tr("&Create Steam Shortcut"));
+		connect(create_steam_shortcut, &QAction::triggered, this, [this, gameinfo]()
+		{
+			m_game_list_actions->CreateShortcuts({gameinfo}, {gui::utils::shortcut_location::steam});
+		});
+		create_steam_shortcut->setEnabled(!steam_running);
+	}
 
 	manage_game_menu->addSeparator();
 
@@ -565,6 +581,7 @@ void game_list_context_menu::show_single_selection_context_menu(const game_info&
 
 	QAction* check_compat = addAction(tr("&Check Game Compatibility"));
 	QAction* download_compat = addAction(tr("&Download Compatibility Database"));
+	QAction* download_config_db = addAction(tr("&Download Config Database"));
 
 	addSeparator();
 
@@ -585,12 +602,13 @@ void game_list_context_menu::show_single_selection_context_menu(const game_info&
 	connect(boot, &QAction::triggered, m_game_list_frame, [this, gameinfo]()
 	{
 		sys_log.notice("Booting from gamelist per context menu...");
-		Q_EMIT m_game_list_frame->RequestBoot(gameinfo, cfg_mode::global);
+		Q_EMIT m_game_list_frame->RequestBoot(gameinfo, cfg_mode::database_config);
 	});
 
-	auto configure_l = [this, current_game, gameinfo](bool create_cfg_from_global_cfg)
+	const auto configure_game = [this, current_game, gameinfo](bool create_cfg_from_global_cfg, bool create_cfg_from_database)
 	{
-		settings_dialog dlg(m_gui_settings, m_emu_settings, 0, m_game_list_frame, &current_game, create_cfg_from_global_cfg);
+		const std::optional<std::string> db_config = create_cfg_from_database ? m_game_list_frame->GetConfigDatabase()->get_config(gameinfo->info.serial) : "";
+		settings_dialog dlg(m_gui_settings, m_emu_settings, 0, m_game_list_frame, &current_game, create_cfg_from_global_cfg, db_config ? *db_config : "");
 
 		connect(&dlg, &settings_dialog::EmuSettingsApplied, [this, gameinfo]()
 		{
@@ -605,14 +623,16 @@ void game_list_context_menu::show_single_selection_context_menu(const game_info&
 		dlg.exec();
 	};
 
+	connect(configure, &QAction::triggered, this, [configure_game]() { configure_game(true, false); });
+
 	if (create_game_default_config)
 	{
-		connect(configure, &QAction::triggered, m_game_list_frame, [configure_l]() { configure_l(true); });
-		connect(create_game_default_config, &QAction::triggered, m_game_list_frame, [configure_l = std::move(configure_l)]() { configure_l(false); });
+		connect(create_game_default_config, &QAction::triggered, m_game_list_frame, [configure_game]() { configure_game(false, false); });
 	}
-	else
+
+	if (create_game_database_config)
 	{
-		connect(configure, &QAction::triggered, m_game_list_frame, [configure_l = std::move(configure_l)]() { configure_l(true); });
+		connect(create_game_database_config, &QAction::triggered, m_game_list_frame, [configure_game]() { configure_game(false, true); });
 	}
 
 	connect(pad_configure, &QAction::triggered, m_game_list_frame, [this, current_game, gameinfo]()
@@ -658,7 +678,11 @@ void game_list_context_menu::show_single_selection_context_menu(const game_info&
 	});
 	connect(download_compat, &QAction::triggered, m_game_list_frame, [this]
 	{
-		ensure(m_game_list_frame->GetGameCompatibility())->RequestCompatibility(true);
+		m_game_list_frame->GetGameCompatibility()->RequestCompatibility(true);
+	});
+	connect(download_config_db, &QAction::triggered, m_game_list_frame, [this]
+	{
+		m_game_list_frame->GetConfigDatabase()->request_config_database(true);
 	});
 	connect(rename_title, &QAction::triggered, m_game_list_frame, [this, name, serial = QString::fromStdString(serial), global_pos]
 	{
@@ -843,6 +867,20 @@ void game_list_context_menu::show_multi_selection_context_menu(const std::vector
 		m_game_list_actions->CreateShortcuts(games, {gui::utils::shortcut_location::applications});
 	});
 
+	if (gui::utils::steam_shortcut::steam_installed())
+	{
+		const bool steam_running = gui::utils::steam_shortcut::is_steam_running();
+		QAction* create_steam_shortcut = manage_game_menu->addAction(steam_running ? tr("&Create Steam Shortcut (Steam must be closed)") : tr("&Create Steam Shortcut"));
+		connect(create_steam_shortcut, &QAction::triggered, this, [this, games]()
+		{
+			if (QMessageBox::question(m_game_list_frame, tr("Confirm Creation"), tr("Create Steam shortcut?")) != QMessageBox::Yes)
+				return;
+
+			m_game_list_actions->CreateShortcuts(games, {gui::utils::shortcut_location::steam});
+		});
+		create_steam_shortcut->setEnabled(!steam_running);
+	}
+
 	manage_game_menu->addSeparator();
 
 	// Hide game in game list
@@ -908,7 +946,13 @@ void game_list_context_menu::show_multi_selection_context_menu(const std::vector
 	QAction* download_compat = addAction(tr("&Download Compatibility Database"));
 	connect(download_compat, &QAction::triggered, m_game_list_frame, [this]
 	{
-		ensure(m_game_list_frame->GetGameCompatibility())->RequestCompatibility(true);
+		m_game_list_frame->GetGameCompatibility()->RequestCompatibility(true);
+	});
+
+	QAction* download_config_db = addAction(tr("&Download Config Database"));
+	connect(download_config_db, &QAction::triggered, m_game_list_frame, [this]
+	{
+		m_game_list_frame->GetConfigDatabase()->request_config_database(true);
 	});
 
 	addSeparator();
