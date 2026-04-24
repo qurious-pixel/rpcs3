@@ -2970,7 +2970,7 @@ namespace rsx
 
 			auto& cfg = g_fxo->get<gcm_config>();
 
-			std::unique_lock<shared_mutex> hle_lock;
+			std::optional<std::unique_lock<shared_mutex>> hle_lock;
 
 			for (u32 i = 0; i < std::size(unmap_status); i++)
 			{
@@ -3011,7 +3011,7 @@ namespace rsx
 
 			if (hle_lock)
 			{
-				hle_lock.unlock();
+				hle_lock->unlock();
 			}
 
 			// Pause RSX thread momentarily to handle unmapping
@@ -3414,7 +3414,7 @@ namespace rsx
 		current_display_buffer = buffer;
 		m_queued_flip.emu_flip = true;
 		m_queued_flip.in_progress = true;
-		m_queued_flip.skip_frame |= g_cfg.video.disable_video_output && !g_cfg.video.perf_overlay.perf_overlay_enabled;
+		m_queued_flip.skip_frame |= g_cfg.video.disable_video_output && !g_cfg.video.perf_overlay.enabled;
 
 		flip(m_queued_flip);
 

@@ -61,6 +61,7 @@ void fmt_class_string<cpu_flag>::format(std::string& out, u64 arg)
 		case cpu_flag::notify: return "ntf";
 		case cpu_flag::yield: return "y";
 		case cpu_flag::preempt: return "PREEMPT";
+		case cpu_flag::req_exit: return "REQ-EXIT";
 		case cpu_flag::dbg_global_pause: return "G-PAUSE";
 		case cpu_flag::dbg_pause: return "PAUSE";
 		case cpu_flag::dbg_step: return "STEP";
@@ -729,8 +730,14 @@ void cpu_thread::operator()()
 		{
 			if (_this)
 			{
-				sys_log.warning("CPU Thread '%s' terminated abnormally!", name);
 				cleanup();
+
+				auto log_thread = named_thread("CPU Thread Cleanup Logger", [name = name]()
+				{
+					sys_log.warning("CPU Thread '%s' terminated abnormally!", name);
+				});
+
+				log_thread();
 			}
 		}
 	} cleanup;
