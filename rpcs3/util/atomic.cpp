@@ -195,10 +195,10 @@ namespace
 			cv.init(cv);
 			mtx.init(mtx);
 #endif
-			sync.store(0, std::memory_order_relaxed);
+			sync.store(0);
 			fat_ptr initial_state{ iptr, 0, 1 };
 #if defined(_MSC_VER) && defined(__clang__)
-			ptr_ref.store(initial_state, std::memory_order_release);
+			ptr_ref.store(initial_state);
 #else			
 			ensure(ptr_ref.exchange(initial_state) == fat_ptr{});
 #endif
@@ -209,9 +209,11 @@ namespace
 			tid = 0;
 			tsc0 = 0;
 			link = 0;
-			sync.release(0);
 			oldv = 0;
-
+			
+			sync.store(0);
+    		ptr_ref.store(fat_ptr{});
+			
 #ifdef USE_STD
 			mtx.destroy();
 			cv.destroy();
