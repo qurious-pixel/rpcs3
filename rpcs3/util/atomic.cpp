@@ -195,8 +195,13 @@ namespace
 			cv.init(cv);
 			mtx.init(mtx);
 #endif
-
-			ensure(ptr_ref.exchange(fat_ptr{iptr, 0, 1}) == fat_ptr{});
+			sync.store(0, std::memory_order_relaxed);
+			fat_ptr initial_state{ iptr, 0, 1 };
+#if defined(_MSC_VER) && defined(__clang__)
+			ptr_ref.store(initial_state, std::memory_order_release);
+#else			
+			ensure(ptr_ref.exchange(initial_state) == fat_ptr{});
+#endif
 		}
 
 		void destroy()
