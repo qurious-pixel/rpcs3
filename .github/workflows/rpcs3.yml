@@ -473,7 +473,9 @@ jobs:
         shell: pwsh
         run: |
           git clone https://github.com/microsoft/vcpkg.git
-          .\vcpkg\bootstrap-vcpkg.bat
+          cd vcpkg
+          git checkout 2026.03.18
+          .\bootstrap-vcpkg.bat
 
       - name: 'Setup NuGet Credentials for vcpkg'
         shell: pwsh
