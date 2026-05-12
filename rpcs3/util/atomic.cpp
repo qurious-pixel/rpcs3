@@ -15,7 +15,7 @@ namespace utils
 {
 	u128 __vectorcall atomic_load16(const void* ptr)
 	{
-		return std::bit_cast<u128>(_mm_load_si128(static_cast<const __m128i*>(ptr)));
+		return std::bit_cast<u128>(_mm_loadu_si128(static_cast<const __m128i*>(ptr)));
 	}
 
 	void __vectorcall atomic_store16(void* ptr, u128 value)
