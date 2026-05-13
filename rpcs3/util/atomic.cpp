@@ -200,11 +200,11 @@ namespace
 #endif
 			sync.store(0);
 			fat_ptr initial_state{ iptr, 0, 1 };
-#if defined(_MSC_VER) && defined(__clang__)
-			ptr_ref.store(initial_state, std::memory_order_release);
-#else			
-			ensure(ptr_ref.exchange(initial_state) == fat_ptr{});
-#endif
+//#if defined(_MSC_VER) && defined(__clang__)
+			ptr_ref.store(initial_state);
+//#else			
+//			ensure(ptr_ref.exchange(initial_state) == fat_ptr{});
+//#endif
 		}
 
 		void destroy()
