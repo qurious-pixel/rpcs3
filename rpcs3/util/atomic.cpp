@@ -64,8 +64,9 @@ static constexpr usz s_hashtable_size = 1u << 17;
 
 // Reference counter mask
 //static constexpr uptr s_ref_mask = 0xffff'ffff;
+static constexpr uptr s_ref_mask = 0x0000'ffff'ffff'ffffULL;
 // Remove mask
-uptr real_ptr = raw_ptr;
+//uptr real_ptr = raw_ptr;
 
 // Fix for silly on-first-use initializer
 static bool s_null_wait_cb(const void*, u64, u64){ return true; };
