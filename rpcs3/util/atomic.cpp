@@ -64,7 +64,7 @@ static constexpr usz s_hashtable_size = 1u << 17;
 
 // Reference counter mask
 //static constexpr uptr s_ref_mask = 0xffff'ffff;
-static constexpr uptr s_ref_mask = 0x0000'ffff'ffff'ffffULL;
+static constexpr u32 s_ref_mask = 0xffff'ffff;
 // Remove mask
 //uptr real_ptr = raw_ptr;
 
